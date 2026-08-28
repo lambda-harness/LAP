@@ -1,6 +1,6 @@
 # LEP-0004: Portable Orchestrator Context
 
-- **Status:** Accepted
+- **Status:** Implemented
 - **Type:** Standards Track
 - **Target version:** `0.1.0-draft`
 - **Authors:** `@dongrv`
@@ -146,13 +146,31 @@ validate both published schemas, include the extension in idempotency
 equivalence, and prove locally that scope rejection still starts no target
 Agent.
 
-## Reference Implementation Plan
+## Reference Implementation
 
-Lambda Harness will construct this extension from its immutable workflow
-definition, pass it through LAP Local and the A2A bridge, and include it in the
-external run fingerprint. Its tests will exercise a packaged LAP Local Agent
-that reads the extension, returns a dispatch plan, and remains subject to the
-Host's pre-dispatch checks.
+[Lambda Harness](https://github.com/dongrv/lambda/commit/cb96c19) is the
+initial reference Host for `FLOW-13`. It constructs the extension from the
+immutable, admitted workflow definition; canonically includes it in the
+external-run idempotency fingerprint; and forwards it without changing the
+ordinary capability input.
+
+- Its LAP Local transport places the extension in
+  `run.start.payload.context.extensions` and protects the Host-owned Skill
+  extension namespace from overwrite.
+- Its A2A bridge sends the ordinary capability input and the orchestration
+  context as separate `application/json` data parts. A selected remote Skill
+  without JSON input support fails with `LAP-204` before remote task creation.
+- Its workflow runtime continues to validate every returned proposal against
+  the immutable allowlist and optional capability scope before target support
+  checks or child creation. It records only a safe summary that the planning
+  context was fixed, never the raw Context Packet.
+
+The reference suite covers local delivery, idempotency divergence when only
+the extension changes, separate A2A data-part mapping, pre-task A2A rejection,
+external-workflow context construction, out-of-scope no-target-start behavior,
+and frontend audit rendering. This is reference-Host evidence, not an
+independent interoperability claim. Another Host claiming `FLOW-13` MUST run
+the published vector and provide equivalent local evidence.
 
 ## Alternatives Considered
 
@@ -172,11 +190,12 @@ extension as a credential.
 
 ## Resolution Record
 
-- **Decision:** Accepted
+- **Decision:** Implemented
 - **Decision date:** 2026-08-29
 - **Target release:** `0.1.0-draft`
 - **Rationale:** A bounded, deterministic Context Packet extension lets
   independently packaged Agents construct portable dispatch proposals while
   preserving Host-only authorization and execution.
-- **Required follow-up:** Publish reference-Host and independent implementation
-  evidence for `FLOW-13` before declaring broader workflow interoperability.
+- **Required follow-up:** Independent Hosts should publish `FLOW-13` vector
+  results and local no-target-start evidence before making a workflow-profile
+  conformance claim.
