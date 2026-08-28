@@ -1,0 +1,58 @@
+{
+  "profile": "lap-workflow/0.1",
+  "strict_output_budget_workflow": {
+    "lap": "0.1",
+    "id": "com.example.budgeted-release-check",
+    "version": "1.0.0",
+    "mode": "orchestrated",
+    "policy": {
+      "max_child_runs": 3,
+      "max_depth": 1,
+      "max_output_tokens": 120
+    },
+    "nodes": [
+      {
+        "id": "plan",
+        "type": "orchestrator",
+        "agent": { "id": "com.example.planner", "capability": "plan.dispatch" },
+        "allowed_agent_ids": ["com.example.inspector"],
+        "budget": { "max_output_tokens": 40 }
+      },
+      {
+        "id": "verify",
+        "type": "agent",
+        "agent": { "id": "com.example.verifier", "capability": "release.verify" },
+        "budget": { "max_output_tokens": 50 }
+      }
+    ],
+    "edges": []
+  },
+  "dynamic_dispatch": {
+    "agent_id": "com.example.inspector",
+    "capability": "repo.inspect",
+    "input": { "target": "release" },
+    "budget": { "max_output_tokens": 30 }
+  },
+  "oversubscribed_static_allocations": {
+    "lap": "0.1",
+    "id": "com.example.invalid-budgeted-release",
+    "version": "1.0.0",
+    "mode": "declared",
+    "policy": { "max_output_tokens": 3 },
+    "nodes": [
+      {
+        "id": "first",
+        "type": "agent",
+        "agent": { "id": "com.example.first", "capability": "task.run" },
+        "budget": { "max_output_tokens": 2 }
+      },
+      {
+        "id": "second",
+        "type": "agent",
+        "agent": { "id": "com.example.second", "capability": "task.run" },
+        "budget": { "max_output_tokens": 2 }
+      }
+    ],
+    "edges": []
+  }
+}

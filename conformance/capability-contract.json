@@ -1,0 +1,27 @@
+{
+  "lap": "0.1",
+  "schema_draft": "https://json-schema.org/draft/2020-12/schema",
+  "capability": {
+    "id": "text.echo",
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 }
+      }
+    },
+    "output_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "valid_input": { "text": "hello LAP" },
+  "invalid_input": { "text": 42 },
+  "valid_output": { "text": "hello LAP" },
+  "invalid_output": { "text": 42 }
+}

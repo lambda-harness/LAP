@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+dist/
+build/
+examples/echo-agent-go/echo-agent-go
+examples/echo-agent-go/echo-agent-go.exe
+examples/echo-agent-go/bin/

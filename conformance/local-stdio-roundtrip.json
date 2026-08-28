@@ -1,0 +1,66 @@
+{
+  "id": "lap-local-roundtrip-0.1",
+  "profile": "lap-local/0.1",
+  "host_frames": [
+    {
+      "lap": "0.1",
+      "id": "host-hello-1",
+      "producer": "host.conformance",
+      "seq": 1,
+      "type": "agent.hello",
+      "payload": {
+        "supported_lap": ["0.1"],
+        "profiles": ["lap-local/0.1"],
+        "host": "host.conformance"
+      }
+    },
+    {
+      "lap": "0.1",
+      "id": "host-run-2",
+      "producer": "host.conformance",
+      "seq": 2,
+      "type": "run.start",
+      "run": {
+        "tenant_id": "tenant-conformance",
+        "session_id": "session-conformance",
+        "run_id": "run-conformance",
+        "trace_id": "trace-conformance"
+      },
+      "idempotency_key": "conformance-key-0001",
+      "payload": {
+        "capability": "text.echo",
+        "input": { "text": "hello LAP" },
+        "context": {
+          "input": { "text": "hello LAP" },
+          "artifacts": [
+            {
+              "id": "input-brief-01",
+              "name": "brief.txt",
+              "media_type": "text/plain",
+              "uri": "lap://run/input/001-input-brief-01.txt",
+              "sha256": "3e3a7f18d29f5288be1f9238ce70c90e9af3cba55cf3cac2910eeec8a7528bb1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "lap": "0.1",
+      "id": "host-shutdown-3",
+      "producer": "host.conformance",
+      "seq": 3,
+      "type": "agent.shutdown",
+      "payload": { "reason": "Conformance run complete." }
+    }
+  ],
+  "expect": {
+    "agent_types": ["agent.welcome", "run.accepted", "run.progress", "run.result"],
+    "selected_lap": "0.1",
+    "profile": "lap-local/0.1",
+    "result": {
+      "status": "succeeded",
+      "summary": "Echo complete.",
+      "output": { "text": "hello LAP" }
+    }
+  }
+}

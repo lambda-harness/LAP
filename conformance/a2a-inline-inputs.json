@@ -1,0 +1,69 @@
+{
+  "profile": "lap-a2a-inline-inputs/0.1",
+  "a2a_version": "0.3.0",
+  "manifest_transport": {
+    "kind": "a2a",
+    "agent_card_url": "https://reviewer.example.com/.well-known/agent-card.json",
+    "input_artifact_transfer": "inline"
+  },
+  "host_policy": {
+    "allow_inline_input_artifacts": true,
+    "max_request_bytes": 8192
+  },
+  "selected_skill": {
+    "id": "workbook.inspect",
+    "input_modes": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ]
+  },
+  "input_artifact": {
+    "id": "input-01",
+    "name": "approved.xlsx",
+    "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "size_bytes": 17,
+    "sha256": "0aa8f7c3b6e6a35126322046160441036d5b5b676564314f4e76a9b7e26107a0",
+    "bytes_base64": "YXBwcm92ZWQgd29ya2Jvb2s="
+  },
+  "expected_file_part": {
+    "kind": "file",
+    "file": {
+      "bytes": "YXBwcm92ZWQgd29ya2Jvb2s=",
+      "name": "approved.xlsx",
+      "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    "metadata": {
+      "io.github.dongrv.lap.a2a.inline-inputs": {
+        "id": "input-01",
+        "sha256": "0aa8f7c3b6e6a35126322046160441036d5b5b676564314f4e76a9b7e26107a0",
+        "sizeBytes": 17
+      }
+    }
+  },
+  "required_rejections": [
+    {
+      "case": "host policy disabled",
+      "code": "LAP-402",
+      "remote_task_created": false
+    },
+    {
+      "case": "manifest omitted inline opt-in",
+      "code": "LAP-402",
+      "remote_task_created": false
+    },
+    {
+      "case": "selected skill MIME mismatch",
+      "code": "LAP-402",
+      "remote_task_created": false
+    },
+    {
+      "case": "source digest changed before transfer",
+      "code": "LAP-409",
+      "remote_task_created": false
+    },
+    {
+      "case": "serialized request exceeds Host bound",
+      "code": "LAP-401",
+      "remote_task_created": false
+    }
+  ]
+}

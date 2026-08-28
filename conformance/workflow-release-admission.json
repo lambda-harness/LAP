@@ -1,0 +1,73 @@
+{
+  "profile": "lap-workflow/0.1",
+  "root": {
+    "tenant_id": "tenant-acme",
+    "session_id": "session-release-01",
+    "workflow_run_id": "workflow-release-01",
+    "release": {
+      "agent_id": "com.example.inspector",
+      "release_identity": "sha256:9e3f7f68f0b3d1bc71b18a285ac3ebc4f6b0f6b3d843443a5994f8f53c5f2a26"
+    }
+  },
+  "admission": {
+    "host_private": true,
+    "serialized_to_agent": false,
+    "invalidated_on_root_terminal": true
+  },
+  "accepted_child": {
+    "tenant_id": "tenant-acme",
+    "session_id": "session-release-01",
+    "parent_run_id": "workflow-release-01",
+    "agent_started": true
+  },
+  "required_rejections": [
+    {
+      "case": "new root after release begins draining",
+      "tenant_id": "tenant-acme",
+      "session_id": "session-release-02",
+      "parent_run_id": "workflow-release-02",
+      "admission": "new",
+      "agent_started": false
+    },
+    {
+      "case": "tenant mismatch",
+      "tenant_id": "tenant-other",
+      "session_id": "session-release-01",
+      "parent_run_id": "workflow-release-01",
+      "admission": "issued",
+      "agent_started": false
+    },
+    {
+      "case": "session mismatch",
+      "tenant_id": "tenant-acme",
+      "session_id": "session-other",
+      "parent_run_id": "workflow-release-01",
+      "admission": "issued",
+      "agent_started": false
+    },
+    {
+      "case": "root run mismatch",
+      "tenant_id": "tenant-acme",
+      "session_id": "session-release-01",
+      "parent_run_id": "workflow-other",
+      "admission": "issued",
+      "agent_started": false
+    },
+    {
+      "case": "closed admission",
+      "tenant_id": "tenant-acme",
+      "session_id": "session-release-01",
+      "parent_run_id": "workflow-release-01",
+      "admission": "closed",
+      "agent_started": false
+    },
+    {
+      "case": "fabricated admission",
+      "tenant_id": "tenant-acme",
+      "session_id": "session-release-01",
+      "parent_run_id": "workflow-release-01",
+      "admission": "fabricated",
+      "agent_started": false
+    }
+  ]
+}

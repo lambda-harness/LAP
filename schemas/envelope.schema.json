@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dongrv/LAP/schemas/envelope.schema.json",
+  "title": "LAP Core Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lap", "id", "producer", "seq", "type", "payload"],
+  "properties": {
+    "lap": { "const": "0.1" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "correlation_id": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "producer": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "seq": { "type": "integer", "minimum": 0 },
+    "type": {
+      "enum": [
+        "agent.hello",
+        "agent.welcome",
+        "agent.shutdown",
+        "run.start",
+        "run.accepted",
+        "run.progress",
+        "run.artifact",
+        "run.result",
+        "run.cancel"
+      ]
+    },
+    "run": { "$ref": "#/$defs/run" },
+    "idempotency_key": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "payload": { "type": "object" },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z0-9-]+)+$"
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenant_id", "session_id", "run_id", "trace_id"],
+      "properties": {
+        "tenant_id": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "session_id": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "run_id": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "parent_run_id": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "trace_id": { "type": "string", "minLength": 1, "maxLength": 240 }
+      }
+    }
+  }
+}

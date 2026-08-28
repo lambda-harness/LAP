@@ -1,0 +1,32 @@
+{
+  "profile": "lap-host-metering/0.1",
+  "currency": "USD",
+  "prices_microunits_per_million": {
+    "input": 1000000,
+    "cached_input": 500000,
+    "output": 2000000
+  },
+  "reservation": {
+    "input_upper_bound_tokens": 20,
+    "output_upper_bound_tokens": 9,
+    "expected_cost_microunits": 38
+  },
+  "settlement": {
+    "provider_usage": {
+      "input_tokens": 10,
+      "cached_tokens": 4,
+      "output_tokens": 2
+    },
+    "expected_cost_microunits": 12
+  },
+  "missing_usage_settlement": {
+    "provider_usage": {
+      "input_tokens": 0,
+      "cached_tokens": 0,
+      "output_tokens": 0
+    },
+    "expected_input_tokens": 20,
+    "expected_output_tokens": 9,
+    "expected_cost_microunits": 38
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dongrv/LAP/schemas/workflow.schema.json",
+  "title": "LAP Workflow",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lap", "id", "version", "mode", "nodes", "edges"],
+  "properties": {
+    "lap": { "const": "0.1" },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{2,127}$" },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$" },
+    "mode": { "enum": ["declared", "orchestrated"] },
+    "policy": { "$ref": "#/$defs/policy" },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    },
+    "outputs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/output" }
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z0-9-]+)+$" },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_child_runs": { "type": "integer", "minimum": 0 },
+        "max_depth": { "type": "integer", "minimum": 0 },
+        "max_parallel_nodes": { "type": "integer", "minimum": 1 },
+        "deadline_at": { "type": "string", "format": "date-time" },
+        "max_input_tokens": { "type": "integer", "minimum": 0 },
+        "max_output_tokens": { "type": "integer", "minimum": 0 },
+        "max_cost_microunits": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "node": {
+      "oneOf": [
+        { "$ref": "#/$defs/agentNode" },
+        { "$ref": "#/$defs/approvalNode" },
+        { "$ref": "#/$defs/orchestratorNode" }
+      ]
+    },
+    "baseNode": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,127}$" },
+        "input": {}
+      }
+    },
+    "nodeBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_output_tokens"],
+      "properties": {
+        "max_output_tokens": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "agentNode": {
+      "allOf": [
+        { "$ref": "#/$defs/baseNode" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "type", "agent"],
+          "properties": {
+            "id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,127}$" },
+            "type": { "const": "agent" },
+            "agent": { "$ref": "#/$defs/agentRef" },
+            "input": {},
+            "budget": { "$ref": "#/$defs/nodeBudget" }
+          }
+        }
+      ]
+    },
+    "approvalNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "message"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,127}$" },
+        "type": { "const": "approval" },
+        "message": { "type": "string", "minLength": 1, "maxLength": 4000 }
+      }
+    },
+    "orchestratorNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "agent", "allowed_agent_ids"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,127}$" },
+        "type": { "const": "orchestrator" },
+        "agent": { "$ref": "#/$defs/agentRef" },
+        "input": {},
+        "budget": { "$ref": "#/$defs/nodeBudget" },
+        "allowed_agent_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{2,127}$" }
+        }
+      }
+    },
+    "agentRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "capability"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{2,127}$" },
+        "version": { "type": "string", "maxLength": 160 },
+        "capability": { "type": "string", "pattern": "^[a-z][a-z0-9._-]{2,127}$" }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "on"],
+      "properties": {
+        "from": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,127}$" },
+        "to": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,127}$" },
+        "on": { "enum": ["succeeded", "failed", "cancelled", "timed_out"] }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "binding"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,127}$" },
+        "binding": { "type": "string", "pattern": "^/" }
+      }
+    }
+  }
+}

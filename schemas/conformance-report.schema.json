@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dongrv/LAP/schemas/conformance-report.schema.json",
+  "title": "LAP Conformance Report",
+  "description": "A reproducible claim made by one LAP implementation against one versioned test suite.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "lap",
+    "implementation",
+    "implementation_version",
+    "profiles",
+    "suite",
+    "executed_at",
+    "results"
+  ],
+  "properties": {
+    "lap": { "const": "0.1" },
+    "implementation": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "implementation_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "lap-core/0.1",
+          "lap-local/0.1",
+          "lap-a2a-bridge/0.1",
+          "lap-a2a-inline-inputs/0.1",
+          "lap-package-signing/0.1",
+          "lap-workflow/0.1",
+          "lap-host-metering/0.1"
+        ]
+      }
+    },
+    "suite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "command"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+        },
+        "command": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "source_revision": { "type": "string", "minLength": 1, "maxLength": 240 }
+      }
+    },
+    "executed_at": { "type": "string", "format": "date-time" },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "os": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "runtime": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "architecture": { "type": "string", "minLength": 1, "maxLength": 120 }
+      }
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^(CORE|LOCAL|A2A|INLINE|SIGN|FLOW|METER)-[0-9]{2}$" },
+          "status": { "enum": ["passed", "failed", "not_applicable"] },
+          "evidence": { "type": "string", "minLength": 1, "maxLength": 2000 },
+          "notes": { "type": "string", "maxLength": 4000 }
+        }
+      }
+    }
+  }
+}

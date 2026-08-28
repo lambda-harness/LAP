@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dongrv/LAP/schemas/context-packet.schema.json",
+  "title": "LAP Context Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "input": {},
+    "history_summary": { "type": "string", "maxLength": 1048576 },
+    "artifacts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/artifactReference" }
+    },
+    "deadline_at": { "type": "string", "format": "date-time" },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_input_tokens": { "type": "integer", "minimum": 0 },
+        "max_output_tokens": { "type": "integer", "minimum": 0 },
+        "max_cost_microunits": { "type": "integer", "minimum": 0 },
+        "max_child_runs": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "grants": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/grant" }
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z0-9-]+)+$"
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "media_type"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "media_type": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "uri": { "type": "string", "format": "uri" },
+        "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["uri"],
+            "properties": {
+              "uri": { "pattern": "^lap://run/input/" }
+            }
+          },
+          "then": {
+            "required": ["sha256"],
+            "properties": {
+              "uri": {
+                "pattern": "^lap://run/input/[A-Za-z0-9][A-Za-z0-9._-]{0,239}$"
+              },
+              "sha256": {
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "grant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "capability", "expires_at"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "capability": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "audience": { "type": "string", "minLength": 1, "maxLength": 240 }
+      }
+    }
+  }
+}

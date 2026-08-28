@@ -1,0 +1,55 @@
+name: LAP Enhancement Proposal
+description: Start public review for a normative LAP change.
+title: "LEP: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this issue to establish the problem and review scope. A normative
+        change must later include the completed proposal template in a pull request.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Interoperability problem
+      description: What currently fails or remains ambiguous across independent Hosts or Agents?
+      placeholder: Describe observable behavior, affected profile/version, and evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed direction
+      description: Describe the smallest protocol change. Do not include private reasoning or credentials.
+    validations:
+      required: true
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: Change type
+      options:
+        - Standards Track
+        - Process
+        - Informational
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility and migration
+      description: Identify breaking behavior, feature negotiation, and a migration path.
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Security and tenant impact
+      description: Describe authorization, data isolation, package trust, and abuse considerations.
+    validations:
+      required: true
+  - type: textarea
+    id: conformance
+    attributes:
+      label: Conformance evidence
+      description: List schema, vector, negative-test, or independent implementation evidence needed.
+    validations:
+      required: true

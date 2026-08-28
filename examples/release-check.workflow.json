@@ -1,0 +1,57 @@
+{
+  "lap": "0.1",
+  "id": "com.example.release-check",
+  "version": "1.0.0",
+  "mode": "declared",
+  "policy": {
+    "max_child_runs": 3,
+    "max_depth": 2
+  },
+  "nodes": [
+    {
+      "id": "inspect",
+      "type": "agent",
+      "agent": {
+        "id": "com.example.inspector",
+        "capability": "repo.inspect"
+      },
+      "input": {
+        "binding": "/input"
+      }
+    },
+    {
+      "id": "approve",
+      "type": "approval",
+      "message": "Approve the generated release report?"
+    },
+    {
+      "id": "publish",
+      "type": "agent",
+      "agent": {
+        "id": "com.example.publisher",
+        "capability": "report.publish"
+      },
+      "input": {
+        "binding": "/nodes/inspect/output"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "inspect",
+      "to": "approve",
+      "on": "succeeded"
+    },
+    {
+      "from": "approve",
+      "to": "publish",
+      "on": "succeeded"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "report",
+      "binding": "/nodes/publish/output"
+    }
+  ]
+}

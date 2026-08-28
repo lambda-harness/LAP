@@ -1,0 +1,22 @@
+{
+  "lap": "0.1",
+  "implementation": "example-lap-host",
+  "implementation_version": "0.1.0",
+  "profiles": ["lap-core/0.1", "lap-local/0.1"],
+  "suite": {
+    "version": "0.1.0",
+    "command": "python -m unittest discover -s tests -p \"test_*.py\"",
+    "source_revision": "example-revision"
+  },
+  "executed_at": "2026-08-27T00:00:00Z",
+  "environment": {
+    "os": "example-os",
+    "runtime": "Python 3.12",
+    "architecture": "x86_64"
+  },
+  "results": [
+    { "id": "CORE-01", "status": "passed", "evidence": "tests/test_conformance.py::test_local_roundtrip" },
+    { "id": "LOCAL-02", "status": "passed", "evidence": "tests/test_conformance.py::test_local_roundtrip" },
+    { "id": "LOCAL-05", "status": "passed", "evidence": "tests/test_conformance.py::test_local_roundtrip" }
+  ]
+}
