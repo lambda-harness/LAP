@@ -40,3 +40,4 @@ normal pull request. State why no LEP is needed in that pull request.
 | [LEP-0002](LEP-0002-scoped-workflow-release-admission.md) | Implemented | `0.1.0-draft` | Root-scoped, Host-private admission for draining workflow releases. |
 | [LEP-0003](LEP-0003-capability-scoped-orchestrator-dispatch.md) | Implemented | `0.1.0-draft` | Optional per-Agent capability scopes for orchestrator dispatch. |
 | [LEP-0004](LEP-0004-portable-orchestrator-context.md) | Implemented | `0.1.0-draft` | Portable Context Packet planning view for external orchestrators. |
+| [LEP-0005](LEP-0005-local-workflow-profile-negotiation.md) | Implemented | `0.1.0-draft` | Per-run Local negotiation before an external Agent receives workflow orchestration context. |

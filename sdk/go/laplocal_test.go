@@ -294,6 +294,45 @@ func TestNewRejectsInvalidConfiguration(t *testing.T) {
 	}
 }
 
+func TestWelcomeAdvertisesConfiguredWorkflowProfile(t *testing.T) {
+	server, err := New(Config{
+		AgentID: "org.lap.sdk-workflow", Version: "0.1.0", MaxConcurrency: 1,
+		Capabilities:       []string{"plan.dispatch"},
+		AdditionalProfiles: []string{WorkflowProfile},
+	}, func(context.Context, Request, Reporter) (Result, error) {
+		return Succeeded("unused", nil), nil
+	})
+	if err != nil {
+		t.Fatalf("New: %v", err)
+	}
+	h := startServer(t, server)
+	h.send(t, hostFrame("host-hello", "agent.hello", nil, map[string]any{
+		"supported_lap": []string{Version},
+		"profiles":      []string{Profile, WorkflowProfile},
+	}))
+	welcome := h.receive(t)
+	profiles, ok := payload(welcome)["profiles"].([]any)
+	if !ok || len(profiles) != 2 || profiles[0] != Profile || profiles[1] != WorkflowProfile {
+		t.Fatalf("welcome profiles = %#v", payload(welcome)["profiles"])
+	}
+	h.send(t, hostFrame("host-shutdown", "agent.shutdown", nil, map[string]any{}))
+	h.close(t)
+}
+
+func TestNewRejectsDuplicateOrBaseAdditionalProfiles(t *testing.T) {
+	for _, profiles := range [][]string{{Profile}, {WorkflowProfile, WorkflowProfile}, {"  "}} {
+		_, err := New(Config{
+			AgentID: "org.lap.sdk-invalid", Version: "0.1.0", MaxConcurrency: 1,
+			AdditionalProfiles: profiles,
+		}, func(context.Context, Request, Reporter) (Result, error) {
+			return Succeeded("unused", nil), nil
+		})
+		if err == nil {
+			t.Fatalf("New accepted invalid AdditionalProfiles %#v", profiles)
+		}
+	}
+}
+
 func TestArtifactValidationRejectsInvalidDescriptor(t *testing.T) {
 	if _, err := normalizeArtifact(Artifact{ID: "artifact-01", Name: "report.txt", MediaType: "text/plain", URI: "relative.txt"}); err == nil {
 		t.Fatal("normalizeArtifact accepted a relative URI")

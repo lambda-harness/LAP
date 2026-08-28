@@ -268,6 +268,13 @@ class ConformanceKitTests(unittest.TestCase):
             {agent_id: scopes[agent_id] for agent_id in sorted(scopes)},
         )
 
+        local_negotiation = vector["local_negotiation"]
+        self.assertEqual(local_negotiation["host_profiles"], ["lap-local/0.1", "lap-workflow/0.1"])
+        self.assertEqual(local_negotiation["required_agent_profiles"], ["lap-local/0.1", "lap-workflow/0.1"])
+        missing_profile = local_negotiation["missing_workflow_profile_rejection"]
+        self.assertEqual(missing_profile["code"], "LAP-204")
+        self.assertFalse(missing_profile["run_start_sent"])
+
         output = vector["required_output"]
         validate("workflow-orchestrator-output.schema.json", output)
         self.assertEqual(set(output), {"dispatch"})

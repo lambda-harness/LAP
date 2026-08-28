@@ -174,6 +174,15 @@ MUST NOT include tenant/session/run identifiers, release keys, package paths,
 artifact locators, credentials, hidden reasoning, approval decisions, or
 mutable budget state.
 
+For a `lap-local` Agent selected by an `orchestrator` node, the Host MUST
+include both `lap-local/0.1` and `lap-workflow/0.1` in
+`agent.hello.payload.profiles` for that Run. Before it sends `run.start`, the
+Host MUST verify that `agent.welcome.payload.profiles` includes both profile
+identifiers. If `lap-workflow/0.1` is absent, the Host MUST reject the node with
+`LAP-204` and MUST NOT send the Context Packet or start the proposal Run. This
+check is per orchestrator invocation: the same installed package MAY still
+serve ordinary Local capabilities that require only `lap-local/0.1`.
+
 The capability's normal `run.start.payload.input` remains unchanged. The
 external Agent returns the same exact `{"dispatch":[...]}` object defined in
 section 3.1; authors can validate that output against

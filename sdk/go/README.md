@@ -122,6 +122,22 @@ An Agent selected by a Workflow Profile `orchestrator` node can read its
 immutable planning scope without hand-writing JSON traversal:
 
 ```go
+server, err := laplocal.New(laplocal.Config{
+    AgentID: "com.example.workflow-planner",
+    Version: "1.0.0",
+    Capabilities: []string{"plan.dispatch"},
+    AdditionalProfiles: []string{laplocal.WorkflowProfile},
+}, planDispatch)
+```
+
+`AdditionalProfiles` advertises that this executable understands the workflow
+contract; it does not grant dispatch authority. For a Local Agent used by an
+`orchestrator` node, a conforming Host requests `lap-workflow/0.1` during
+`agent.hello`, verifies it in `agent.welcome`, and sends no `run.start` when
+the profile is absent. Ordinary Local runs remain compatible with only
+`lap-local/0.1`.
+
+```go
 scope, found, err := request.WorkflowOrchestratorContext()
 if err != nil || !found {
     return laplocal.Failed(

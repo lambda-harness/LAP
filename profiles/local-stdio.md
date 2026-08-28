@@ -82,9 +82,19 @@ events when exceeded.
 }
 ```
 
-The Host MUST compare `agent_id`, `version`, and selected profile with the
-validated manifest. A mismatch fails activation. A successful negotiation is a
-health check for this profile and permits transition to `ready` or `active`.
+The `profiles` array is the Agent's supported profile set and MUST include
+`lap-local/0.1`. A Host MAY include dependent profiles in
+`agent.hello.payload.profiles`. When the Host requires one of those profiles
+for a Run, it MUST verify that the Agent includes the same identifier in
+`agent.welcome.payload.profiles` before it sends `run.start`; a missing required
+profile is a `LAP-204` pre-dispatch rejection. An Agent MAY advertise additional
+optional profiles so older Hosts can ignore an unknown capability without
+losing normal `lap-local/0.1` compatibility.
+
+The Host MUST compare `agent_id`, `version`, and required profiles with the
+validated package and requested Run. A mismatch fails the affected activation
+or pre-dispatch negotiation. A successful Local negotiation is a health check
+for this profile and permits transition to `ready` or `active`.
 
 ## 5. Run Exchange
 

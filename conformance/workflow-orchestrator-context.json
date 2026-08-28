@@ -49,6 +49,20 @@
       }
     }
   },
+  "local_negotiation": {
+    "host_profiles": [
+      "lap-local/0.1",
+      "lap-workflow/0.1"
+    ],
+    "required_agent_profiles": [
+      "lap-local/0.1",
+      "lap-workflow/0.1"
+    ],
+    "missing_workflow_profile_rejection": {
+      "code": "LAP-204",
+      "run_start_sent": false
+    }
+  },
   "required_output": {
     "dispatch": [
       {

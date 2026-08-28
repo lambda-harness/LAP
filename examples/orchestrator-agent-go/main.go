@@ -17,10 +17,11 @@ const (
 
 func main() {
 	server, err := laplocal.New(laplocal.Config{
-		AgentID:        agentID,
-		Version:        "0.1.0",
-		MaxConcurrency: 1,
-		Capabilities:   []string{capability},
+		AgentID:            agentID,
+		Version:            "0.1.0",
+		MaxConcurrency:     1,
+		Capabilities:       []string{capability},
+		AdditionalProfiles: []string{laplocal.WorkflowProfile},
 	}, planDispatch)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

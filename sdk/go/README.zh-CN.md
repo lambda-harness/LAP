@@ -112,6 +112,20 @@ Agent 输出，并让第一条终态结果胜出。取消或终态结果之后�
 JSON 遍历：
 
 ```go
+server, err := laplocal.New(laplocal.Config{
+    AgentID: "com.example.workflow-planner",
+    Version: "1.0.0",
+    Capabilities: []string{"plan.dispatch"},
+    AdditionalProfiles: []string{laplocal.WorkflowProfile},
+}, planDispatch)
+```
+
+`AdditionalProfiles` 仅声明该可执行文件理解工作流契约，并不授予派遣权限。若 Local Agent 被
+用作 `orchestrator` 节点，符合规范的 Host 会在 `agent.hello` 中请求
+`lap-workflow/0.1`，在 `agent.welcome` 中确认它；缺失时不会发送 `run.start`。普通 Local
+运行仍可只使用 `lap-local/0.1` 保持兼容。
+
+```go
 scope, found, err := request.WorkflowOrchestratorContext()
 if err != nil || !found {
     return laplocal.Failed(

@@ -155,6 +155,7 @@ class ExampleConformanceTests(unittest.TestCase):
         self.assertEqual([item["type"] for item in outputs], [
             "agent.welcome", "run.accepted", "run.progress", "run.result",
         ])
+        self.assertIn("lap-workflow/0.1", outputs[0]["payload"]["profiles"])
         for output in outputs:
             validate("envelope.schema.json", output)
         validate("run-result.schema.json", outputs[-1]["payload"])
@@ -252,6 +253,7 @@ class ExampleConformanceTests(unittest.TestCase):
         self.assertEqual([item["type"] for item in outputs], [
             "agent.welcome", "run.accepted", "run.progress", "run.result",
         ])
+        self.assertIn("lap-workflow/0.1", outputs[0]["payload"]["profiles"])
         for output in outputs:
             validate("envelope.schema.json", output)
         validate("run-result.schema.json", outputs[-1]["payload"])

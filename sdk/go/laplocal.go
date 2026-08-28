@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"sort"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -25,6 +26,9 @@ const (
 	Version = "0.1"
 	// Profile is the LAP Local stdio profile implemented by this SDK.
 	Profile = "lap-local/0.1"
+	// WorkflowProfile is the optional LAP Workflow profile used by a local
+	// Agent that can safely consume the Host-scoped orchestrator context.
+	WorkflowProfile = "lap-workflow/0.1"
 )
 
 var (
@@ -42,6 +46,11 @@ type Config struct {
 	MaxFrameBytes   int
 	ShutdownTimeout time.Duration
 	Capabilities    []string
+	// AdditionalProfiles declares optional LAP profiles this Agent supports.
+	// Profile is always advertised automatically. A Host remains responsible
+	// for requesting and requiring an optional profile before it sends any
+	// profile-specific Context Packet extension.
+	AdditionalProfiles []string
 }
 
 // Run is the immutable Host-provided identity for one request.
@@ -188,6 +197,11 @@ func New(config Config, handler Handler) (*Server, error) {
 	}
 	config.AgentID = strings.TrimSpace(config.AgentID)
 	config.Version = strings.TrimSpace(config.Version)
+	profiles, err := normalizeAdditionalProfiles(config.AdditionalProfiles)
+	if err != nil {
+		return nil, err
+	}
+	config.AdditionalProfiles = profiles
 	return &Server{config: config, handler: handler, active: make(map[string]*activeRun)}, nil
 }
 
@@ -271,7 +285,7 @@ func (s *Server) welcome(frame envelope) error {
 	}
 	if err := s.emit("agent.welcome", map[string]any{
 		"selected_lap":    Version,
-		"profiles":        []string{Profile},
+		"profiles":        s.supportedProfiles(),
 		"agent_id":        s.config.AgentID,
 		"version":         s.config.Version,
 		"max_concurrency": s.config.MaxConcurrency,
@@ -282,6 +296,34 @@ func (s *Server) welcome(frame envelope) error {
 	s.negotiated = true
 	s.activeMu.Unlock()
 	return nil
+}
+
+func (s *Server) supportedProfiles() []string {
+	profiles := make([]string, 1, len(s.config.AdditionalProfiles)+1)
+	profiles[0] = Profile
+	profiles = append(profiles, s.config.AdditionalProfiles...)
+	return profiles
+}
+
+func normalizeAdditionalProfiles(raw []string) ([]string, error) {
+	seen := make(map[string]struct{}, len(raw))
+	profiles := make([]string, 0, len(raw))
+	for _, value := range raw {
+		profile := strings.TrimSpace(value)
+		if profile == "" {
+			return nil, errors.New("laplocal: AdditionalProfiles must not contain an empty profile")
+		}
+		if profile == Profile {
+			return nil, errors.New("laplocal: AdditionalProfiles must not repeat lap-local/0.1")
+		}
+		if _, exists := seen[profile]; exists {
+			return nil, fmt.Errorf("laplocal: AdditionalProfiles contains duplicate profile %q", profile)
+		}
+		seen[profile] = struct{}{}
+		profiles = append(profiles, profile)
+	}
+	sort.Strings(profiles)
+	return profiles, nil
 }
 
 func (s *Server) startRun(frame envelope) error {

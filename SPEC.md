@@ -296,6 +296,12 @@ ignored; unknown required extensions MUST cause negotiation failure. Extensions
 MUST NOT change Core terminal-state, tenant, idempotency, or authorization
 semantics.
 
+A profile-defined Context Packet extension is negotiated through the profile
+that defines it. A Host that requires such a profile for a particular Run MUST
+offer it in `agent.hello`, verify Agent support in `agent.welcome`, and reject
+the Run before dispatch when support is absent. The extension remains bounded
+data, not a credential or an authority grant.
+
 ## 14. Conformance
 
 An implementation may claim `LAP Core 0.1`, `LAP Local 0.1`, `LAP A2A Bridge
