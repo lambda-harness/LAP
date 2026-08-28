@@ -2,9 +2,9 @@
 
 This dependency-free Go package implements the **Agent side** of the
 [`lap-local/0.1`](../../profiles/local-stdio.md) stdio profile. It lets an
-author of a local binary, including a Windows `coding-agent.exe`, focus on a
-capability handler instead of reimplementing JSON Lines framing, ordered
-messages, cancellation, and terminal-result races.
+author of a local Agent implementation focus on a capability handler instead
+of reimplementing JSON Lines framing, ordered messages, cancellation, and
+terminal-result races.
 
 It is a reference SDK for the LAP `0.1` draft, not a Host Runtime and not a
 conformance certification.

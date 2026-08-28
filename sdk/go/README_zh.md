@@ -2,8 +2,8 @@
 
 这个无依赖 Go 包实现
 [`lap-local/0.1`](../../profiles/local-stdio.md) stdio profile 的 **Agent 侧**。它让本地
-二进制文件作者（包括 Windows `coding-agent.exe`）专注于 capability handler，而不必重复
-实现 JSON Lines framing、有序消息、取消和终态结果竞争处理。
+Agent 实现作者专注于 capability handler，而不必重复实现 JSON Lines framing、有序消息、
+取消和终态结果竞争处理。
 
 它是 LAP `0.1` 草案的参考 SDK，不是 Host Runtime，也不是 conformance 认证。
 

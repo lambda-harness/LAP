@@ -35,6 +35,7 @@ class ExampleConformanceTests(unittest.TestCase):
     def test_manifest_and_workflow_examples_validate(self) -> None:
         validate("agent-manifest.schema.json", load_json(ROOT / "examples" / "echo-agent" / "agent.json"))
         validate("agent-manifest.schema.json", load_json(ROOT / "examples" / "echo-agent-go" / "agent.json"))
+        validate("agent-manifest.schema.json", load_json(ROOT / "examples" / "echo-agent-rust" / "agent.json"))
         validate("workflow.schema.json", load_json(ROOT / "examples" / "release-check.workflow.json"))
 
     def test_workflow_parallel_bound_is_optional_but_positive(self) -> None:

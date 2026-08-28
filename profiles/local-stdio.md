@@ -6,8 +6,8 @@
 ## 1. Purpose
 
 This profile runs an external local Agent Implementation as a supervised child
-process. It is designed for binaries such as `coding-agent.exe`, scripts, and
-agents written in any language that can read stdin and write stdout.
+process. It supports a package-provided binary, script, or launcher written in
+any language that can read stdin and write stdout.
 
 It is a local IPC profile, not a network service. A Host Runtime owns process
 creation, lifecycle, resource limits, working directory, and capability
@@ -20,7 +20,7 @@ The manifest transport MUST be:
 ```json
 {
   "kind": "lap-local",
-  "command": ["bin/coding-agent.exe"],
+  "command": ["bin/agent-entrypoint"],
   "working_directory": "."
 }
 ```
@@ -35,7 +35,7 @@ An optional executable or script digest is explicit rather than inferred:
 ```json
 {
   "integrity": {
-    "path": "bin/coding-agent.exe",
+    "path": "bin/agent-entrypoint",
     "sha256": "<lowercase SHA-256 of that file>",
     "publisher": "Example Publisher"
   }

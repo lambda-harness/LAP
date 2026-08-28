@@ -1,0 +1,35 @@
+{
+  "lap": "0.1",
+  "protocol_versions": ["0.1"],
+  "id": "org.lap.rust-echo-agent",
+  "display_name": "LAP Rust Echo Agent",
+  "version": "0.1.0",
+  "description": "Rust reference lap-local agent used by the conformance fixture.",
+  "transport": {
+    "kind": "lap-local",
+    "command": ["cargo", "run", "--quiet"],
+    "working_directory": "."
+  },
+  "capabilities": [
+    {
+      "id": "text.echo",
+      "description": "Returns the provided text in a structured result.",
+      "input_schema": {
+        "type": "object",
+        "required": ["text"],
+        "properties": { "text": { "type": "string" } }
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["text"],
+        "properties": { "text": { "type": "string" } }
+      },
+      "max_concurrency": 1
+    }
+  ],
+  "permissions": { "requested": [] },
+  "health_check": {
+    "startup_timeout_ms": 5000,
+    "shutdown_timeout_ms": 10000
+  }
+}

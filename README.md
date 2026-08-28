@@ -48,8 +48,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 
 - [Core Specification](SPEC.md): terms, envelope, lifecycle, governance, and
   compatibility rules.
-- [Local Stdio Profile](profiles/local-stdio.md): the first normative transport
-  for external executables such as `coding-agent.exe`.
+- [Local Stdio Profile](profiles/local-stdio.md): the normative local-process
+  transport for a supervised external Agent implementation.
 - [A2A Bridge Profile](profiles/a2a-bridge.md): interoperability rules for
   managed remote A2A agents.
 - [A2A Inline Inputs Profile](profiles/a2a-inline-inputs.md): optional,
@@ -85,7 +85,7 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 my-agent/
   agent.json
   bin/
-    coding-agent.exe
+    <agent-entrypoint>
   lap-signature.json  # optional, signed publisher provenance
 ```
 
@@ -94,9 +94,10 @@ only then marks the release active. Finding a binary on disk is never
 permission to execute it.
 
 See the [echo-agent example](examples/echo-agent/README.md) for a runnable
-Python reference conversation, the
-[echo-agent-go example](examples/echo-agent-go/README.md) for the same
-`lap-local` exchange compiled as a Go executable, and
+Python reference conversation, the [echo-agent-go example](examples/echo-agent-go/README.md)
+for a Go implementation of the same `lap-local` exchange, the
+[echo-agent-rust example](examples/echo-agent-rust/README.md) for a Rust
+implementation, and
 [release-check.workflow.json](examples/release-check.workflow.json) for a
 validated workflow graph.
 
@@ -120,11 +121,11 @@ is not yet a stable compatibility promise. Implementers should report gaps via
 issues or a LAP Enhancement Proposal before depending on it in production.
 
 The first conformance target is a local executable integrated by an independent
-host in under 30 minutes. The published Python and Go references exercise the
-same vector so the Local Profile is not coupled to one language runtime. Remote
-discovery and delegated authorization are intentionally layered on top of that
-target. The workflow graph is specified in this draft; a production reference
-executor follows the Local Profile.
+host in under 30 minutes. The published Python, Go, and Rust references
+exercise the same vector so the Local Profile is not coupled to one language
+runtime. Remote discovery and delegated authorization are intentionally layered
+on top of that target. The workflow graph is specified in this draft; a
+production reference executor follows the Local Profile.
 
 ## Validate the Draft
 
@@ -135,8 +136,9 @@ python -m unittest discover -s tests -p "test_*.py"
 
 These checks validate the published schemas, conformance report, portable
 round-trip vector, and local echo-agent through a real stdin/stdout protocol
-exchange. When Go is on `PATH`, the same suite also runs the Go reference;
-the public CI includes a pinned Go 1.21 job for that check.
+exchange. When Go or Cargo is on `PATH`, the same suite also runs the Go or
+Rust reference respectively; the public CI includes a pinned Go 1.21 job for
+the Go reference.
 
 ## Contributing
 

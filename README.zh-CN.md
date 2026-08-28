@@ -43,8 +43,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 ## 文档
 
 - [Core Specification](SPEC.md)：术语、envelope、生命周期、治理和兼容规则。
-- [Local Stdio Profile](profiles/local-stdio.md)：面向 `coding-agent.exe` 等外部可执行
-  文件的首个规范性传输 profile。
+- [Local Stdio Profile](profiles/local-stdio.md)：面向受监管外部 Agent 实现的规范性
+  本地进程传输 profile。
 - [A2A Bridge Profile](profiles/a2a-bridge.md)：受管远程 A2A Agent 的互操作规则。
 - [A2A Inline Inputs Profile](profiles/a2a-inline-inputs.md)：将明确授予的小型 Host
   输入 artifact 以 A2A `FilePart.bytes` 有界传输给已准入 A2A Skill 的可选 profile。
@@ -76,7 +76,7 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 my-agent/
   agent.json
   bin/
-    coding-agent.exe
+    <agent-entrypoint>
   lap-signature.json  # optional, signed publisher provenance
 ```
 
@@ -85,7 +85,9 @@ my-agent/
 
 可参阅 [Echo Agent 示例](examples/echo-agent/README_zh.md) 获得可运行的 Python 参考
 对话；参阅 [Go Echo Agent 示例](examples/echo-agent-go/README_zh.md) 获得使用同一
-`lap-local` 交换并编译为 Go 可执行文件的示例；参阅
+`lap-local` 交换的 Go 示例；参阅
+[Rust Echo Agent 示例](examples/echo-agent-rust/README_zh.md) 获得使用同一交换的
+Rust 示例；参阅
 [release-check.workflow.json](examples/release-check.workflow.json) 获得已验证工作流图。
 
 ## 设计原则
@@ -102,8 +104,8 @@ my-agent/
 `0.1.0-draft` 用于设计评审和参考实现，尚不是稳定兼容性承诺。实现者在生产依赖前，
 应通过 issue 或 LAP Enhancement Proposal 报告缺口。
 
-首个 conformance 目标是在 30 分钟内由独立 Host 集成本地可执行文件。已发布的 Python
-和 Go 参考实现使用相同向量，因此 Local Profile 不与单一语言运行时耦合。远程发现和
+首个 conformance 目标是在 30 分钟内由独立 Host 集成本地可执行文件。已发布的 Python、
+Go 和 Rust 参考实现使用相同向量，因此 Local Profile 不与单一语言运行时耦合。远程发现和
 委派授权有意叠加在该目标之上。工作流图已在本草案中规定；生产参考 executor 将遵循
 Local Profile。
 
@@ -115,8 +117,8 @@ python -m unittest discover -s tests -p "test_*.py"
 ```
 
 这些检查会验证已发布 schema、conformance 报告、可移植往返向量和通过真实 stdin/stdout
-协议交换的本地 Echo Agent。若 Go 位于 `PATH`，同一套件还会运行 Go 参考；公共 CI 使用
-固定 Go 1.21 job 覆盖该路径。
+协议交换的本地 Echo Agent。若 Go 或 Cargo 位于 `PATH`，同一套件还会分别运行 Go 或 Rust
+参考；公共 CI 使用固定 Go 1.21 job 覆盖 Go 路径。
 
 ## 贡献
 
