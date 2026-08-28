@@ -14,7 +14,8 @@ SDK 提供：
 - `agent.hello` / `agent.welcome` 协商和有序 Agent envelope；
 - 已接受运行的顺序、进度和 artifact 事件，以及每次已接受运行的一条终态 `run.result`；
 - 有界输入帧、声明 capability 和并发检查；
-- 支持取消的 Go `context.Context`；以及
+- 支持取消的 Go `context.Context`；
+- 可选外部编排器工作流范围的类型化解析；以及
 - 在可配置时间内排空工作的优雅关闭。
 
 SDK **不**认证用户、分配租户、验证或激活包、授权效果、暂存文件、监管子进程、强制资源
@@ -104,6 +105,37 @@ reporter.Artifact(laplocal.Artifact{
 对于已接受的运行，SDK 在调用 handler 前发出 `run.accepted`，以严格递增的 `seq` 序列化
 Agent 输出，并让第一条终态结果胜出。取消或终态结果之后试图发送进度或 artifact 会返回
 `laplocal.ErrRunClosed`。
+
+## 外部编排器上下文
+
+被 Workflow Profile `orchestrator` 节点选中的 Agent 可以读取其不可变规划范围，无需手写
+JSON 遍历：
+
+```go
+scope, found, err := request.WorkflowOrchestratorContext()
+if err != nil || !found {
+    return laplocal.Failed(
+        "failed", "Workflow context is invalid.", "LAP-201",
+        "A valid Host-scoped orchestrator context is required.", false,
+    ), nil
+}
+
+target := scope.AllowedDispatches[0]
+proposal := map[string]any{
+    "dispatch": []map[string]any{{
+        "agent_id": target.AgentID,
+        "capability": target.Capabilities[0],
+        "input": json.RawMessage(request.Input),
+    }},
+}
+return laplocal.Succeeded("Proposed one Host-constrained dispatch.", proposal), nil
+```
+
+`found == false` 对普通 Agent 节点是正常情况。扩展存在时，
+`WorkflowOrchestratorContext` 会严格校验 LEP-0004 / Workflow Profile `0.1` 形状：精确的
+扩展字段、版本、合法 ID、非空目标，以及规范的目标/capability 排序。它不授予调度权限；
+Host 在启动子 Agent 前仍会校验每条提议。请参阅可运行的[外部编排器 Agent 示例](../../examples/orchestrator-agent/README.zh-CN.md)
+和[Workflow Profile](../../profiles/workflow.md#33-external-orchestrator-context)。
 
 ## 限制与关闭
 

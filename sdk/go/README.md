@@ -17,7 +17,8 @@ The SDK provides:
 - accepted-run sequencing, progress and artifact events, and one terminal
   `run.result` per accepted run;
 - bounded input frames, declared capability and concurrency checks;
-- a cancellation-aware Go `context.Context`; and
+- a cancellation-aware Go `context.Context`;
+- typed parsing of the optional external-orchestrator workflow scope; and
 - graceful shutdown that drains work for a configurable period.
 
 The SDK does **not** authenticate users, assign tenants, validate or activate
@@ -114,6 +115,39 @@ For an accepted run the SDK emits `run.accepted` before invoking the handler,
 serializes Agent output with a strictly increasing `seq`, and makes the first
 terminal result win. Progress or artifacts attempted after cancellation or a
 terminal result return `laplocal.ErrRunClosed`.
+
+## External Orchestrator Context
+
+An Agent selected by a Workflow Profile `orchestrator` node can read its
+immutable planning scope without hand-writing JSON traversal:
+
+```go
+scope, found, err := request.WorkflowOrchestratorContext()
+if err != nil || !found {
+    return laplocal.Failed(
+        "failed", "Workflow context is invalid.", "LAP-201",
+        "A valid Host-scoped orchestrator context is required.", false,
+    ), nil
+}
+
+target := scope.AllowedDispatches[0]
+proposal := map[string]any{
+    "dispatch": []map[string]any{{
+        "agent_id": target.AgentID,
+        "capability": target.Capabilities[0],
+        "input": json.RawMessage(request.Input),
+    }},
+}
+return laplocal.Succeeded("Proposed one Host-constrained dispatch.", proposal), nil
+```
+
+`found == false` is normal for ordinary Agent nodes. When the extension is
+present, `WorkflowOrchestratorContext` strictly verifies the LEP-0004 /
+Workflow Profile `0.1` shape: the exact extension fields, version, valid IDs,
+non-empty targets, and canonical target/capability ordering. It does not
+authorize a dispatch; the Host validates every proposal before starting a
+child Agent. See the runnable [external orchestrator Agent example](../../examples/orchestrator-agent/README.md)
+and the [Workflow Profile](../../profiles/workflow.md#33-external-orchestrator-context).
 
 ## Limits And Shutdown
 
