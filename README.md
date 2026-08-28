@@ -1,12 +1,17 @@
 # LAP: Lattice Agent Protocol
 
-- **Status:** `0.1.0-draft`
-- **License:** Apache-2.0
-- **Tagline:** Orchestrate Any Agent. Connect Everything.
+[![Verify LAP Draft](https://img.shields.io/github/actions/workflow/status/lambda-harness/LAP/verify.yml?branch=main&style=flat-square&label=verify)](https://github.com/lambda-harness/LAP/actions/workflows/verify.yml)
+[![Protocol status](https://img.shields.io/badge/protocol-0.1.0--draft-5b7c99?style=flat-square)](SPEC.md)
+[![License](https://img.shields.io/badge/license-Apache--2.0-3da639?style=flat-square)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11%2B-3776AB?style=flat-square)](.github/workflows/verify.yml)
 
-LAP is an open, managed-agent interoperability specification. It makes an
-agent package, a local executable, a native runtime agent, or a remote agent
-look like the same supervised unit to a host runtime.
+> **Orchestrate Any Agent. Connect Everything.**
+
+Most agent stacks can invoke a tool, but cannot safely make independently
+built Agents installable, identifiable, governed, observable, and composable.
+LAP gives a Host Runtime one portable lifecycle contract for admitted local
+executables, native runtime Agents, and remote Agents, so they can work
+together without giving up tenant boundaries or operational control.
 
 LAP is deliberately narrow. It does **not** replace existing standards:
 
@@ -14,11 +19,85 @@ LAP is deliberately narrow. It does **not** replace existing standards:
   resources, and prompts.
 - [A2A](https://a2a-protocol.org/latest/) connects independent remote agents.
 - LAP defines the lifecycle and runtime contract for installable, governed
-  agents, including local binaries and A2A-backed agents.
+  Agents, including local binaries and A2A-backed Agents.
+
+## One Contract, Many Agent Implementations
+
+```mermaid
+flowchart LR
+    Author[Agent author] --> Package[Versioned Agent Package]
+    Package --> Registry[Host registry]
+    Registry --> Host[Trusted Host Runtime]
+
+    Host --> Local[Local executable Agent]
+    Host --> Native[Native runtime Agent]
+    Host --> Remote[Remote A2A Agent]
+
+    Host <--> MCP[MCP tools and resources]
+    Host --> Control[Policy, approval, cancellation]
+    Host --> Evidence[Progress, audit, artifacts, terminal result]
+```
+
+LAP governs the Agent boundary. MCP remains the tool and resource boundary;
+A2A remains the remote-agent interoperability boundary. The Host Runtime is
+the control point that admits releases, grants capabilities, supervises runs,
+and records results.
+
+## Quick Start
+
+LAP is a specification and conformance kit. You can validate the Local Profile
+without a hosted service, API key, or global installation.
+
+**Prerequisites:** Git and Python 3.11 or later. Public CI verifies Python
+3.11, 3.12, and 3.13.
+
+### 1. Clone and prepare the environment
+
+```bash
+git clone https://github.com/lambda-harness/LAP.git
+cd LAP
+python -m venv .venv
+```
+
+Activate the environment with PowerShell on Windows:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Or activate it with a POSIX shell on macOS or Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+### 2. Install the checks and run the published exchange
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements-dev.txt
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+The suite validates the published schemas and vectors, then drives the Python
+echo Agent through a real stdin/stdout LAP exchange. When Go or Cargo is on
+`PATH`, it also exercises the matching reference implementation.
+
+### 3. Choose the next integration path
+
+- **Build a local Agent:** start with the runnable
+  [Python](examples/echo-agent/README.md),
+  [Go](examples/echo-agent-go/README.md), or
+  [Rust](examples/echo-agent-rust/README.md) echo Agent.
+- **Build a Host Runtime:** read the [Core Specification](SPEC.md), then use
+  [Conformance](CONFORMANCE.md) to make a reproducible implementation claim.
+- **Compose a governed workflow:** use the
+  [Workflow Profile](profiles/workflow.md) and the validated
+  [workflow example](examples/release-check.workflow.json).
 
 ## Why LAP
 
-An agent is more than a prompt or a tool. A portable agent needs an identity,
+An Agent is more than a prompt or a tool. A portable Agent needs an identity,
 version, declared capabilities, a transport, a health contract, scoped
 permissions, observable progress, cancellation, artifacts, and a dependable
 terminal result. Without those contracts, "plug-in agents" become arbitrary
@@ -66,9 +145,9 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Agent Manifest](schemas/agent-manifest.schema.json),
   [Envelope](schemas/envelope.schema.json),
   [Context Packet](schemas/context-packet.schema.json), and
-  [Run Result](schemas/run-result.schema.json), and
+  [Run Result](schemas/run-result.schema.json),
   [Workflow](schemas/workflow.schema.json), and
-  [Package Signature](schemas/package-signature.schema.json) Schemas:
+  [Package Signature](schemas/package-signature.schema.json) schemas:
   machine-readable contracts.
 - [Conformance Report](schemas/conformance-report.schema.json) Schema: a
   machine-readable record of an implementation's reproducible claim.
@@ -126,19 +205,6 @@ exercise the same vector so the Local Profile is not coupled to one language
 runtime. Remote discovery and delegated authorization are intentionally layered
 on top of that target. The workflow graph is specified in this draft; a
 production reference executor follows the Local Profile.
-
-## Validate the Draft
-
-```bash
-python -m pip install -r requirements-dev.txt
-python -m unittest discover -s tests -p "test_*.py"
-```
-
-These checks validate the published schemas, conformance report, portable
-round-trip vector, and local echo-agent through a real stdin/stdout protocol
-exchange. When Go or Cargo is on `PATH`, the same suite also runs the Go or
-Rust reference respectively; the public CI includes a pinned Go 1.21 job for
-the Go reference.
 
 ## Contributing
 

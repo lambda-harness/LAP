@@ -1,11 +1,16 @@
 # LAP: Lattice Agent Protocol
 
-- **状态：** `0.1.0-draft`
-- **许可证：** Apache-2.0
-- **标语：** Orchestrate Any Agent. Connect Everything.
+[![Verify LAP Draft](https://img.shields.io/github/actions/workflow/status/lambda-harness/LAP/verify.yml?branch=main&style=flat-square&label=verify)](https://github.com/lambda-harness/LAP/actions/workflows/verify.yml)
+[![Protocol status](https://img.shields.io/badge/protocol-0.1.0--draft-5b7c99?style=flat-square)](SPEC.md)
+[![License](https://img.shields.io/badge/license-Apache--2.0-3da639?style=flat-square)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11%2B-3776AB?style=flat-square)](.github/workflows/verify.yml)
 
-LAP 是一份开放的受管 Agent 互操作规范。它让 Agent 包、本地可执行文件、原生运行时
-Agent 或远程 Agent 都能以同一个受监管单元的形式接入 Host Runtime。
+> **Orchestrate Any Agent. Connect Everything.**
+
+多数 Agent 系统可以调用工具，却无法把独立开发的 Agent 安全地做成可安装、可识别、可
+治理、可观测、可组合的单元。LAP 为 Host Runtime 提供一份可移植的生命周期契约，让已
+准入的本地可执行文件、原生运行时 Agent 和远程 Agent 可以可靠协作，同时不牺牲租户边界
+和运行控制权。
 
 LAP 有意保持边界清晰。它**不**取代已有标准：
 
@@ -13,6 +18,75 @@ LAP 有意保持边界清晰。它**不**取代已有标准：
 - [A2A](https://a2a-protocol.org/latest/) 连接独立的远程 Agent。
 - LAP 定义可安装、可治理 Agent 的生命周期和运行时契约，包括本地二进制 Agent 与
   A2A 支撑的 Agent。
+
+## 一份契约，多种 Agent 实现
+
+```mermaid
+flowchart LR
+    Author[Agent 作者] --> Package[版本化 Agent Package]
+    Package --> Registry[Host Registry]
+    Registry --> Host[可信 Host Runtime]
+
+    Host --> Local[本地可执行 Agent]
+    Host --> Native[原生运行时 Agent]
+    Host --> Remote[远程 A2A Agent]
+
+    Host <--> MCP[MCP 工具与资源]
+    Host --> Control[策略、授权、取消]
+    Host --> Evidence[进度、审计、artifact、终态结果]
+```
+
+LAP 治理 Agent 边界；MCP 仍是工具与资源边界；A2A 仍是远程 Agent 互操作边界。Host
+Runtime 是控制点：它准入发布、授予 capability、监管运行并记录结果。
+
+## 快速开始
+
+LAP 是规范与 conformance 工具包。无需托管服务、API Key 或全局安装，即可验证 Local
+Profile。
+
+**前置条件：** Git 和 Python 3.11 或更高版本。公共 CI 验证 Python 3.11、3.12 和 3.13。
+
+### 1. 克隆并准备环境
+
+```bash
+git clone https://github.com/lambda-harness/LAP.git
+cd LAP
+python -m venv .venv
+```
+
+Windows PowerShell 中激活环境：
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+macOS 或 Linux 的 POSIX shell 中激活环境：
+
+```bash
+source .venv/bin/activate
+```
+
+### 2. 安装检查依赖并运行已发布交换
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements-dev.txt
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+该套件会验证已发布的 schema 和向量，随后通过真实 stdin/stdout LAP 交换驱动 Python
+Echo Agent。若 `PATH` 中有 Go 或 Cargo，还会运行相应语言的参考实现。
+
+### 3. 选择下一条集成路径
+
+- **构建本地 Agent：** 从可运行的
+  [Python](examples/echo-agent/README.zh-CN.md)、
+  [Go](examples/echo-agent-go/README.zh-CN.md) 或
+  [Rust](examples/echo-agent-rust/README.zh-CN.md) Echo Agent 开始。
+- **构建 Host Runtime：** 阅读 [Core Specification](SPEC.md)，再使用
+  [Conformance](CONFORMANCE.md) 形成可复现的实现声明。
+- **组合受治理的工作流：** 使用 [Workflow Profile](profiles/workflow.md) 与已经验证的
+  [工作流示例](examples/release-check.workflow.json)。
 
 ## 为什么需要 LAP
 
@@ -108,17 +182,6 @@ Rust 示例；参阅
 Go 和 Rust 参考实现使用相同向量，因此 Local Profile 不与单一语言运行时耦合。远程发现和
 委派授权有意叠加在该目标之上。工作流图已在本草案中规定；生产参考 executor 将遵循
 Local Profile。
-
-## 验证草案
-
-```bash
-python -m pip install -r requirements-dev.txt
-python -m unittest discover -s tests -p "test_*.py"
-```
-
-这些检查会验证已发布 schema、conformance 报告、可移植往返向量和通过真实 stdin/stdout
-协议交换的本地 Echo Agent。若 Go 或 Cargo 位于 `PATH`，同一套件还会分别运行 Go 或 Rust
-参考；公共 CI 使用固定 Go 1.21 job 覆盖 Go 路径。
 
 ## 贡献
 
