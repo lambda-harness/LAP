@@ -79,7 +79,8 @@ echo Agent through a real stdin/stdout LAP exchange. When Go or Cargo is on
   [Go](examples/echo-agent-go/README.md), or
   [Rust](examples/echo-agent-rust/README.md) echo Agent. For a Host-governed
   multi-Agent workflow, use the runnable
-  [external orchestrator Agent](examples/orchestrator-agent/README.md).
+  [Python](examples/orchestrator-agent/README.md) or
+  [Go](examples/orchestrator-agent-go/README.md) external orchestrator Agent.
 - **Build a Host Runtime:** read the [Core Specification](SPEC.md), then use
   [Conformance](CONFORMANCE.md) to make a reproducible implementation claim.
 - **Compose a governed workflow:** use the
@@ -170,7 +171,8 @@ See the [echo-agent example](examples/echo-agent/README.md) for a runnable
 Python reference conversation, the [echo-agent-go example](examples/echo-agent-go/README.md)
 for a Go implementation of the same `lap-local` exchange, the
 [echo-agent-rust example](examples/echo-agent-rust/README.md) for a Rust
-implementation, and
+implementation, the [orchestrator-agent-go example](examples/orchestrator-agent-go/README.md) for a Go external workflow planner,
+and
 [release-check.workflow.json](examples/release-check.workflow.json) for a
 validated workflow graph.
 

@@ -8,4 +8,5 @@ build/
 examples/echo-agent-go/echo-agent-go
 examples/echo-agent-go/echo-agent-go.exe
 examples/echo-agent-go/bin/
+examples/orchestrator-agent-go/bin/
 examples/echo-agent-rust/target/

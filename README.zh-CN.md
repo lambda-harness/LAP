@@ -73,7 +73,8 @@ Echo Agent。若 `PATH` 中有 Go 或 Cargo，还会运行相应语言的参考�
   [Go](examples/echo-agent-go/README.zh-CN.md) 或
   [Rust](examples/echo-agent-rust/README.zh-CN.md) Echo Agent 开始。要构建由 Host
   监管的多 Agent 工作流，请使用可运行的
-  [外部编排 Agent](examples/orchestrator-agent/README.zh-CN.md)。
+  [Python](examples/orchestrator-agent/README.zh-CN.md) 或
+  [Go](examples/orchestrator-agent-go/README.zh-CN.md) 外部编排 Agent。
 - **构建 Host Runtime：** 阅读 [Core Specification](SPEC.md)，再使用
   [Conformance](CONFORMANCE.md) 形成可复现的实现声明。
 - **组合受治理的工作流：** 使用 [Workflow Profile](profiles/workflow.md) 与已经验证的
@@ -154,7 +155,7 @@ my-agent/
 对话；参阅 [Go Echo Agent 示例](examples/echo-agent-go/README.zh-CN.md) 获得使用同一
 `lap-local` 交换的 Go 示例；参阅
 [Rust Echo Agent 示例](examples/echo-agent-rust/README.zh-CN.md) 获得使用同一交换的
-Rust 示例；参阅
+Rust 示例；参阅 [Go 外部编排 Agent 示例](examples/orchestrator-agent-go/README.zh-CN.md) 了解 Go 外部工作流规划器；参阅
 [release-check.workflow.json](examples/release-check.workflow.json) 获得已验证工作流图。
 
 ## 设计原则

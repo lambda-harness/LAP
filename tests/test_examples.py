@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 import unittest
@@ -37,6 +38,7 @@ class ExampleConformanceTests(unittest.TestCase):
         validate("agent-manifest.schema.json", load_json(ROOT / "examples" / "echo-agent-go" / "agent.json"))
         validate("agent-manifest.schema.json", load_json(ROOT / "examples" / "echo-agent-rust" / "agent.json"))
         validate("agent-manifest.schema.json", load_json(ROOT / "examples" / "orchestrator-agent" / "agent.json"))
+        validate("agent-manifest.schema.json", load_json(ROOT / "examples" / "orchestrator-agent-go" / "agent.json"))
         validate("workflow.schema.json", load_json(ROOT / "examples" / "release-check.workflow.json"))
 
     def test_workflow_parallel_bound_is_optional_but_positive(self) -> None:
@@ -198,6 +200,106 @@ class ExampleConformanceTests(unittest.TestCase):
         self.assertEqual([item["type"] for item in outputs], [
             "agent.welcome", "run.accepted", "run.result",
         ])
+        validate("run-result.schema.json", outputs[-1]["payload"])
+        self.assertEqual(outputs[-1]["payload"]["status"], "failed")
+        self.assertEqual(outputs[-1]["payload"]["error"]["code"], "LAP-201")
+        self.assertNotIn("output", outputs[-1]["payload"])
+
+    @unittest.skipUnless(shutil.which("go"), "Go toolchain is not installed")
+    def test_go_local_orchestrator_agent_reads_host_scoped_context(self) -> None:
+        extension = {
+            "version": "0.1",
+            "allowed_dispatches": [{
+                "agent_id": "com.example.inspector",
+                "capabilities": ["repo.inspect"],
+            }],
+        }
+        frames = "\n".join([
+            json.dumps({
+                "lap": "0.1", "id": "host-1", "producer": "host.test", "seq": 1,
+                "type": "agent.hello", "payload": {},
+            }),
+            json.dumps({
+                "lap": "0.1", "id": "host-2", "producer": "host.test", "seq": 2,
+                "type": "run.start",
+                "run": {
+                    "tenant_id": "tenant-demo", "session_id": "session-demo",
+                    "run_id": "run-demo", "trace_id": "trace-demo",
+                },
+                "idempotency_key": "demo-key",
+                "payload": {
+                    "capability": "plan.dispatch",
+                    "input": {"target": "release"},
+                    "context": {"extensions": {
+                        "io.github.dongrv.lap.workflow.orchestrator": extension,
+                    }},
+                },
+            }),
+            json.dumps({
+                "lap": "0.1", "id": "host-3", "producer": "host.test", "seq": 3,
+                "type": "agent.shutdown", "payload": {},
+            }),
+        ]) + "\n"
+        completed = subprocess.run(
+            ["go", "run", "."],
+            cwd=ROOT / "examples" / "orchestrator-agent-go",
+            input=frames,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+        outputs = [json.loads(line) for line in completed.stdout.splitlines()]
+        self.assertEqual([item["type"] for item in outputs], [
+            "agent.welcome", "run.accepted", "run.progress", "run.result",
+        ])
+        for output in outputs:
+            validate("envelope.schema.json", output)
+        validate("run-result.schema.json", outputs[-1]["payload"])
+        validate("workflow-orchestrator-output.schema.json", outputs[-1]["payload"]["output"])
+        self.assertEqual(outputs[-1]["payload"]["output"], {
+            "dispatch": [{
+                "agent_id": "com.example.inspector",
+                "capability": "repo.inspect",
+                "input": {"target": "release"},
+            }],
+        })
+
+    @unittest.skipUnless(shutil.which("go"), "Go toolchain is not installed")
+    def test_go_local_orchestrator_agent_rejects_missing_context(self) -> None:
+        frames = "\n".join([
+            json.dumps({
+                "lap": "0.1", "id": "host-1", "producer": "host.test", "seq": 1,
+                "type": "agent.hello", "payload": {},
+            }),
+            json.dumps({
+                "lap": "0.1", "id": "host-2", "producer": "host.test", "seq": 2,
+                "type": "run.start",
+                "run": {
+                    "tenant_id": "tenant-demo", "session_id": "session-demo",
+                    "run_id": "run-demo", "trace_id": "trace-demo",
+                },
+                "idempotency_key": "demo-key",
+                "payload": {"capability": "plan.dispatch", "input": {}},
+            }),
+            json.dumps({
+                "lap": "0.1", "id": "host-3", "producer": "host.test", "seq": 3,
+                "type": "agent.shutdown", "payload": {},
+            }),
+        ]) + "\n"
+        completed = subprocess.run(
+            ["go", "run", "."],
+            cwd=ROOT / "examples" / "orchestrator-agent-go",
+            input=frames,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
+        outputs = [json.loads(line) for line in completed.stdout.splitlines()]
+        self.assertEqual([item["type"] for item in outputs], [
+            "agent.welcome", "run.accepted", "run.result",
+        ])
+        for output in outputs:
+            validate("envelope.schema.json", output)
         validate("run-result.schema.json", outputs[-1]["payload"])
         self.assertEqual(outputs[-1]["payload"]["status"], "failed")
         self.assertEqual(outputs[-1]["payload"]["error"]["code"], "LAP-201")
