@@ -1,6 +1,6 @@
 # LEP-0003: Capability-Scoped Orchestrator Dispatch
 
-- **Status:** Accepted
+- **Status:** Implemented
 - **Type:** Standards Track
 - **Target version:** `0.1.0-draft`
 - **Authors:** `@dongrv`
@@ -151,8 +151,7 @@ not rewritten.
 
 ## Conformance Plan
 
-This proposal would add `FLOW-12` with portable positive and negative
-vectors:
+`FLOW-12` defines portable positive and negative vectors:
 
 1. A mapped Agent-and-capability pair is eligible when all existing checks
    pass.
@@ -163,17 +162,26 @@ vectors:
 4. An otherwise identical `0.1` document without the mapping retains the
    established Agent-ID-only behavior.
 
-The schema change, profile text, and conformance vector are intentionally not
-published by this Draft. They are required before the LEP can move to
-`Implemented` status.
+The Workflow Profile, schema delta, and conformance vector are published with
+this LEP. A Host that claims `FLOW-12` must run the vector and supplement it
+with implementation-local tests proving that every rejected proposal starts
+no target Agent.
 
-## Reference Implementation Plan
+## Reference Implementation
 
 The accepted profile, schema delta, and `FLOW-12` vector define the portable
-contract. A reference Host must add semantic validation and enforce the mapping
-in its dynamic-dispatch adapter before child creation. An implementation MUST
-NOT claim `FLOW-12` until it provides both the published vector result and
-implementation-local evidence that a rejected proposal starts no target Agent.
+contract. Lambda Harness is the initial reference Host. It validates the exact
+mapping while parsing a workflow, renders the constrained dispatch boundary to
+the root orchestrator, and rejects an out-of-scope proposal with `LAP-301`
+before capability support checks or child creation. Its workflow-runtime tests
+cover the accepted pair, malformed mappings, and a declared-but-out-of-scope
+capability whose target-start counter remains zero. Its workflow authoring UI
+persists each selected downstream capability into the immutable mapping rather
+than treating the selection as display-only.
+
+This is reference-Host evidence, not an independent interoperability claim.
+Any additional Host claiming `FLOW-12` MUST run the published vector and
+provide equivalent local no-target-start evidence for every rejection path.
 
 ## Alternatives Considered
 
@@ -195,11 +203,11 @@ wire contract.
 
 ## Resolution Record
 
-- **Decision:** Accepted
+- **Decision:** Implemented
 - **Decision date:** 2026-08-29
 - **Target release:** `0.1.0-draft`
 - **Rationale:** Per-Agent capability scopes are the smallest portable
   authority reduction that preserves the current workflow document model.
-- **Required follow-up:** Publish the profile/schema/vector delta and collect
-  reference-Host and independent implementation evidence before promotion to
-  `Implemented`.
+- **Required follow-up:** Independent Hosts should publish `FLOW-12` vector
+  results and local no-target-start evidence before making a workflow-profile
+  conformance claim.
