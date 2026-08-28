@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dongrv/LAP/schemas/workflow-orchestrator-context.schema.json",
+  "title": "LAP Workflow Orchestrator Context Extension",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "allowed_dispatches"],
+  "properties": {
+    "version": { "const": "0.1" },
+    "allowed_dispatches": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/dispatchTarget" }
+    }
+  },
+  "$defs": {
+    "dispatchTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent_id", "capabilities"],
+      "properties": {
+        "agent_id": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{2,127}$" },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9._-]{2,127}$"
+          }
+        }
+      }
+    }
+  }
+}

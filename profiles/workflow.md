@@ -145,6 +145,52 @@ When the field is absent, a Host MUST preserve the Agent-ID-only dispatch
 behavior from section 3.1. A Host that recognizes the field MUST enforce it;
 it MUST NOT silently downgrade a scoped document to an unscoped one.
 
+### 3.3 External Orchestrator Context
+
+When the Agent selected by an `orchestrator` node uses a LAP external
+transport, the Host MUST provide the profile-owned Context Packet extension
+`io.github.dongrv.lap.workflow.orchestrator`. Its exact schema is
+[`workflow-orchestrator-context.schema.json`](../schemas/workflow-orchestrator-context.schema.json):
+
+```json
+{
+  "version": "0.1",
+  "allowed_dispatches": [
+    {
+      "agent_id": "com.example.inspector",
+      "capabilities": ["repo.inspect"]
+    }
+  ]
+}
+```
+
+The extension is an immutable planning view, not a grant. It MUST contain
+exactly one lexicographically ordered entry for each `allowed_agent_ids`
+member. Each capability array MUST be lexicographically ordered and equal the
+Host's actual accepted scope for that Agent: `allowed_capabilities` when the
+node declares it, otherwise the resolved Agent Release capability set at root
+admission. The Host MUST include this extension in idempotency equivalence and
+MUST NOT include tenant/session/run identifiers, release keys, package paths,
+artifact locators, credentials, hidden reasoning, approval decisions, or
+mutable budget state.
+
+The capability's normal `run.start.payload.input` remains unchanged. The
+external Agent returns the same exact `{"dispatch":[...]}` object defined in
+section 3.1; authors can validate that output against
+[`workflow-orchestrator-output.schema.json`](../schemas/workflow-orchestrator-output.schema.json).
+The output schema establishes syntax only. It never replaces the Host's
+pre-dispatch policy checks.
+
+The Local Profile carries the extension directly in
+`run.start.payload.context.extensions`. The A2A Bridge carries it as a
+separate A2A `data` part whose object key is the same extension key, while the
+ordinary normalized capability input remains a distinct, unchanged data part.
+An A2A Agent used as an orchestrator MUST declare `application/json` input
+support for the selected Skill; a Host MUST reject the node with `LAP-204`
+before creating a remote task when that support is absent. A Host MUST NOT
+flatten this extension into an ambiguous text-only A2A request and claim this
+external-orchestrator behavior.
+
 ## 4. Edges and Terminal Policy
 
 Every edge declares the source terminal status that enables it: `succeeded`,

@@ -1,0 +1,118 @@
+{
+  "profile": "lap-workflow/0.1",
+  "extension_key": "io.github.dongrv.lap.workflow.orchestrator",
+  "workflow": {
+    "lap": "0.1",
+    "id": "com.example.external-orchestrator",
+    "version": "1.0.0",
+    "mode": "orchestrated",
+    "policy": {
+      "max_child_runs": 2,
+      "max_depth": 1,
+      "max_parallel_nodes": 1
+    },
+    "nodes": [
+      {
+        "id": "route",
+        "type": "orchestrator",
+        "agent": {
+          "id": "com.example.planner",
+          "capability": "plan.dispatch"
+        },
+        "allowed_agent_ids": [
+          "com.example.inspector",
+          "com.example.publisher"
+        ],
+        "allowed_capabilities": {
+          "com.example.inspector": ["repo.inspect"],
+          "com.example.publisher": ["report.publish"]
+        }
+      }
+    ],
+    "edges": []
+  },
+  "context_packet": {
+    "input": { "target": "release" },
+    "extensions": {
+      "io.github.dongrv.lap.workflow.orchestrator": {
+        "version": "0.1",
+        "allowed_dispatches": [
+          {
+            "agent_id": "com.example.inspector",
+            "capabilities": ["repo.inspect"]
+          },
+          {
+            "agent_id": "com.example.publisher",
+            "capabilities": ["report.publish"]
+          }
+        ]
+      }
+    }
+  },
+  "required_output": {
+    "dispatch": [
+      {
+        "agent_id": "com.example.inspector",
+        "capability": "repo.inspect",
+        "input": { "target": "release" }
+      }
+    ]
+  },
+  "a2a_mapping": {
+    "required_input_mode": "application/json",
+    "context_data_part": {
+      "kind": "data",
+      "data": {
+        "io.github.dongrv.lap.workflow.orchestrator": {
+          "version": "0.1",
+          "allowed_dispatches": [
+            {
+              "agent_id": "com.example.inspector",
+              "capabilities": ["repo.inspect"]
+            },
+            {
+              "agent_id": "com.example.publisher",
+              "capabilities": ["report.publish"]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "required_rejections": [
+    {
+      "case": "context leaks a Host-private identifier",
+      "context_extension": {
+        "version": "0.1",
+        "allowed_dispatches": [
+          {
+            "agent_id": "com.example.inspector",
+            "capabilities": ["repo.inspect"]
+          }
+        ],
+        "tenant_id": "tenant-private"
+      },
+      "code": "LAP-201",
+      "external_task_started": false
+    },
+    {
+      "case": "proposal exceeds immutable scope",
+      "output": {
+        "dispatch": [
+          {
+            "agent_id": "com.example.inspector",
+            "capability": "repo.write",
+            "input": {}
+          }
+        ]
+      },
+      "code": "LAP-301",
+      "target_agent_started": false
+    },
+    {
+      "case": "A2A skill lacks JSON input support",
+      "code": "LAP-204",
+      "remote_task_created": false
+    }
+  ]
+}

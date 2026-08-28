@@ -39,6 +39,13 @@ the Agent but absent from its scope, and an undeclared capability. Every
 rejection starts no target Agent. It also carries missing and extra scope-key
 documents that require semantic validation beyond JSON Schema alone.
 
+`workflow-orchestrator-context.json` defines the exact Context Packet extension
+that a Host supplies to an external `orchestrator` node. It proves the stable,
+sorted Agent-and-capability planning view, its reusable dispatch-output schema,
+and the separate A2A JSON data-part mapping. It also names the private-field,
+scope, and missing-A2A-JSON-input failures that must occur before an external
+task or target Agent starts.
+
 `a2a-inline-inputs.json` is a deterministic `lap-a2a-inline-inputs/0.1`
 admission vector. It proves the manifest opt-in, Host-policy, and selected
 Skill MIME gates; the exact A2A `FilePart.bytes` mapping; and safe metadata.

@@ -237,6 +237,66 @@ class ConformanceKitTests(unittest.TestCase):
         with self.assertRaises(ValidationError):
             validate("workflow.schema.json", invalid)
 
+    def test_external_orchestrator_context_is_exact_and_machine_readable(self) -> None:
+        vector = load_json(ROOT / "conformance" / "workflow-orchestrator-context.json")
+        self.assertIsInstance(vector, dict)
+        self.assertEqual(vector["profile"], "lap-workflow/0.1")
+        extension_key = vector["extension_key"]
+        self.assertEqual(extension_key, "io.github.dongrv.lap.workflow.orchestrator")
+
+        workflow = vector["workflow"]
+        validate("workflow.schema.json", workflow)
+        node = workflow["nodes"][0]
+        context_packet = vector["context_packet"]
+        validate("context-packet.schema.json", context_packet)
+        extension = context_packet["extensions"][extension_key]
+        validate("workflow-orchestrator-context.schema.json", extension)
+        self.assertEqual(
+            [item["agent_id"] for item in extension["allowed_dispatches"]],
+            sorted(node["allowed_agent_ids"]),
+        )
+        self.assertTrue(all(
+            item["capabilities"] == sorted(item["capabilities"])
+            for item in extension["allowed_dispatches"]
+        ))
+        scopes = node["allowed_capabilities"]
+        self.assertEqual(
+            {
+                item["agent_id"]: item["capabilities"]
+                for item in extension["allowed_dispatches"]
+            },
+            {agent_id: scopes[agent_id] for agent_id in sorted(scopes)},
+        )
+
+        output = vector["required_output"]
+        validate("workflow-orchestrator-output.schema.json", output)
+        self.assertEqual(set(output), {"dispatch"})
+        self.assertEqual(context_packet["input"], {"target": "release"})
+
+        a2a_mapping = vector["a2a_mapping"]
+        self.assertEqual(a2a_mapping["required_input_mode"], "application/json")
+        self.assertEqual(a2a_mapping["context_data_part"], {
+            "kind": "data",
+            "data": {extension_key: extension},
+        })
+
+        rejections = {item["case"]: item for item in vector["required_rejections"]}
+        self.assertEqual(set(rejections), {
+            "context leaks a Host-private identifier",
+            "proposal exceeds immutable scope",
+            "A2A skill lacks JSON input support",
+        })
+        leaked_context = rejections["context leaks a Host-private identifier"]["context_extension"]
+        with self.assertRaises(ValidationError):
+            validate("workflow-orchestrator-context.schema.json", leaked_context)
+        out_of_scope = rejections["proposal exceeds immutable scope"]
+        validate("workflow-orchestrator-output.schema.json", out_of_scope["output"])
+        self.assertEqual(out_of_scope["code"], "LAP-301")
+        self.assertFalse(out_of_scope["target_agent_started"])
+        no_json = rejections["A2A skill lacks JSON input support"]
+        self.assertEqual(no_json["code"], "LAP-204")
+        self.assertFalse(no_json["remote_task_created"])
+
     def test_capability_contract_vector_has_distinct_valid_and_invalid_instances(self) -> None:
         vector = load_json(ROOT / "conformance" / "capability-contract.json")
         self.assertIsInstance(vector, dict)

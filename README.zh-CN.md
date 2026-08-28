@@ -113,8 +113,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   输入 artifact 以 A2A `FilePart.bytes` 有界传输给已准入 A2A Skill 的可选 profile。
 - [Package Signing Profile](profiles/package-signing.md)：面向可移植 Agent Package 的
   可选 Ed25519 发布者来源证明。
-- [Workflow Profile](profiles/workflow.md)：具有运行时强制 Agent 与 capability 收窄分派
-  边界、用户拥有的版本化 Agent 图。
+- [Workflow Profile](profiles/workflow.md)：具有运行时强制分派边界与可移植外部编排器
+  规划上下文、用户拥有的版本化 Agent 图。
 - [Host Metering Profile](profiles/host-metering.md)：面向可强制执行的工作流输入和成本
   预算的可选 Host 直连模型计量。
 - [Go Agent SDK](sdk/go/README.zh-CN.md)：无依赖的本地 Profile Agent 侧辅助工具；它不是
@@ -123,7 +123,9 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   [Envelope](schemas/envelope.schema.json)、
   [Context Packet](schemas/context-packet.schema.json)、
   [Run Result](schemas/run-result.schema.json)、
-  [Workflow](schemas/workflow.schema.json) 和
+  [Workflow](schemas/workflow.schema.json)、
+  [Orchestrator Context](schemas/workflow-orchestrator-context.schema.json) 和
+  [Orchestrator Output](schemas/workflow-orchestrator-output.schema.json) 以及
   [Package Signature](schemas/package-signature.schema.json) schema：机器可读契约。
 - [Conformance Report](schemas/conformance-report.schema.json) schema：可复现、机器可读的
   实现声明。

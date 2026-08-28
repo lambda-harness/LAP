@@ -39,3 +39,4 @@ normal pull request. State why no LEP is needed in that pull request.
 | [LEP-0001](LEP-0001-a2a-inline-inputs.md) | Draft | `0.1.0-draft` | Optional, bounded A2A inline input artifact transfer. |
 | [LEP-0002](LEP-0002-scoped-workflow-release-admission.md) | Implemented | `0.1.0-draft` | Root-scoped, Host-private admission for draining workflow releases. |
 | [LEP-0003](LEP-0003-capability-scoped-orchestrator-dispatch.md) | Implemented | `0.1.0-draft` | Optional per-Agent capability scopes for orchestrator dispatch. |
+| [LEP-0004](LEP-0004-portable-orchestrator-context.md) | Accepted | `0.1.0-draft` | Portable Context Packet planning view for external orchestrators. |

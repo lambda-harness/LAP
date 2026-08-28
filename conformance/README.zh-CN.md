@@ -28,6 +28,11 @@ envelope 中；实现通过本地生命周期测试证明私有注册表行为�
 的 capability。它还包含缺少或多出 scope key 的文档，要求 Host 在 JSON Schema 之外进行
 语义校验。
 
+`workflow-orchestrator-context.json` 定义 Host 提供给外部 `orchestrator` 节点的精确
+Context Packet 扩展。它验证稳定排序的 Agent-capability 规划视图、可复用的派遣输出 schema
+以及独立的 A2A JSON data part 映射；同时列出私有字段泄漏、scope 越界和 A2A 缺失 JSON 输入
+支持时必须在外部任务或目标 Agent 启动前发生的拒绝。
+
 `a2a-inline-inputs.json` 是确定性的 `lap-a2a-inline-inputs/0.1` 准入向量。它验证
 清单 opt-in、Host 策略和所选 Skill MIME 三道门；精确的 A2A `FilePart.bytes` 映射；
 以及安全元数据。它有意不证明远程 Agent 的保留或删除行为；那仍是管理员信任决策，

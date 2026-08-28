@@ -126,7 +126,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Package Signing Profile](profiles/package-signing.md): optional Ed25519
   publisher provenance for portable Agent Packages.
 - [Workflow Profile](profiles/workflow.md): user-owned, versioned Agent graphs
-  with runtime-enforced Agent and capability-scoped dispatch boundaries.
+  with runtime-enforced dispatch boundaries and a portable external-orchestrator
+  planning context.
 - [Host Metering Profile](profiles/host-metering.md): optional direct-model
   Host accounting for enforceable workflow input and cost budgets.
 - [Go Agent SDK](sdk/go/README.md): dependency-free Agent-side helper for the
@@ -135,7 +136,9 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   [Envelope](schemas/envelope.schema.json),
   [Context Packet](schemas/context-packet.schema.json), and
   [Run Result](schemas/run-result.schema.json),
-  [Workflow](schemas/workflow.schema.json), and
+  [Workflow](schemas/workflow.schema.json),
+  [Orchestrator Context](schemas/workflow-orchestrator-context.schema.json),
+  [Orchestrator Output](schemas/workflow-orchestrator-output.schema.json), and
   [Package Signature](schemas/package-signature.schema.json) schemas:
   machine-readable contracts.
 - [Conformance Report](schemas/conformance-report.schema.json) Schema: a
