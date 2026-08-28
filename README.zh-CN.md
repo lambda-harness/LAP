@@ -71,7 +71,9 @@ Echo Agent。若 `PATH` 中有 Go 或 Cargo，还会运行相应语言的参考�
 - **构建本地 Agent：** 从可运行的
   [Python](examples/echo-agent/README.zh-CN.md)、
   [Go](examples/echo-agent-go/README.zh-CN.md) 或
-  [Rust](examples/echo-agent-rust/README.zh-CN.md) Echo Agent 开始。
+  [Rust](examples/echo-agent-rust/README.zh-CN.md) Echo Agent 开始。要构建由 Host
+  监管的多 Agent 工作流，请使用可运行的
+  [外部编排 Agent](examples/orchestrator-agent/README.zh-CN.md)。
 - **构建 Host Runtime：** 阅读 [Core Specification](SPEC.md)，再使用
   [Conformance](CONFORMANCE.md) 形成可复现的实现声明。
 - **组合受治理的工作流：** 使用 [Workflow Profile](profiles/workflow.md) 与已经验证的

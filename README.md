@@ -77,7 +77,9 @@ echo Agent through a real stdin/stdout LAP exchange. When Go or Cargo is on
 - **Build a local Agent:** start with the runnable
   [Python](examples/echo-agent/README.md),
   [Go](examples/echo-agent-go/README.md), or
-  [Rust](examples/echo-agent-rust/README.md) echo Agent.
+  [Rust](examples/echo-agent-rust/README.md) echo Agent. For a Host-governed
+  multi-Agent workflow, use the runnable
+  [external orchestrator Agent](examples/orchestrator-agent/README.md).
 - **Build a Host Runtime:** read the [Core Specification](SPEC.md), then use
   [Conformance](CONFORMANCE.md) to make a reproducible implementation claim.
 - **Compose a governed workflow:** use the
