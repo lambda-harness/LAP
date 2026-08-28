@@ -49,6 +49,16 @@ deviation from the manifest declaration; it does not authenticate the package.
 The 0.1 `publisher` value is display/provenance metadata; it is not a
 signature.
 
+### 2.1 Profile Declaration
+
+A Local package MAY declare a `profiles` array in `agent.json`. When present,
+it MUST include `lap-local/0.1`; an external workflow orchestrator declares
+both `lap-local/0.1` and `lap-workflow/0.1`. This declaration lets a Host show
+the package's intended contracts and reject an incompatible workflow before it
+executes. It is neither a permission nor evidence that the spawned process
+accepted the profile. The per-Run negotiation in section 4 remains mandatory
+for every profile-owned exchange.
+
 ## 3. Stream Rules
 
 - The Host writes one UTF-8 JSON Core Envelope followed by `LF` to the agent's

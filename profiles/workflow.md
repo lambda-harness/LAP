@@ -183,6 +183,15 @@ identifiers. If `lap-workflow/0.1` is absent, the Host MUST reject the node with
 check is per orchestrator invocation: the same installed package MAY still
 serve ordinary Local capabilities that require only `lap-local/0.1`.
 
+Before a Host accepts a workflow for execution, its resolved Local external
+orchestrator package MUST declare both identifiers in `agent.json.profiles`.
+If the declaration is absent or lacks `lap-workflow/0.1`, the Host MUST reject
+that orchestrator reference with `LAP-204` before the root workflow Run starts.
+The package declaration is an early compatibility signal only: a matching
+declaration never replaces the per-invocation `agent.hello` / `agent.welcome`
+verification above, and it grants no dispatch, tenant, approval, or credential
+authority.
+
 The capability's normal `run.start.payload.input` remains unchanged. The
 external Agent returns the same exact `{"dispatch":[...]}` object defined in
 section 3.1; authors can validate that output against

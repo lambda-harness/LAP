@@ -107,7 +107,7 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 
 | Concern | LAP answer |
 |---|---|
-| Discover and install | Versioned `agent.json` manifest and package profile. |
+| Discover and install | Versioned `agent.json` manifest, declared profiles, and package profile. |
 | Run a local binary | `lap-local` UTF-8 NDJSON over supervised stdin/stdout. |
 | Invoke a remote agent | `lap-a2a-bridge`, using negotiated A2A semantics. |
 | Observe work | Ordered progress, artifact, and terminal events. |
@@ -166,6 +166,10 @@ my-agent/
 The runtime validates the manifest, starts the process, negotiates LAP, and
 only then marks the release active. Finding a binary on disk is never
 permission to execute it.
+
+When a Local package declares `profiles`, the declaration makes its intended
+contracts visible for discovery and workflow preflight. It never grants
+authority or replaces the required per-Run profile negotiation.
 
 See the [echo-agent example](examples/echo-agent/README.md) for a runnable
 Python reference conversation, the [echo-agent-go example](examples/echo-agent-go/README.md)

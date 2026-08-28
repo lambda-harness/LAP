@@ -71,6 +71,23 @@ class ExampleConformanceTests(unittest.TestCase):
         manifest["integrity"] = {"path": "echo_agent.py", "sha256": "0" * 64}
         validate("agent-manifest.schema.json", manifest)
 
+    def test_local_manifest_profiles_are_declared_and_baseline_safe(self) -> None:
+        worker = load_json(ROOT / "examples" / "echo-agent" / "agent.json")
+        planner = load_json(ROOT / "examples" / "orchestrator-agent" / "agent.json")
+        self.assertIsInstance(worker, dict)
+        self.assertIsInstance(planner, dict)
+        self.assertEqual(worker["profiles"], ["lap-local/0.1"])
+        self.assertEqual(planner["profiles"], ["lap-local/0.1", "lap-workflow/0.1"])
+
+        invalid = dict(worker)
+        invalid["profiles"] = ["lap-workflow/0.1"]
+        with self.assertRaises(ValidationError):
+            validate("agent-manifest.schema.json", invalid)
+
+        invalid["profiles"] = ["lap-local/0.1", "lap-local/0.1"]
+        with self.assertRaises(ValidationError):
+            validate("agent-manifest.schema.json", invalid)
+
     def test_local_echo_agent_negotiates_and_returns_a_valid_result(self) -> None:
         frames = "\n".join([
             json.dumps({

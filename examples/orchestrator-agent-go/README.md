@@ -24,14 +24,16 @@ cycles before it can start any target.
 ## Package Contents
 
 - `agent.json`: a portable package manifest with the `plan.dispatch`
-  capability and the published dispatch-output schema shape.
+  capability, the published dispatch-output schema shape, and declarations for
+  both `lap-local/0.1` and `lap-workflow/0.1`.
 - `main.go`: a dependency-free Agent implementation built on the Go SDK.
 - `go.mod`: a local SDK replacement so the repository example builds without
   downloading a moving dependency.
 
 The source manifest runs `go run .` so the conformance suite can execute the
 same source on supported platforms. A Host must still explicitly allow the Go
-executable before activation.
+executable before activation. The declaration supports workflow preflight, but
+the Host still proves the workflow profile in every run's handshake.
 
 ## Try It With a Host
 

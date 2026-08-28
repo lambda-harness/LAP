@@ -23,11 +23,14 @@ cycles before it can start any target.
 ## Package Contents
 
 - `agent.json`: a portable package manifest with the `plan.dispatch`
-  capability and the published dispatch-output schema shape.
+  capability, the published dispatch-output schema shape, and declarations for
+  both `lap-local/0.1` and `lap-workflow/0.1`.
 - `orchestrator_agent.py`: a dependency-free stdin/stdout protocol loop.
 
 The manifest runs `python orchestrator_agent.py`. Packaging it as a Windows
 executable or using another language does not change the wire contract.
+The declaration lets a Host reject an incompatible workflow early; it does not
+replace the required workflow-profile handshake before every run.
 
 ## Try It With a Host
 

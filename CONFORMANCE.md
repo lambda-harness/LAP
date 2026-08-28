@@ -87,6 +87,7 @@ extensions.
 | FLOW-12 | When an orchestrator declares `allowed_capabilities`, validates an exact per-Agent mapping and rejects a proposed Agent/capability pair outside that immutable scope with `LAP-301` before the target Agent starts; absent scopes retain Agent-ID-only behavior. |
 | FLOW-13 | For an external orchestrator, derives the exact immutable Agent/capability planning view into `io.github.dongrv.lap.workflow.orchestrator`, includes it in run idempotency equivalence, preserves normal capability input, maps it as a separate A2A JSON data part when bridged, and still rejects an out-of-scope proposal before its target starts. |
 | FLOW-14 | For a Local external orchestrator, offers and verifies `lap-workflow/0.1` alongside `lap-local/0.1` before `run.start`; a missing workflow profile produces `LAP-204` and starts no proposal Run. |
+| FLOW-15 | Before accepting a workflow for execution, verifies that a Local external orchestrator package declares both `lap-local/0.1` and `lap-workflow/0.1` in its manifest; a missing declaration produces `LAP-204`. This discovery-time signal never replaces FLOW-14's per-Run negotiation. |
 
 ## Host Metering 0.1
 

@@ -66,6 +66,18 @@ The required `lap` field declares the package's primary Core version. An Agent
 MAY additionally declare `protocol_versions` to advertise compatible versions
 for negotiation.
 
+The optional `profiles` field is a unique, versioned declaration of profile
+contracts that the package author intends the implementation to support. It is
+discovery and preflight metadata, not a capability grant, authorization
+decision, or proof that a running process accepted a Profile. When a
+`lap-local` package declares `profiles`, the list MUST include
+`lap-local/0.1`. A Local package that also intends to serve a Workflow
+orchestrator declares `lap-workflow/0.1` alongside that baseline profile.
+Packages that omit the optional field remain valid for ordinary compatible
+runs, but make no additional profile claim. A Host MAY display or use this
+metadata to reject an incompatible workflow before execution; it MUST still
+negotiate and verify every profile required by a Local Run before `run.start`.
+
 Manifest permissions are requests, not grants. The Host Runtime MUST make the
 authorization decision independently for each installation or run.
 

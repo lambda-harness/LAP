@@ -19,11 +19,12 @@ capability 范围、预算、截止时间、审批和环路。
 ## 包内容
 
 - `agent.json`：带有 `plan.dispatch` capability 和已发布 dispatch 输出 schema 形状的
-  可移植包清单。
+  可移植包清单，并声明 `lap-local/0.1` 与 `lap-workflow/0.1`。
 - `orchestrator_agent.py`：无依赖的 stdin/stdout 协议循环。
 
 清单通过 `python orchestrator_agent.py` 运行它。将其打包为 Windows 可执行文件或改用其他
-语言，不会改变线协议契约。
+语言，不会改变线协议契约。该声明可让 Host 提前拒绝不兼容的工作流，但不能替代每次运行前
+必需的 workflow profile 握手。
 
 ## 通过 Host 试运行
 

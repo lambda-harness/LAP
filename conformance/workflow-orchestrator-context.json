@@ -63,6 +63,16 @@
       "run_start_sent": false
     }
   },
+  "local_manifest_declaration": {
+    "profiles": [
+      "lap-local/0.1",
+      "lap-workflow/0.1"
+    ],
+    "missing_workflow_profile_rejection": {
+      "code": "LAP-204",
+      "root_run_started": false
+    }
+  },
   "required_output": {
     "dispatch": [
       {

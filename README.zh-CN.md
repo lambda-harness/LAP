@@ -98,7 +98,7 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 
 | 关注点 | LAP 的回答 |
 |---|---|
-| 发现和安装 | 版本化 `agent.json` 清单和包 profile。 |
+| 发现和安装 | 版本化 `agent.json` 清单、已声明 profile 和包 profile。 |
 | 运行本地二进制 | 通过受监管 stdin/stdout 使用 `lap-local` UTF-8 NDJSON。 |
 | 调用远程 Agent | 使用协商 A2A 语义的 `lap-a2a-bridge`。 |
 | 观察工作 | 有序的进度、artifact 和终态事件。 |
@@ -150,6 +150,9 @@ my-agent/
 
 运行时会验证清单、启动进程、协商 LAP，并且仅在此后将发布标记为 active。在磁盘上发现
 二进制文件绝不代表可以执行它。
+
+Local 包声明 `profiles` 后，Host 可以在发现和工作流预检时展示其预期契约。该声明不授予
+任何权限，也不能替代每次运行必需的 profile 协商。
 
 可参阅 [Echo Agent 示例](examples/echo-agent/README.zh-CN.md) 获得可运行的 Python 参考
 对话；参阅 [Go Echo Agent 示例](examples/echo-agent-go/README.zh-CN.md) 获得使用同一

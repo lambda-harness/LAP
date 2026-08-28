@@ -35,3 +35,4 @@ LAP Enhancement Proposal（LEP）是 LAP 规范性行为、schema、profile、�
 | [LEP-0003](LEP-0003-capability-scoped-orchestrator-dispatch.md) | Implemented | `0.1.0-draft` | 面向编排器派遣的可选、按 Agent 收窄的 capability 范围。 |
 | [LEP-0004](LEP-0004-portable-orchestrator-context.md) | Implemented | `0.1.0-draft` | 面向外部编排器的可移植 Context Packet 规划视图。 |
 | [LEP-0005](LEP-0005-local-workflow-profile-negotiation.md) | Implemented | `0.1.0-draft` | 外部 Agent 接收工作流编排上下文前的逐运行 Local 协商。 |
+| [LEP-0006](LEP-0006-manifest-profile-declaration.md) | Implemented | `0.1.0-draft` | 可发现的包 Profile 声明，以及工作流预检和逐运行证明。 |

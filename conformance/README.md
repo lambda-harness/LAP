@@ -44,7 +44,10 @@ that a Host supplies to an external `orchestrator` node. It proves the stable,
 sorted Agent-and-capability planning view, its reusable dispatch-output schema,
 and the separate A2A JSON data-part mapping. It also names the private-field,
 scope, and missing-A2A-JSON-input failures that must occur before an external
-task or target Agent starts.
+task or target Agent starts. For a Local external orchestrator it records both
+the `agent.json.profiles` preflight declaration and the separate live
+`agent.hello` / `agent.welcome` proof; either missing workflow Profile fails
+with `LAP-204` before work starts.
 
 `a2a-inline-inputs.json` is a deterministic `lap-a2a-inline-inputs/0.1`
 admission vector. It proves the manifest opt-in, Host-policy, and selected

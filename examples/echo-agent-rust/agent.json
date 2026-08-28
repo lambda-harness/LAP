@@ -1,6 +1,7 @@
 {
   "lap": "0.1",
   "protocol_versions": ["0.1"],
+  "profiles": ["lap-local/0.1"],
   "id": "org.lap.rust-echo-agent",
   "display_name": "LAP Rust Echo Agent",
   "version": "0.1.0",
