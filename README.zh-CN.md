@@ -54,7 +54,7 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   Agent 图。
 - [Host Metering Profile](profiles/host-metering.md)：面向可强制执行的工作流输入和成本
   预算的可选 Host 直连模型计量。
-- [Go Agent SDK](sdk/go/README_zh.md)：无依赖的本地 Profile Agent 侧辅助工具；它不是
+- [Go Agent SDK](sdk/go/README.zh-CN.md)：无依赖的本地 Profile Agent 侧辅助工具；它不是
   Host Runtime，也不是 conformance 认证。
 - [Agent Manifest](schemas/agent-manifest.schema.json)、
   [Envelope](schemas/envelope.schema.json)、
@@ -65,9 +65,9 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Conformance Report](schemas/conformance-report.schema.json) schema：可复现、机器可读的
   实现声明。
 - [Conformance](CONFORMANCE.md)：必需测试和 conformance 声明。
-- [Conformance Kit](conformance/README_zh.md)：可移植向量、报告示例和精确验证命令。
+- [Conformance Kit](conformance/README.zh-CN.md)：可移植向量、报告示例和精确验证命令。
 - [Governance](GOVERNANCE.md)：版本和变更流程。
-- [LAP Enhancement Proposals](proposals/README_zh.md)：规范性、兼容性和安全变更的
+- [LAP Enhancement Proposals](proposals/README.zh-CN.md)：规范性、兼容性和安全变更的
   公开设计记录。
 
 ## 最小本地包
@@ -83,10 +83,10 @@ my-agent/
 运行时会验证清单、启动进程、协商 LAP，并且仅在此后将发布标记为 active。在磁盘上发现
 二进制文件绝不代表可以执行它。
 
-可参阅 [Echo Agent 示例](examples/echo-agent/README_zh.md) 获得可运行的 Python 参考
-对话；参阅 [Go Echo Agent 示例](examples/echo-agent-go/README_zh.md) 获得使用同一
+可参阅 [Echo Agent 示例](examples/echo-agent/README.zh-CN.md) 获得可运行的 Python 参考
+对话；参阅 [Go Echo Agent 示例](examples/echo-agent-go/README.zh-CN.md) 获得使用同一
 `lap-local` 交换的 Go 示例；参阅
-[Rust Echo Agent 示例](examples/echo-agent-rust/README_zh.md) 获得使用同一交换的
+[Rust Echo Agent 示例](examples/echo-agent-rust/README.zh-CN.md) 获得使用同一交换的
 Rust 示例；参阅
 [release-check.workflow.json](examples/release-check.workflow.json) 获得已验证工作流图。
 

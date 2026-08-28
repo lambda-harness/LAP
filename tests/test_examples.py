@@ -29,7 +29,7 @@ class ExampleConformanceTests(unittest.TestCase):
         readmes = sorted(ROOT.rglob("README.md"))
         self.assertTrue(readmes)
         missing = [str(path.relative_to(ROOT)) for path in readmes
-                   if not path.with_name("README_zh.md").is_file()]
+                   if not path.with_name("README.zh-CN.md").is_file()]
         self.assertEqual(missing, [])
 
     def test_manifest_and_workflow_examples_validate(self) -> None:

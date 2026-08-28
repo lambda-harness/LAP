@@ -118,5 +118,5 @@ go test ./...
 go vet ./...
 ```
 
-[Go Echo Agent](../../examples/echo-agent-go/README_zh.md) 是该 SDK 针对共享 LAP 本地
+[Go Echo Agent](../../examples/echo-agent-go/README.zh-CN.md) 是该 SDK 针对共享 LAP 本地
 往返向量的完整可运行用法。
