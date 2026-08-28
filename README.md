@@ -23,20 +23,9 @@ LAP is deliberately narrow. It does **not** replace existing standards:
 
 ## One Contract, Many Agent Implementations
 
-```mermaid
-flowchart LR
-    Author[Agent author] --> Package[Versioned Agent Package]
-    Package --> Registry[Host registry]
-    Registry --> Host[Trusted Host Runtime]
-
-    Host --> Local[Local executable Agent]
-    Host --> Native[Native runtime Agent]
-    Host --> Remote[Remote A2A Agent]
-
-    Host <--> MCP[MCP tools and resources]
-    Host --> Control[Policy, approval, cancellation]
-    Host --> Evidence[Progress, audit, artifacts, terminal result]
-```
+<p align="center">
+  <img src="assets/lap-architecture.png" alt="LAP architecture: a trusted Host Runtime orchestrates local executable, native runtime, and remote Agents, connects them to MCP tools and resources, and governs identity, capability grants, supervision, progress, artifacts, cancellation, and terminal results." width="1200" />
+</p>
 
 LAP governs the Agent boundary. MCP remains the tool and resource boundary;
 A2A remains the remote-agent interoperability boundary. The Host Runtime is

@@ -21,20 +21,9 @@ LAP 有意保持边界清晰。它**不**取代已有标准：
 
 ## 一份契约，多种 Agent 实现
 
-```mermaid
-flowchart LR
-    Author[Agent 作者] --> Package[版本化 Agent Package]
-    Package --> Registry[Host Registry]
-    Registry --> Host[可信 Host Runtime]
-
-    Host --> Local[本地可执行 Agent]
-    Host --> Native[原生运行时 Agent]
-    Host --> Remote[远程 A2A Agent]
-
-    Host <--> MCP[MCP 工具与资源]
-    Host --> Control[策略、授权、取消]
-    Host --> Evidence[进度、审计、artifact、终态结果]
-```
+<p align="center">
+  <img src="assets/lap-architecture.png" alt="LAP 架构图：可信 Host Runtime 编排本地可执行、原生运行时和远程 Agent，并连接 MCP 工具与资源，统一治理身份、能力授权、监督、进度、交付物、取消与终态结果。" width="1200" />
+</p>
 
 LAP 治理 Agent 边界；MCP 仍是工具与资源边界；A2A 仍是远程 Agent 互操作边界。Host
 Runtime 是控制点：它准入发布、授予 capability、监管运行并记录结果。
