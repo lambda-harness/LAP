@@ -32,3 +32,4 @@ LAP Enhancement Proposal（LEP）是 LAP 规范性行为、schema、profile、�
 |---|---|---|---|
 | [LEP-0001](LEP-0001-a2a-inline-inputs.md) | Draft | `0.1.0-draft` | 可选、有界的 A2A 内联输入 artifact 传输。 |
 | [LEP-0002](LEP-0002-scoped-workflow-release-admission.md) | Implemented | `0.1.0-draft` | 用于排空工作流发布的根作用域、Host 私有准入。 |
+| [LEP-0003](LEP-0003-capability-scoped-orchestrator-dispatch.md) | Draft | `0.2.0-draft` | 面向编排器派遣的可选、按 Agent 收窄的 capability 范围。 |
