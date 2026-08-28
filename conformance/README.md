@@ -32,6 +32,13 @@ fabricated-admission cases that must start no target Agent. The admission token
 itself is deliberately absent from every LAP envelope; implementations prove
 the private registry behavior with local lifecycle tests.
 
+`workflow-capability-scopes.json` defines a capability-scoped dynamic dispatch
+for `lap-workflow/0.1`. It distinguishes one accepted Agent-and-capability
+pair from an Agent outside the immutable allowlist, a capability declared by
+the Agent but absent from its scope, and an undeclared capability. Every
+rejection starts no target Agent. It also carries missing and extra scope-key
+documents that require semantic validation beyond JSON Schema alone.
+
 `a2a-inline-inputs.json` is a deterministic `lap-a2a-inline-inputs/0.1`
 admission vector. It proves the manifest opt-in, Host-policy, and selected
 Skill MIME gates; the exact A2A `FilePart.bytes` mapping; and safe metadata.

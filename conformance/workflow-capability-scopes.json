@@ -1,0 +1,91 @@
+{
+  "profile": "lap-workflow/0.1",
+  "workflow": {
+    "lap": "0.1",
+    "id": "com.example.capability-scoped-dispatch",
+    "version": "1.0.0",
+    "mode": "orchestrated",
+    "policy": {
+      "max_child_runs": 3,
+      "max_depth": 1,
+      "max_parallel_nodes": 2
+    },
+    "nodes": [
+      {
+        "id": "route",
+        "type": "orchestrator",
+        "agent": {
+          "id": "com.example.planner",
+          "capability": "plan.dispatch"
+        },
+        "allowed_agent_ids": [
+          "com.example.inspector",
+          "com.example.publisher"
+        ],
+        "allowed_capabilities": {
+          "com.example.inspector": ["repo.inspect"],
+          "com.example.publisher": ["report.publish"]
+        }
+      }
+    ],
+    "edges": []
+  },
+  "admitted_capabilities": {
+    "com.example.inspector": ["repo.inspect", "repo.write"],
+    "com.example.publisher": ["report.publish"]
+  },
+  "accepted_dispatch": {
+    "agent_id": "com.example.inspector",
+    "capability": "repo.inspect",
+    "input": {"target": "release"},
+    "target_agent_started": true
+  },
+  "required_rejections": [
+    {
+      "case": "Agent outside immutable allowlist",
+      "proposal": {
+        "agent_id": "com.example.writer",
+        "capability": "report.publish",
+        "input": {}
+      },
+      "code": "LAP-301",
+      "target_agent_started": false
+    },
+    {
+      "case": "Declared capability outside scoped mapping",
+      "proposal": {
+        "agent_id": "com.example.inspector",
+        "capability": "repo.write",
+        "input": {}
+      },
+      "code": "LAP-301",
+      "target_agent_started": false
+    },
+    {
+      "case": "Undeclared capability",
+      "proposal": {
+        "agent_id": "com.example.publisher",
+        "capability": "report.delete",
+        "input": {}
+      },
+      "code": "LAP-301",
+      "target_agent_started": false
+    }
+  ],
+  "document_rejections": [
+    {
+      "case": "Missing scope key",
+      "allowed_capabilities": {
+        "com.example.inspector": ["repo.inspect"]
+      }
+    },
+    {
+      "case": "Extra scope key",
+      "allowed_capabilities": {
+        "com.example.inspector": ["repo.inspect"],
+        "com.example.publisher": ["report.publish"],
+        "com.example.writer": ["report.write"]
+      }
+    }
+  ]
+}

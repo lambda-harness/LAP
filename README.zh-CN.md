@@ -101,7 +101,7 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 | 观察工作 | 有序的进度、artifact 和终态事件。 |
 | 安全停止和重试 | 幂等键、截止时间、取消和不可变终态。 |
 | 治理租户 | 运行时派生的租户身份和有作用域的 capability grant。 |
-| 组合 Agent | 面向可信 supervisor 的父/子谱系与 Workflow Profile。 |
+| 组合 Agent | 面向可信 supervisor 的父/子谱系，以及不可变的 Agent 与 capability 作用域。 |
 
 ## 文档
 
@@ -113,8 +113,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   输入 artifact 以 A2A `FilePart.bytes` 有界传输给已准入 A2A Skill 的可选 profile。
 - [Package Signing Profile](profiles/package-signing.md)：面向可移植 Agent Package 的
   可选 Ed25519 发布者来源证明。
-- [Workflow Profile](profiles/workflow.md)：具有运行时强制分派边界、用户拥有的版本化
-  Agent 图。
+- [Workflow Profile](profiles/workflow.md)：具有运行时强制 Agent 与 capability 收窄分派
+  边界、用户拥有的版本化 Agent 图。
 - [Host Metering Profile](profiles/host-metering.md)：面向可强制执行的工作流输入和成本
   预算的可选 Host 直连模型计量。
 - [Go Agent SDK](sdk/go/README.zh-CN.md)：无依赖的本地 Profile Agent 侧辅助工具；它不是

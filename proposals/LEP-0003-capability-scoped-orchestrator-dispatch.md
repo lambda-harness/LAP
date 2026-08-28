@@ -1,8 +1,8 @@
 # LEP-0003: Capability-Scoped Orchestrator Dispatch
 
-- **Status:** Draft
+- **Status:** Accepted
 - **Type:** Standards Track
-- **Target version:** `0.2.0-draft`
+- **Target version:** `0.1.0-draft`
 - **Authors:** `@dongrv`
 - **Created:** `2026-08-29`
 - **Requires:** None
@@ -48,7 +48,7 @@ authority in the same root run.
 
 ## Normative Specification
 
-For `lap-workflow/0.2`, an `orchestrator` node MAY declare
+For `lap-workflow/0.1`, an `orchestrator` node MAY declare
 `allowed_capabilities` alongside its required `allowed_agent_ids`:
 
 ```json
@@ -136,12 +136,12 @@ LEP adds no Agent-visible envelope field.
 
 ## Compatibility and Migration
 
-This is an additive, authority-narrowing profile change. Existing `0.1`
-workflow documents omit the field and retain their current behavior. A
-workflow document that uses `allowed_capabilities` targets `lap-workflow/0.2`
-and MUST be rejected by a Host that does not advertise support for that
-profile; a Host MUST NOT silently ignore the field or downgrade it to an
-Agent-ID-only check.
+This is an additive, authority-narrowing profile revision. Existing workflow
+documents omit the field and retain their current Agent-ID-only behavior. A
+Host that does not implement the revised schema will reject the unknown field;
+a Host that does implement it MUST NOT silently ignore the field or downgrade
+it to an Agent-ID-only check. Implementations claim this support by passing
+`FLOW-12` under `lap-workflow/0.1`.
 
 Authors can migrate incrementally by retaining `allowed_agent_ids`, adding
 one scope entry for every listed Agent, publishing a new immutable version,
@@ -169,12 +169,11 @@ published by this Draft. They are required before the LEP can move to
 
 ## Reference Implementation Plan
 
-After acceptance, a reference Host will add the `0.2` schema and semantic
-validator, enforce the mapping in the dynamic-dispatch adapter before child
-creation, and publish `FLOW-12` evidence. Until then, implementations MAY
-render the proposed mapping for authoring feedback but MUST NOT claim
-`lap-workflow/0.2` conformance or represent the behavior as an accepted LAP
-standard.
+The accepted profile, schema delta, and `FLOW-12` vector define the portable
+contract. A reference Host must add semantic validation and enforce the mapping
+in its dynamic-dispatch adapter before child creation. An implementation MUST
+NOT claim `FLOW-12` until it provides both the published vector result and
+implementation-local evidence that a rejected proposal starts no target Agent.
 
 ## Alternatives Considered
 
@@ -188,17 +187,19 @@ surface than this Host-enforced workflow constraint.
 
 ## Open Questions
 
-1. Should a future workflow-profile minor version replace the parallel
-   `allowed_agent_ids` and `allowed_capabilities` fields with one canonical
-   dispatch-target array after a deprecation period?
-2. Should the standardized rejection fact reserve a stable symbolic reason in
-   addition to its existing `LAP-3xx` class?
+None. `allowed_agent_ids` remains the compatibility anchor for `0.1`; a future
+major profile may replace the parallel fields only with an explicit migration.
+`LAP-301` is the stable portable policy-denial class. Hosts may add a safe,
+implementation-specific reason to their audit event without making it an Agent
+wire contract.
 
 ## Resolution Record
 
-- **Decision:** Pending
-- **Decision date:** Not applicable
-- **Target release:** Not applicable
-- **Rationale:** Pending public review.
-- **Required follow-up:** Resolve open questions, publish the profile/schema
-  delta and FLOW-12 vectors, then collect independent implementation evidence.
+- **Decision:** Accepted
+- **Decision date:** 2026-08-29
+- **Target release:** `0.1.0-draft`
+- **Rationale:** Per-Agent capability scopes are the smallest portable
+  authority reduction that preserves the current workflow document model.
+- **Required follow-up:** Publish the profile/schema/vector delta and collect
+  reference-Host and independent implementation evidence before promotion to
+  `Implemented`.

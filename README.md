@@ -110,7 +110,7 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 | Observe work | Ordered progress, artifact, and terminal events. |
 | Stop and retry safely | Idempotency keys, deadlines, cancellation, immutable terminal states. |
 | Govern a tenant | Runtime-derived tenant identity and scoped capability grants. |
-| Compose agents | Parent/child lineage and a workflow profile for a trusted supervisor. |
+| Compose agents | Parent/child lineage plus immutable Agent and capability scopes for a trusted supervisor. |
 
 ## Documents
 
@@ -126,7 +126,7 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Package Signing Profile](profiles/package-signing.md): optional Ed25519
   publisher provenance for portable Agent Packages.
 - [Workflow Profile](profiles/workflow.md): user-owned, versioned Agent graphs
-  with runtime-enforced dispatch boundaries.
+  with runtime-enforced Agent and capability-scoped dispatch boundaries.
 - [Host Metering Profile](profiles/host-metering.md): optional direct-model
   Host accounting for enforceable workflow input and cost budgets.
 - [Go Agent SDK](sdk/go/README.md): dependency-free Agent-side helper for the

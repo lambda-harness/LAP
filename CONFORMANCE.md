@@ -84,6 +84,7 @@ extensions.
 | FLOW-09 | When strict output budgeting is requested, requires explicit static and dynamic node allocations, reserves a dynamic allocation before dispatch acceptance, constrains every Host-metered model sub-run, and rejects transports or nested Agent-as-tool executions that cannot share a Host meter. |
 | FLOW-10 | If the Host offers YAML workflow author input, bounds and safely parses it, rejects YAML graph/duplicate-key ambiguity and non-JSON data, and normalizes it to the same canonical JSON document before validation, persistence, digesting, or execution. |
 | FLOW-11 | Atomically issues a Host-private workflow release admission for the exact external release set and root tenant/session/run; a draining release admits only matching child scope, and new, cross-scope, closed, or fabricated admissions start no target Agent. |
+| FLOW-12 | When an orchestrator declares `allowed_capabilities`, validates an exact per-Agent mapping and rejects a proposed Agent/capability pair outside that immutable scope with `LAP-301` before the target Agent starts; absent scopes retain Agent-ID-only behavior. |
 
 ## Host Metering 0.1
 
@@ -106,6 +107,7 @@ The repository includes the portable material in
 | `capability-contract.json` | A Draft 2020-12 capability input/output contract with valid and invalid JSON instances for Host-side contract checks. |
 | `workflow-budget.json` | A strict workflow output-budget example, an explicit dynamic allocation, and a structurally valid oversubscription that every Host must reject during semantic validation. |
 | `workflow-release-admission.json` | A root-scoped external release-admission scenario with matching and rejected child scopes; Hosts use it with implementation-local lifecycle tests. |
+| `workflow-capability-scopes.json` | An orchestrator capability-scope scenario with one accepted pair, Agent/declared-capability/scope rejections, and document-level mapping mismatches. |
 | `host-metering.json` | Integer reservation and settlement values for `lap-host-metering/0.1`, including cached input and missing-usage fallback. |
 | `a2a-inline-inputs.json` | A three-gate A2A input-file admission vector, exact Base64 `FilePart` mapping, safe metadata, and required pre-dispatch rejections. |
 | `conformance-report.schema.json` | A reproducible, machine-readable implementation/profile claim. |

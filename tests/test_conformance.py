@@ -194,6 +194,49 @@ class ConformanceKitTests(unittest.TestCase):
         )
         self.assertEqual(fallback["expected_cost_microunits"], reserved)
 
+    def test_workflow_capability_scopes_vector_is_exact_and_pre_dispatch(self) -> None:
+        vector = load_json(ROOT / "conformance" / "workflow-capability-scopes.json")
+        self.assertIsInstance(vector, dict)
+        self.assertEqual(vector["profile"], "lap-workflow/0.1")
+        workflow = vector["workflow"]
+        validate("workflow.schema.json", workflow)
+        node = workflow["nodes"][0]
+        allowed = set(node["allowed_agent_ids"])
+        scopes = node["allowed_capabilities"]
+        self.assertEqual(set(scopes), allowed)
+        self.assertTrue(all(values and len(values) == len(set(values)) for values in scopes.values()))
+
+        admitted = vector["admitted_capabilities"]
+        accepted = vector["accepted_dispatch"]
+        self.assertIn(accepted["agent_id"], allowed)
+        self.assertIn(accepted["capability"], scopes[accepted["agent_id"]])
+        self.assertIn(accepted["capability"], admitted[accepted["agent_id"]])
+        self.assertTrue(accepted["target_agent_started"])
+
+        rejections = {item["case"]: item for item in vector["required_rejections"]}
+        self.assertEqual(set(rejections), {
+            "Agent outside immutable allowlist",
+            "Declared capability outside scoped mapping",
+            "Undeclared capability",
+        })
+        self.assertTrue(all(item["code"] == "LAP-301" for item in rejections.values()))
+        self.assertTrue(all(item["target_agent_started"] is False for item in rejections.values()))
+        self.assertNotIn(rejections["Agent outside immutable allowlist"]["proposal"]["agent_id"], allowed)
+        scoped_out = rejections["Declared capability outside scoped mapping"]["proposal"]
+        self.assertIn(scoped_out["agent_id"], allowed)
+        self.assertNotIn(scoped_out["capability"], scopes[scoped_out["agent_id"]])
+        self.assertIn(scoped_out["capability"], admitted[scoped_out["agent_id"]])
+        undeclared = rejections["Undeclared capability"]["proposal"]
+        self.assertNotIn(undeclared["capability"], admitted[undeclared["agent_id"]])
+
+        for rejection in vector["document_rejections"]:
+            self.assertNotEqual(set(rejection["allowed_capabilities"]), allowed)
+
+        invalid = json.loads(json.dumps(workflow))
+        invalid["nodes"][0]["allowed_capabilities"]["com.example.inspector"] = []
+        with self.assertRaises(ValidationError):
+            validate("workflow.schema.json", invalid)
+
     def test_capability_contract_vector_has_distinct_valid_and_invalid_instances(self) -> None:
         vector = load_json(ROOT / "conformance" / "capability-contract.json")
         self.assertIsInstance(vector, dict)

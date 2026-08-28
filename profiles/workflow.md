@@ -108,6 +108,43 @@ NOT start the target Agent. Hosts MAY run independent accepted proposals in
 parallel only within `max_parallel_nodes` and all applicable Agent limits;
 their recorded outputs retain proposal order.
 
+### 3.2 Capability-Scoped Dispatch
+
+An orchestrator node MAY add `allowed_capabilities` to narrow each permitted
+Agent to explicitly named capabilities:
+
+```json
+{
+  "allowed_agent_ids": [
+    "com.example.inspector",
+    "com.example.publisher"
+  ],
+  "allowed_capabilities": {
+    "com.example.inspector": ["repo.inspect"],
+    "com.example.publisher": ["report.publish"]
+  }
+}
+```
+
+When present, `allowed_capabilities` MUST be an object whose keys are exactly
+the immutable `allowed_agent_ids` set. Each value MUST be a non-empty array of
+unique capability IDs. A Host MUST reject a workflow document with a missing
+or extra Agent key, an empty array, or an invalid capability ID before a root
+run starts.
+
+Before a dynamic child starts, the Host MUST verify that the proposal's
+`capability` appears in the array for its proposed `agent_id`, in addition to
+all checks in section 3.1. A scope mismatch is an authorization/policy denial
+in the `LAP-3xx` range, MUST emit a safe typed dispatch-rejection fact, and
+MUST NOT start the target Agent. The mapping narrows dispatch authority only:
+it does not permit an Agent outside `allowed_agent_ids`, bypass Agent Release
+capability declaration, or replace tenant, approval, quota, depth, deadline,
+or lifecycle validation.
+
+When the field is absent, a Host MUST preserve the Agent-ID-only dispatch
+behavior from section 3.1. A Host that recognizes the field MUST enforce it;
+it MUST NOT silently downgrade a scoped document to an unscoped one.
+
 ## 4. Edges and Terminal Policy
 
 Every edge declares the source terminal status that enables it: `succeeded`,
