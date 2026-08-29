@@ -192,6 +192,31 @@ declaration never replaces the per-invocation `agent.hello` / `agent.welcome`
 verification above, and it grants no dispatch, tenant, approval, or credential
 authority.
 
+#### Optional Activation Verification
+
+A Host MAY probe the Workflow Profile while explicitly activating a validated
+Local package that declares `lap-workflow/0.1`. A Host claiming `FLOW-16` MUST
+offer both `lap-local/0.1` and `lap-workflow/0.1` in the candidate's activation
+`agent.hello`, and MUST verify that the candidate's `agent.welcome` includes
+both identifiers before recording `lap-workflow/0.1` as activation-verified.
+If the Workflow Profile is absent, the candidate activation MUST fail with
+`LAP-204`; the Host MUST NOT make that candidate release active or report its
+Workflow Profile as verified.
+
+Activation verification is Host-local lifecycle evidence, not a new envelope
+field or authority grant. The Host MUST bind it to the exact validated package
+release and MUST NOT carry it to a different candidate after installation,
+reload, replacement, or identity change. A failed replacement candidate does
+not invalidate independently recorded evidence for an unchanged, still-active
+release. A Host MAY expose only safe lifecycle facts such as profile
+identifiers, verification phase, and typed failure codes; it MUST NOT attach a
+Context Packet, user input, credentials, package command, or hidden reasoning.
+
+This optional probe improves early deployment feedback but never substitutes
+for the per-invocation check above. Every Local external orchestrator Run still
+MUST satisfy the `agent.hello` / `agent.welcome` verification before the Host
+sends a Context Packet or `run.start`.
+
 The capability's normal `run.start.payload.input` remains unchanged. The
 external Agent returns the same exact `{"dispatch":[...]}` object defined in
 section 3.1; authors can validate that output against

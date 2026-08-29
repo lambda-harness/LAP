@@ -42,3 +42,4 @@ normal pull request. State why no LEP is needed in that pull request.
 | [LEP-0004](LEP-0004-portable-orchestrator-context.md) | Implemented | `0.1.0-draft` | Portable Context Packet planning view for external orchestrators. |
 | [LEP-0005](LEP-0005-local-workflow-profile-negotiation.md) | Implemented | `0.1.0-draft` | Per-run Local negotiation before an external Agent receives workflow orchestration context. |
 | [LEP-0006](LEP-0006-manifest-profile-declaration.md) | Implemented | `0.1.0-draft` | Discoverable package profile declarations with workflow preflight and per-Run proof. |
+| [LEP-0007](LEP-0007-activation-verified-workflow-profile.md) | Implemented | `0.1.0-draft` | Optional activation-time evidence for a declared Local Workflow Profile, without weakening per-Run proof. |

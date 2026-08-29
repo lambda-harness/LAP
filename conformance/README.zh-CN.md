@@ -32,8 +32,9 @@ envelope 中；实现通过本地生命周期测试证明私有注册表行为�
 Context Packet 扩展。它验证稳定排序的 Agent-capability 规划视图、可复用的派遣输出 schema
 以及独立的 A2A JSON data part 映射；同时列出私有字段泄漏、scope 越界和 A2A 缺失 JSON 输入
 支持时必须在外部任务或目标 Agent 启动前发生的拒绝。对于 Local 外部编排器，它同时记录
-`agent.json.profiles` 预检声明和独立的实时 `agent.hello` / `agent.welcome` 证明；任一
-workflow Profile 缺失都会以 `LAP-204` 在工作开始前失败。
+`agent.json.profiles` 预检声明、声明 `FLOW-16` 的 Host 可选执行的激活探测，以及独立的实时
+`agent.hello` / `agent.welcome` 证明。workflow Profile 缺失会以 `LAP-204` 在工作开始前
+失败；激活探测失败会使候选发布保持 inactive 和 unverified，但每次调用仍必须完成实时证明。
 
 `a2a-inline-inputs.json` 是确定性的 `lap-a2a-inline-inputs/0.1` 准入向量。它验证
 清单 opt-in、Host 策略和所选 Skill MIME 三道门；精确的 A2A `FilePart.bytes` 映射；

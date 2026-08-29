@@ -284,6 +284,24 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertEqual(missing_manifest_profile["code"], "LAP-204")
         self.assertFalse(missing_manifest_profile["root_run_started"])
 
+        local_activation = vector["local_activation_probe"]
+        self.assertEqual(
+            local_activation["manifest_profiles"],
+            ["lap-local/0.1", "lap-workflow/0.1"],
+        )
+        self.assertEqual(
+            local_activation["host_profiles"],
+            ["lap-local/0.1", "lap-workflow/0.1"],
+        )
+        self.assertEqual(
+            local_activation["verified_profiles"],
+            ["lap-local/0.1", "lap-workflow/0.1"],
+        )
+        missing_activation_profile = local_activation["missing_workflow_profile_rejection"]
+        self.assertEqual(missing_activation_profile["code"], "LAP-204")
+        self.assertFalse(missing_activation_profile["release_active"])
+        self.assertEqual(missing_activation_profile["verified_profiles"], [])
+
         output = vector["required_output"]
         validate("workflow-orchestrator-output.schema.json", output)
         self.assertEqual(set(output), {"dispatch"})

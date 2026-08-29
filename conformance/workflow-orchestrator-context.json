@@ -73,6 +73,25 @@
       "root_run_started": false
     }
   },
+  "local_activation_probe": {
+    "manifest_profiles": [
+      "lap-local/0.1",
+      "lap-workflow/0.1"
+    ],
+    "host_profiles": [
+      "lap-local/0.1",
+      "lap-workflow/0.1"
+    ],
+    "verified_profiles": [
+      "lap-local/0.1",
+      "lap-workflow/0.1"
+    ],
+    "missing_workflow_profile_rejection": {
+      "code": "LAP-204",
+      "release_active": false,
+      "verified_profiles": []
+    }
+  },
   "required_output": {
     "dispatch": [
       {

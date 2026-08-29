@@ -171,6 +171,11 @@ When a Local package declares `profiles`, the declaration makes its intended
 contracts visible for discovery and workflow preflight. It never grants
 authority or replaces the required per-Run profile negotiation.
 
+A Host MAY also probe a declared dependent profile during activation. Any
+successful activation verification is Host-local evidence bound to the exact
+validated release; it grants no authority and never replaces the required
+per-Run negotiation.
+
 See the [echo-agent example](examples/echo-agent/README.md) for a runnable
 Python reference conversation, the [echo-agent-go example](examples/echo-agent-go/README.md)
 for a Go implementation of the same `lap-local` exchange, the

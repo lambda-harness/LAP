@@ -154,6 +154,9 @@ my-agent/
 Local 包声明 `profiles` 后，Host 可以在发现和工作流预检时展示其预期契约。该声明不授予
 任何权限，也不能替代每次运行必需的 profile 协商。
 
+Host 也可以在激活期间探测已声明的依赖 profile。成功的激活验证是绑定到精确已验证发布的
+Host 本地证据；它不授予任何权限，也不能替代每次运行必需的 profile 协商。
+
 可参阅 [Echo Agent 示例](examples/echo-agent/README.zh-CN.md) 获得可运行的 Python 参考
 对话；参阅 [Go Echo Agent 示例](examples/echo-agent-go/README.zh-CN.md) 获得使用同一
 `lap-local` 交换的 Go 示例；参阅

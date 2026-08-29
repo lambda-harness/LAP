@@ -4,6 +4,10 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added LEP-0007 and optional activation-time verification for a declared
+  Local Workflow Profile. The evidence is tied to an exact validated release,
+  fails a non-negotiating candidate with `LAP-204`, and never replaces the
+  required per-Run negotiation.
 - Added LEP-0002 and the `lap-workflow/0.1` root-scoped workflow release
   admission rule. A draining external release can complete only children of a
   Host-issued tenant/session/root-bound admission; no Agent-visible token or

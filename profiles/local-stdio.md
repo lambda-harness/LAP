@@ -59,6 +59,14 @@ executes. It is neither a permission nor evidence that the spawned process
 accepted the profile. The per-Run negotiation in section 4 remains mandatory
 for every profile-owned exchange.
 
+A Host MAY separately probe a declared dependent profile while activating a
+validated Local package. A Host claiming `FLOW-16` that probes a package
+declaring `lap-workflow/0.1` MUST offer both `lap-local/0.1` and
+`lap-workflow/0.1` in that activation's `agent.hello`, and MUST verify both in
+`agent.welcome` before it records the Workflow Profile as activation-verified.
+That evidence is bound to the exact validated package release; it is not a
+permission and it never replaces the per-Run negotiation required by section 4.
+
 ## 3. Stream Rules
 
 - The Host writes one UTF-8 JSON Core Envelope followed by `LF` to the agent's
