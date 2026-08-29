@@ -33,7 +33,8 @@ Runtime 是控制点：它准入发布、授予 capability、监管运行并记�
 LAP 是规范与 conformance 工具包。无需托管服务、API Key 或全局安装，即可验证 Local
 Profile。
 
-**前置条件：** Git 和 Python 3.11 或更高版本。公共 CI 验证 Python 3.11、3.12 和 3.13。
+**前置条件：** Git 和 Python 3.11 或更高版本。仅运行 Node.js 参考 Agent 时需要 Node.js 18
+或更高版本。公共 CI 验证 Python 3.11、3.12、3.13 以及 Node.js 22。
 
 ### 1. 克隆并准备环境
 
@@ -64,7 +65,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 该套件会验证已发布的 schema 和向量，随后通过真实 stdin/stdout LAP 交换驱动 Python
-Echo Agent。若 `PATH` 中有 Go 或 Cargo，还会运行相应语言的参考实现。
+Echo Agent。若 `PATH` 中有 Node.js、Go 或 Cargo，还会运行相应语言的参考实现。
 
 ### 3. 探测外部 Agent 包
 
@@ -92,10 +93,12 @@ python tools/lap_local_probe.py --package /path/to/my-agent \
 
 - **构建本地 Agent：** 从可运行的
   [Python](examples/echo-agent/README.zh-CN.md)、
+  [Node.js](examples/echo-agent-node/README.zh-CN.md)、
   [Go](examples/echo-agent-go/README.zh-CN.md) 或
   [Rust](examples/echo-agent-rust/README.zh-CN.md) Echo Agent 开始。要构建由 Host
   监管的多 Agent 工作流，请使用可运行的
-  [Python](examples/orchestrator-agent/README.zh-CN.md) 或
+  [Python](examples/orchestrator-agent/README.zh-CN.md)、
+  [Node.js](examples/orchestrator-agent-node/README.zh-CN.md) 或
   [Go](examples/orchestrator-agent-go/README.zh-CN.md) 外部编排 Agent。
 - **构建 Host Runtime：** 阅读 [Core Specification](SPEC.md)，再使用
   [Conformance](CONFORMANCE.md) 形成可复现的实现声明。
@@ -182,11 +185,15 @@ Host 也可以在激活期间探测已声明的依赖 profile。成功的激活�
 Host 本地证据；它不授予任何权限，也不能替代每次运行必需的 profile 协商。
 
 可参阅 [Echo Agent 示例](examples/echo-agent/README.zh-CN.md) 获得可运行的 Python 参考
-对话；参阅 [Go Echo Agent 示例](examples/echo-agent-go/README.zh-CN.md) 获得使用同一
-`lap-local` 交换的 Go 示例；参阅
-[Rust Echo Agent 示例](examples/echo-agent-rust/README.zh-CN.md) 获得使用同一交换的
-Rust 示例；参阅 [Go 外部编排 Agent 示例](examples/orchestrator-agent-go/README.zh-CN.md) 了解 Go 外部工作流规划器；参阅
-[release-check.workflow.json](examples/release-check.workflow.json) 获得已验证工作流图。
+对话；参阅 [Node.js Echo Agent 示例](examples/echo-agent-node/README.zh-CN.md) 获得使用
+同一 `lap-local` 交换的 Node.js 示例；参阅
+[Go Echo Agent 示例](examples/echo-agent-go/README.zh-CN.md) 获得使用同一交换的 Go
+示例；参阅 [Rust Echo Agent 示例](examples/echo-agent-rust/README.zh-CN.md) 获得使用同一
+交换的 Rust 示例；参阅
+[Node.js 外部编排 Agent 示例](examples/orchestrator-agent-node/README.zh-CN.md) 了解 Node.js
+外部工作流规划器；参阅
+[Go 外部编排 Agent 示例](examples/orchestrator-agent-go/README.zh-CN.md) 了解 Go 外部工作流
+规划器；参阅 [release-check.workflow.json](examples/release-check.workflow.json) 获得已验证工作流图。
 
 ## 设计原则
 
@@ -203,9 +210,9 @@ Rust 示例；参阅 [Go 外部编排 Agent 示例](examples/orchestrator-agent-
 应通过 issue 或 LAP Enhancement Proposal 报告缺口。
 
 首个 conformance 目标是在 30 分钟内由独立 Host 集成本地可执行文件。已发布的 Python、
-Go 和 Rust 参考实现使用相同向量，因此 Local Profile 不与单一语言运行时耦合。远程发现和
-委派授权有意叠加在该目标之上。工作流图已在本草案中规定；生产参考 executor 将遵循
-Local Profile。
+Node.js、Go 和 Rust 参考实现使用相同向量，因此 Local Profile 不与单一语言运行时耦合。
+远程发现和委派授权有意叠加在该目标之上。工作流图已在本草案中规定；生产参考 executor
+将遵循 Local Profile。
 
 ## 贡献
 

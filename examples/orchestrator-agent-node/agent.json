@@ -1,0 +1,56 @@
+{
+  "lap": "0.1",
+  "protocol_versions": ["0.1"],
+  "profiles": ["lap-local/0.1", "lap-workflow/0.1"],
+  "id": "org.lap.orchestrator-agent-node",
+  "display_name": "LAP Node.js External Orchestrator Agent",
+  "version": "0.1.0",
+  "description": "Node.js reference external orchestrator that reads the Host-scoped workflow Context Packet.",
+  "transport": {
+    "kind": "lap-local",
+    "command": ["node", "orchestrator_agent.js"],
+    "working_directory": "."
+  },
+  "capabilities": [
+    {
+      "id": "plan.dispatch",
+      "description": "Proposes one dispatch from the Host-provided workflow scope.",
+      "input_schema": {},
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dispatch"],
+        "properties": {
+          "dispatch": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["agent_id", "capability", "input"],
+              "properties": {
+                "agent_id": {"type": "string", "pattern": "^[a-z][a-z0-9.-]{2,127}$"},
+                "capability": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,127}$"},
+                "input": {},
+                "budget": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["max_output_tokens"],
+                  "properties": {
+                    "max_output_tokens": {"type": "integer", "minimum": 1}
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "max_concurrency": 1
+    }
+  ],
+  "permissions": {"requested": []},
+  "health_check": {
+    "startup_timeout_ms": 5000,
+    "shutdown_timeout_ms": 10000
+  }
+}

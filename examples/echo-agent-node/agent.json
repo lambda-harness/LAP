@@ -1,0 +1,36 @@
+{
+  "lap": "0.1",
+  "protocol_versions": ["0.1"],
+  "profiles": ["lap-local/0.1"],
+  "id": "org.lap.echo-agent-node",
+  "display_name": "LAP Node.js Echo Agent",
+  "version": "0.1.0",
+  "description": "Node.js reference lap-local agent used by the conformance fixture.",
+  "transport": {
+    "kind": "lap-local",
+    "command": ["node", "echo_agent.js"],
+    "working_directory": "."
+  },
+  "capabilities": [
+    {
+      "id": "text.echo",
+      "description": "Returns the provided text in a structured result.",
+      "input_schema": {
+        "type": "object",
+        "required": ["text"],
+        "properties": { "text": { "type": "string" } }
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["text"],
+        "properties": { "text": { "type": "string" } }
+      },
+      "max_concurrency": 1
+    }
+  ],
+  "permissions": { "requested": [] },
+  "health_check": {
+    "startup_timeout_ms": 5000,
+    "shutdown_timeout_ms": 10000
+  }
+}

@@ -37,8 +37,9 @@ and records results.
 LAP is a specification and conformance kit. You can validate the Local Profile
 without a hosted service, API key, or global installation.
 
-**Prerequisites:** Git and Python 3.11 or later. Public CI verifies Python
-3.11, 3.12, and 3.13.
+**Prerequisites:** Git and Python 3.11 or later. Node.js 18 or later is
+needed only to run the Node.js reference Agents. Public CI verifies Python
+3.11, 3.12, and 3.13, plus Node.js 22.
 
 ### 1. Clone and prepare the environment
 
@@ -69,8 +70,8 @@ python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 The suite validates the published schemas and vectors, then drives the Python
-echo Agent through a real stdin/stdout LAP exchange. When Go or Cargo is on
-`PATH`, it also exercises the matching reference implementation.
+echo Agent through a real stdin/stdout LAP exchange. When Node.js, Go, or
+Cargo is on `PATH`, it also exercises the matching reference implementation.
 
 ### 3. Probe an external Agent package
 
@@ -102,10 +103,12 @@ not a Host Runtime certification or authorization boundary.
 
 - **Build a local Agent:** start with the runnable
   [Python](examples/echo-agent/README.md),
+  [Node.js](examples/echo-agent-node/README.md),
   [Go](examples/echo-agent-go/README.md), or
   [Rust](examples/echo-agent-rust/README.md) echo Agent. For a Host-governed
   multi-Agent workflow, use the runnable
-  [Python](examples/orchestrator-agent/README.md) or
+  [Python](examples/orchestrator-agent/README.md),
+  [Node.js](examples/orchestrator-agent-node/README.md), or
   [Go](examples/orchestrator-agent-go/README.md) external orchestrator Agent.
 - **Build a Host Runtime:** read the [Core Specification](SPEC.md), then use
   [Conformance](CONFORMANCE.md) to make a reproducible implementation claim.
@@ -205,11 +208,15 @@ validated release; it grants no authority and never replaces the required
 per-Run negotiation.
 
 See the [echo-agent example](examples/echo-agent/README.md) for a runnable
-Python reference conversation, the [echo-agent-go example](examples/echo-agent-go/README.md)
+Python reference conversation, the [echo-agent-node example](examples/echo-agent-node/README.md)
+for a Node.js implementation of the same `lap-local` exchange, the
+[echo-agent-go example](examples/echo-agent-go/README.md)
 for a Go implementation of the same `lap-local` exchange, the
 [echo-agent-rust example](examples/echo-agent-rust/README.md) for a Rust
-implementation, the [orchestrator-agent-go example](examples/orchestrator-agent-go/README.md) for a Go external workflow planner,
-and
+implementation, the [orchestrator-agent-node example](examples/orchestrator-agent-node/README.md)
+for a Node.js external workflow planner, the
+[orchestrator-agent-go example](examples/orchestrator-agent-go/README.md) for a Go external
+workflow planner, and
 [release-check.workflow.json](examples/release-check.workflow.json) for a
 validated workflow graph.
 
@@ -233,10 +240,10 @@ is not yet a stable compatibility promise. Implementers should report gaps via
 issues or a LAP Enhancement Proposal before depending on it in production.
 
 The first conformance target is a local executable integrated by an independent
-host in under 30 minutes. The published Python, Go, and Rust references
-exercise the same vector so the Local Profile is not coupled to one language
-runtime. Remote discovery and delegated authorization are intentionally layered
-on top of that target. The workflow graph is specified in this draft; a
+host in under 30 minutes. The published Python, Node.js, Go, and Rust
+references exercise the same vector so the Local Profile is not coupled to one
+language runtime. Remote discovery and delegated authorization are intentionally
+layered on top of that target. The workflow graph is specified in this draft; a
 production reference executor follows the Local Profile.
 
 ## Contributing

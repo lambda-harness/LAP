@@ -116,7 +116,7 @@ The repository includes the portable material in
 | `host-metering.json` | Integer reservation and settlement values for `lap-host-metering/0.1`, including cached input and missing-usage fallback. |
 | `a2a-inline-inputs.json` | A three-gate A2A input-file admission vector, exact Base64 `FilePart` mapping, safe metadata, and required pre-dispatch rejections. |
 | `conformance-report.schema.json` | A reproducible, machine-readable implementation/profile claim. |
-| `tests/test_conformance.py` | Runs the same public local round trip against the Python reference Agent and, when their toolchains are available, the Go and Rust reference Agents; it also verifies the vector and report schema. Public CI requires all three paths. |
+| `tests/test_conformance.py` | Runs the same public local round trip against the Python reference Agent and, when their runtimes are available, the Node.js, Go, and Rust reference Agents; it also verifies the vector and report schema. Public CI requires all four paths. |
 | `tools/lap_local_probe.py` | Runs one selected declared Local capability through a bounded public wire probe, validates the manifest contracts and lifecycle invariants, and emits a safe machine-readable Agent-side report. |
 | `tests/test_local_probe.py` | Black-box checks the public Local probe against the Python reference and an arbitrary declared capability, including input preflight and successful-output rejection. |
 | `tests/test_package_signing.py` | Verifies the canonical content address, Ed25519 sidecar schema, required-trust rejection, and reference signing CLI. |

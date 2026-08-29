@@ -408,6 +408,15 @@ class ConformanceKitTests(unittest.TestCase):
             version="0.1.0",
         )
 
+    @unittest.skipUnless(shutil.which("node"), "Node.js runtime is not installed")
+    def test_local_roundtrip_vector_runs_the_node_reference_agent(self) -> None:
+        self._assert_local_roundtrip(
+            ["node", "echo_agent.js"],
+            ROOT / "examples" / "echo-agent-node",
+            agent_id="org.lap.echo-agent-node",
+            version="0.1.0",
+        )
+
     @unittest.skipUnless(shutil.which("go"), "Go toolchain is not installed")
     def test_local_roundtrip_vector_runs_the_go_reference_agent(self) -> None:
         self._assert_local_roundtrip(
