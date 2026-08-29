@@ -61,6 +61,15 @@ class RepositoryIdentityTests(unittest.TestCase):
             self.assertIn(install, content)
             self.assertIn(import_path, content)
 
+    def test_verification_workflow_installs_the_published_go_sdk(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "verify.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("published-go-sdk:", workflow)
+        self.assertIn(f"LAP_MODULE: {CANONICAL_GO_MODULE}", workflow)
+        self.assertIn('go get "${LAP_MODULE}@${LAP_REVISION}"', workflow)
+        self.assertIn(f'import _ "{CANONICAL_GO_MODULE}"', workflow)
+
     def test_published_schema_ids_use_the_canonical_repository(self) -> None:
         for path in sorted((ROOT / "schemas").glob("*.schema.json")):
             document = json.loads(path.read_text(encoding="utf-8"))

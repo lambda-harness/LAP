@@ -45,6 +45,33 @@ jobs:
         working-directory: examples/echo-agent-go
       - run: python -m unittest discover -s tests -p "test_*.py" -v
 
+  published-go-sdk:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.21.x"
+      - name: Install the published SDK as an external Go consumer
+        env:
+          LAP_MODULE: github.com/lambda-harness/LAP/sdk/go
+          LAP_REVISION: ${{ github.sha }}
+          GOPROXY: direct
+        run: |
+          consumer_dir="$(mktemp -d)"
+          cd "$consumer_dir"
+          go mod init example.com/lap-published-sdk-check
+          go get "${LAP_MODULE}@${LAP_REVISION}"
+          test "$(go list -m -f '{{.Path}}' "$LAP_MODULE")" = "$LAP_MODULE"
+          cat > main.go <<'EOF'
+          package main
+
+          import _ "github.com/lambda-harness/LAP/sdk/go"
+
+          func main() {}
+          EOF
+          go build ./...
+
   rust-reference:
     runs-on: ubuntu-latest
     steps:
