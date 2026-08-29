@@ -10,8 +10,8 @@
 不变字段。其 Context Packet 包含带摘要的 `lap://run/input/...` artifact 引用；该向量
 验证公开引用形态，而不是 Host 的私有暂存目录。
 
-仓库测试会根据 Core schema 验证该向量，并用它运行参考 Echo Agent。这能以独立 Host
-或 Agent 作者可复现的形式发现协议漂移。
+仓库测试会根据 Core schema 验证该向量，并用它运行 Python、Go 和 Rust 参考 Echo Agent。
+这能以独立 Host 或 Agent 作者可复现的形式发现协议漂移。
 
 `host-metering.json` 是确定性的 `lap-host-metering/0.1` 算术向量。它涵盖最坏情况
 预留、提供方报告的缓存用量，以及用量缺失时必需的完整预留回退。它不证明 Host 的私有
@@ -58,7 +58,7 @@ python -m pip install -r requirements-dev.txt
 python -m unittest discover -s tests -p "test_*.py"
 ```
 
-该命令会验证全部已发布示例、schema、报告示例和 Python 本地往返流程。若 Go 可用，
-它还会使用相同向量驱动 Go 参考实现；公共 CI 保证这一路径。Host 在声明
+该命令会验证全部已发布示例、schema、报告示例和 Python 本地往返流程。若 Go 和 Rust
+可用，它还会使用相同向量驱动这两个参考实现；公共 CI 保证三条路径。Host 在声明
 `CONFORMANCE.md` 中的条目前，应补充生命周期竞争、租户隔离、策略和存储恢复的
 实现专属覆盖。

@@ -16,8 +16,9 @@ lap://run/input/... artifact reference; the vector verifies the public
 reference shape, not a Host's private staging directory.
 
 The repository test suite validates the vector against the Core schemas and
-runs the reference echo Agent with it. This catches protocol drift in a form
-that an independent Host or Agent author can reproduce.
+runs the Python, Go, and Rust reference echo Agents with it. This catches
+protocol drift in a form that an independent Host or Agent author can
+reproduce.
 
 `host-metering.json` is a deterministic `lap-host-metering/0.1` arithmetic
 vector. It covers a worst-case reservation, provider-reported cached usage,
@@ -76,8 +77,8 @@ python -m unittest discover -s tests -p "test_*.py"
 ```
 
 The test command validates all published examples, schemas, report example,
-and the Python local round trip. When Go is available, it also drives the Go
-reference with the same vector; the public CI guarantees that path. Hosts
-should add their implementation-specific
+and the Python local round trip. When Go and Rust are available, it also
+drives those reference Agents with the same vector; the public CI guarantees
+all three paths. Hosts should add their implementation-specific
 coverage for lifecycle races, tenant isolation, policy, and storage recovery
 before claiming those rows in `CONFORMANCE.md`.

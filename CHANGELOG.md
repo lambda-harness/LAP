@@ -39,7 +39,7 @@ All notable changes to LAP are documented in this file.
   `integrity.sha256` file digest; the file-consistency scope and non-signature
   publisher metadata are explicit.
 - Added GitHub Actions verification for the published schemas, examples, and
-  Python and Go reference local-Agent exchanges.
+  Python, Go, and Rust reference local-Agent exchanges.
 
 ## 0.1.0-draft - 2026-08-26
 

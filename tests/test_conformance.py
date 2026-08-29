@@ -420,7 +420,7 @@ class ConformanceKitTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("cargo"), "Rust toolchain is not installed")
     def test_local_roundtrip_vector_runs_the_rust_reference_agent(self) -> None:
         self._assert_local_roundtrip(
-            ["cargo", "run", "--quiet"],
+            ["cargo", "run", "--quiet", "--locked"],
             ROOT / "examples" / "echo-agent-rust",
             agent_id="org.lap.rust-echo-agent",
             version="0.1.0",

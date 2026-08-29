@@ -116,7 +116,7 @@ The repository includes the portable material in
 | `host-metering.json` | Integer reservation and settlement values for `lap-host-metering/0.1`, including cached input and missing-usage fallback. |
 | `a2a-inline-inputs.json` | A three-gate A2A input-file admission vector, exact Base64 `FilePart` mapping, safe metadata, and required pre-dispatch rejections. |
 | `conformance-report.schema.json` | A reproducible, machine-readable implementation/profile claim. |
-| `tests/test_conformance.py` | Runs the same public local round trip against the Python and Go reference Agents when the Go toolchain is available, and verifies the vector and report schema. |
+| `tests/test_conformance.py` | Runs the same public local round trip against the Python reference Agent and, when their toolchains are available, the Go and Rust reference Agents; it also verifies the vector and report schema. Public CI requires all three paths. |
 | `tests/test_package_signing.py` | Verifies the canonical content address, Ed25519 sidecar schema, required-trust rejection, and reference signing CLI. |
 
 Run every published check with:
