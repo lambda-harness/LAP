@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/dongrv/LAP/schemas/conformance-report.schema.json",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/conformance-report.schema.json",
   "title": "LAP Conformance Report",
   "description": "A reproducible claim made by one LAP implementation against one versioned test suite.",
   "type": "object",

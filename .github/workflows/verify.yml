@@ -36,6 +36,9 @@ jobs:
       - run: python -m pip install -r requirements-dev.txt
       - run: go test ./...
         working-directory: sdk/go
+      - name: Verify canonical Go module identity
+        run: test "$(go list -m)" = "github.com/lambda-harness/LAP/sdk/go"
+        working-directory: sdk/go
       - run: go vet ./...
         working-directory: sdk/go
       - run: go build .

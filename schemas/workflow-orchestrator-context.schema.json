@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/dongrv/LAP/schemas/workflow-orchestrator-context.schema.json",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/workflow-orchestrator-context.schema.json",
   "title": "LAP Workflow Orchestrator Context Extension",
   "type": "object",
   "additionalProperties": false,

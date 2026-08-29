@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/dongrv/LAP/schemas/envelope.schema.json",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/envelope.schema.json",
   "title": "LAP Core Envelope",
   "type": "object",
   "additionalProperties": false,

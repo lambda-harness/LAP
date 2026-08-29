@@ -26,7 +26,7 @@ SDK **不**认证用户、分配租户、验证或激活包、授权效果、暂
 协议尚未发布稳定版。生产环境应固定不可变 commit 或未来 tag 版本，而不是跟踪变动分支。
 
 ```bash
-go get github.com/dongrv/LAP/sdk/go@main
+go get github.com/lambda-harness/LAP/sdk/go@main
 ```
 
 该模块要求 Go 1.21 或更高版本。
@@ -42,7 +42,7 @@ import (
     "fmt"
     "os"
 
-    laplocal "github.com/dongrv/LAP/sdk/go"
+    laplocal "github.com/lambda-harness/LAP/sdk/go"
 )
 
 type echoInput struct {

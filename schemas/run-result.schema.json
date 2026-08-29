@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/dongrv/LAP/schemas/run-result.schema.json",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/run-result.schema.json",
   "title": "LAP Run Result Payload",
   "type": "object",
   "additionalProperties": false,

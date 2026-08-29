@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/dongrv/LAP/schemas/workflow.schema.json",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/workflow.schema.json",
   "title": "LAP Workflow",
   "type": "object",
   "additionalProperties": false,

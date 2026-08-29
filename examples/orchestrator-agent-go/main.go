@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	laplocal "github.com/dongrv/LAP/sdk/go"
+	laplocal "github.com/lambda-harness/LAP/sdk/go"
 )
 
 const (

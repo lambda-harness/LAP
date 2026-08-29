@@ -5,7 +5,7 @@
 - **Target version:** `0.1.0-draft`
 - **Authors:** `@dongrv`
 - **Created:** `2026-08-27`
-- **Discussion:** [#1](https://github.com/dongrv/LAP/issues/1)
+- **Discussion:** No legacy issue is authoritative; follow [LAP Governance](../GOVERNANCE.md) for new discussion.
 - **Requires:** None
 - **Supersedes:** None
 - **Superseded by:** None

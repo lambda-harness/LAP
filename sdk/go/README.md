@@ -32,7 +32,7 @@ The protocol is pre-release. Pin an immutable commit or a future tagged
 version in production rather than tracking a moving branch.
 
 ```bash
-go get github.com/dongrv/LAP/sdk/go@main
+go get github.com/lambda-harness/LAP/sdk/go@main
 ```
 
 The module requires Go 1.21 or newer.
@@ -48,7 +48,7 @@ import (
     "fmt"
     "os"
 
-    laplocal "github.com/dongrv/LAP/sdk/go"
+    laplocal "github.com/lambda-harness/LAP/sdk/go"
 )
 
 type echoInput struct {

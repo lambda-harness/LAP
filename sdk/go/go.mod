@@ -1,3 +1,3 @@
-module github.com/dongrv/LAP/sdk/go
+module github.com/lambda-harness/LAP/sdk/go
 
 go 1.21

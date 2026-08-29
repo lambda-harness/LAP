@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/dongrv/LAP/schemas/context-packet.schema.json",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/context-packet.schema.json",
   "title": "LAP Context Packet",
   "type": "object",
   "additionalProperties": false,

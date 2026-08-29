@@ -4,6 +4,9 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Moved the public source identity, JSON Schema `$id` values, and Go SDK module
+  to `github.com/lambda-harness/LAP`. Go consumers must update their import
+  path before using this draft revision.
 - Added `tools/lap_local_probe.py`, a bounded author-side executable probe for
   any declared Local Agent capability. It verifies public wire invariants and
   declared JSON contracts without installing the package or claiming Host
