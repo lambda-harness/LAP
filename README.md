@@ -72,7 +72,33 @@ The suite validates the published schemas and vectors, then drives the Python
 echo Agent through a real stdin/stdout LAP exchange. When Go or Cargo is on
 `PATH`, it also exercises the matching reference implementation.
 
-### 3. Choose the next integration path
+### 3. Probe an external Agent package
+
+An Agent author can run one bounded, machine-readable Local wire probe against
+the exact entry point declared in any package's `agent.json`:
+
+```bash
+python tools/lap_local_probe.py --package /path/to/my-agent
+```
+
+For a package with multiple capabilities, select one and provide its valid JSON
+input explicitly:
+
+```bash
+python tools/lap_local_probe.py --package /path/to/my-agent \
+  --capability task.run \
+  --input '{"task":"verify the release"}'
+```
+
+The probe never invokes a shell. It validates the package manifest, selected
+input and successful output contracts, Local handshake identity, ordered stdout
+frames, correlation, run identity, and one terminal result. It executes only
+the command already declared by the package, so run it only for code you are
+willing to execute. Its JSON report intentionally omits the probe input, raw
+Agent output, command arguments, and package paths. It is Agent-side evidence,
+not a Host Runtime certification or authorization boundary.
+
+### 4. Choose the next integration path
 
 - **Build a local Agent:** start with the runnable
   [Python](examples/echo-agent/README.md),
@@ -149,6 +175,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Conformance](CONFORMANCE.md): required tests and conformance claims.
 - [Conformance Kit](conformance/README.md): portable vectors, report example,
   and the exact verification command.
+- [Local Agent Probe](tools/lap_local_probe.py): an author-side executable
+  check for one declared `lap-local/0.1` capability without a Host Runtime.
 - [Governance](GOVERNANCE.md): versioning and change process.
 - [LAP Enhancement Proposals](proposals/README.md): public design records for
   normative, compatibility, and security changes.

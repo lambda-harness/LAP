@@ -20,6 +20,15 @@ runs the Python, Go, and Rust reference echo Agents with it. This catches
 protocol drift in a form that an independent Host or Agent author can
 reproduce.
 
+`tools/lap_local_probe.py` lets an Agent author exercise the package's declared
+`lap-local` command directly. It adapts the public Host frame shape to one
+selected declared capability and JSON input, then validates the successful
+handshake, ordered Agent frames, run identity, terminal result, and declared
+output contract. It never installs the package or grants it authority, and its
+machine-readable report deliberately excludes raw input, Agent output, command
+arguments, and package paths. The probe is evidence for an Agent
+implementation, not a Host conformance certification.
+
 `host-metering.json` is a deterministic `lap-host-metering/0.1` arithmetic
 vector. It covers a worst-case reservation, provider-reported cached usage,
 and the required full-reservation fallback when usage is absent. It does not
@@ -74,6 +83,11 @@ must include a concise reproducible evidence reference.
 ```bash
 python -m pip install -r requirements-dev.txt
 python -m unittest discover -s tests -p "test_*.py"
+
+# Run a bounded Agent-side Local wire probe against one package entry point.
+python tools/lap_local_probe.py --package /path/to/my-agent \
+  --capability task.run \
+  --input '{"task":"verify the release"}'
 ```
 
 The test command validates all published examples, schemas, report example,

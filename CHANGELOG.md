@@ -4,6 +4,10 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added `tools/lap_local_probe.py`, a bounded author-side executable probe for
+  any declared Local Agent capability. It verifies public wire invariants and
+  declared JSON contracts without installing the package or claiming Host
+  conformance.
 - Added LEP-0007 and optional activation-time verification for a declared
   Local Workflow Profile. The evidence is tied to an exact validated release,
   fails a non-negotiating candidate with `LAP-204`, and never replaces the

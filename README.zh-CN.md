@@ -66,7 +66,29 @@ python -m unittest discover -s tests -p "test_*.py" -v
 该套件会验证已发布的 schema 和向量，随后通过真实 stdin/stdout LAP 交换驱动 Python
 Echo Agent。若 `PATH` 中有 Go 或 Cargo，还会运行相应语言的参考实现。
 
-### 3. 选择下一条集成路径
+### 3. 探测外部 Agent 包
+
+Agent 作者可以对任意包 `agent.json` 中声明的精确入口执行一次有界、机器可读的 Local
+线协议探测：
+
+```bash
+python tools/lap_local_probe.py --package /path/to/my-agent
+```
+
+多 capability 包必须显式选择一个 capability，并提供符合其契约的 JSON 输入：
+
+```bash
+python tools/lap_local_probe.py --package /path/to/my-agent \
+  --capability task.run \
+  --input '{"task":"verify the release"}'
+```
+
+该探测器绝不通过 shell 启动命令。它会验证包清单、所选输入和成功输出契约、Local 握手
+身份、有序 stdout 帧、关联 ID、运行身份以及唯一终态结果。它只执行包中已经声明的命令，
+因此仅应对愿意实际执行的代码运行。其 JSON 报告有意不包含探测输入、原始 Agent 输出、
+命令参数或包路径。它是 Agent 侧证据，不是 Host Runtime 认证或授权边界。
+
+### 4. 选择下一条集成路径
 
 - **构建本地 Agent：** 从可运行的
   [Python](examples/echo-agent/README.zh-CN.md)、
@@ -134,6 +156,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   实现声明。
 - [Conformance](CONFORMANCE.md)：必需测试和 conformance 声明。
 - [Conformance Kit](conformance/README.zh-CN.md)：可移植向量、报告示例和精确验证命令。
+- [Local Agent Probe](tools/lap_local_probe.py)：无需 Host Runtime，对一个已声明
+  `lap-local/0.1` capability 执行的 Agent 作者侧可执行检查。
 - [Governance](GOVERNANCE.md)：版本和变更流程。
 - [LAP Enhancement Proposals](proposals/README.zh-CN.md)：规范性、兼容性和安全变更的
   公开设计记录。

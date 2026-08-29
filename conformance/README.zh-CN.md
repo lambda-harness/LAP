@@ -13,6 +13,12 @@
 仓库测试会根据 Core schema 验证该向量，并用它运行 Python、Go 和 Rust 参考 Echo Agent。
 这能以独立 Host 或 Agent 作者可复现的形式发现协议漂移。
 
+`tools/lap_local_probe.py` 允许 Agent 作者直接驱动包中声明的 `lap-local` 命令。它会将公开
+Host 帧形态适配为一个已选择的声明 capability 和 JSON 输入，随后验证成功握手、有序 Agent
+帧、运行身份、终态结果和已声明输出契约。它绝不安装该包或授予其权限，机器可读报告也有意
+排除原始输入、Agent 输出、命令参数和包路径。该探测器是 Agent 实现的证据，而不是 Host
+conformance 认证。
+
 `host-metering.json` 是确定性的 `lap-host-metering/0.1` 算术向量。它涵盖最坏情况
 预留、提供方报告的缓存用量，以及用量缺失时必需的完整预留回退。它不证明 Host 的私有
 提供方集成或价格校准；这些属于实现本地 conformance 义务。
@@ -56,6 +62,11 @@ conformance 声明是符合
 ```bash
 python -m pip install -r requirements-dev.txt
 python -m unittest discover -s tests -p "test_*.py"
+
+# 对一个包入口运行有界的 Agent 侧 Local 线协议探测。
+python tools/lap_local_probe.py --package /path/to/my-agent \
+  --capability task.run \
+  --input '{"task":"verify the release"}'
 ```
 
 该命令会验证全部已发布示例、schema、报告示例和 Python 本地往返流程。若 Go 和 Rust
