@@ -9,6 +9,7 @@ import unittest
 from pathlib import Path
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives import serialization
 from jsonschema import Draft202012Validator
 
 
@@ -151,6 +152,41 @@ class PackageSigningTests(unittest.TestCase):
                 [sys.executable, str(tool), "verify", "--package", str(package),
                  "--key-id", "com.example.publisher",
                  "--public-key", public_key.read_text(encoding="ascii").strip()],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(json.loads(verified.stdout)["status"], "verified")
+
+    def test_reference_cli_accepts_a_dash_prefixed_base64url_public_key(self) -> None:
+        # This deterministic Ed25519 seed has a Base64URL public key beginning
+        # with "-", which argparse otherwise mistakes for another option.
+        key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(
+            "0000000000000000000000000000000000000000000000000000000000000021"
+        ))
+        public_key = public_key_base64url(key)
+        self.assertTrue(public_key.startswith("-"))
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            package = write_package(root)
+            private_key = root / "publisher.pem"
+            private_key.write_bytes(key.private_bytes(
+                serialization.Encoding.PEM,
+                serialization.PrivateFormat.PKCS8,
+                serialization.NoEncryption(),
+            ))
+            tool = ROOT / "tools" / "package_sign.py"
+            subprocess.run(
+                [sys.executable, str(tool), "sign", "--package", str(package),
+                 "--private-key", str(private_key), "--key-id", "com.example.publisher"],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            verified = subprocess.run(
+                [sys.executable, str(tool), "verify", "--package", str(package),
+                 "--key-id", "com.example.publisher", "--public-key", public_key],
                 check=True,
                 text=True,
                 capture_output=True,

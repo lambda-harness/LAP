@@ -22,6 +22,40 @@ from lap_package_signing import (
 )
 
 
+_PARSER_OPTIONS = frozenset((
+    "-h",
+    "--help",
+    "--package",
+    "--private-key",
+    "--public-key",
+    "--key-id",
+    "--overwrite",
+))
+
+
+def _normalize_dash_prefixed_public_key(argv: list[str]) -> list[str]:
+    """Keep a raw Base64URL public key from being parsed as an option.
+
+    A valid unpadded Base64URL Ed25519 key may start with ``-``.  Argparse
+    treats that form as an option when it follows ``--public-key`` as a
+    separate argument, while ``--public-key=<value>`` is unambiguous.  Preserve
+    real parser options so missing-value errors still remain useful.
+    """
+    normalized: list[str] = []
+    index = 0
+    while index < len(argv):
+        token = argv[index]
+        if token == "--public-key" and index + 1 < len(argv):
+            candidate = argv[index + 1]
+            if candidate.startswith("-") and candidate not in _PARSER_OPTIONS:
+                normalized.append(f"--public-key={candidate}")
+                index += 2
+                continue
+        normalized.append(token)
+        index += 1
+    return normalized
+
+
 def _manifest_identity(package: Path) -> tuple[str, str]:
     try:
         raw = json.loads((package / "agent.json").read_text(encoding="utf-8"))
@@ -126,7 +160,7 @@ def main() -> None:
                         help="raw 32-byte Ed25519 public key as unpadded base64url")
     verify.set_defaults(handler=command_verify)
 
-    args = parser.parse_args()
+    args = parser.parse_args(_normalize_dash_prefixed_public_key(sys.argv[1:]))
     try:
         result = args.handler(args)
     except PackageSigningError as exc:
