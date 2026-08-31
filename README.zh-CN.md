@@ -145,6 +145,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   规划上下文、用户拥有的版本化 Agent 图。
 - [Host Metering Profile](profiles/host-metering.md)：面向可强制执行的工作流输入和成本
   预算的可选 Host 直连模型计量。
+- [Model Relay Profile（草案）](profiles/model-relay.md)：面向外部 Local Agent 的
+  Host 可观测模型请求路径；在实现前不会放宽当前对外部预算的默认拒绝。
 - [Go Agent SDK](sdk/go/README.zh-CN.md)：无依赖的本地 Profile Agent 侧辅助工具；它不是
   Host Runtime，也不是 conformance 认证。
 - [Agent Manifest](schemas/agent-manifest.schema.json)、

@@ -23,6 +23,11 @@ conformance 认证。
 预留、提供方报告的缓存用量，以及用量缺失时必需的完整预留回退。它不证明 Host 的私有
 提供方集成或价格校准；这些属于实现本地 conformance 义务。
 
+`model-relay.json` 是 `lap-model-relay/0.1` 的草案治理向量。它固定 Local Profile
+协商、有界路由上下文、请求/响应 payload、幂等重放和 provider 调用前拒绝条件。它不让
+该 Profile 变得可声明：已发布的 Core 尚未注册 relay 帧类型，真实 Host 仍需证明提供方
+适配器和部署隔离。
+
 `workflow-release-admission.json` 定义排空外部发布的 Host 私有根作用域：精确的租户、
 会话、根运行和发布集合。它列出可继续执行的匹配子任务，以及不得启动目标 Agent 的跨
 作用域、已关闭和伪造 admission 情形。admission token 本身刻意不出现在任何 LAP

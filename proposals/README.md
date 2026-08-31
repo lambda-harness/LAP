@@ -44,3 +44,4 @@ normal pull request. State why no LEP is needed in that pull request.
 | [LEP-0006](LEP-0006-manifest-profile-declaration.md) | Implemented | `0.1.0-draft` | Discoverable package profile declarations with workflow preflight and per-Run proof. |
 | [LEP-0007](LEP-0007-activation-verified-workflow-profile.md) | Implemented | `0.1.0-draft` | Optional activation-time evidence for a declared Local Workflow Profile, without weakening per-Run proof. |
 | [LEP-0008](LEP-0008-canonical-profile-namespaces.md) | Implemented | `0.1.0-draft` | Canonical `lambda-harness` extension namespaces and explicit `0.2` profile migration. |
+| [LEP-0009](LEP-0009-host-model-relay.md) | Draft | `0.1.0-draft` | Host-mediated model requests for externally implemented Local Agents, without trusting self-reported usage. |

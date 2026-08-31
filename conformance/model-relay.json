@@ -1,0 +1,91 @@
+{
+  "profile": "lap-model-relay/0.1",
+  "status": "draft",
+  "extension_key": "io.github.lambda-harness.lap.model-relay",
+  "negotiation": {
+    "manifest_profiles": ["lap-local/0.1", "lap-model-relay/0.1"],
+    "host_offered_profiles": ["lap-local/0.1", "lap-model-relay/0.1"],
+    "agent_verified_profiles": ["lap-local/0.1", "lap-model-relay/0.1"]
+  },
+  "context_extension": {
+    "version": "0.1",
+    "routes": [
+      {
+        "id": "host.default",
+        "max_requests": 4,
+        "max_output_tokens": 512
+      }
+    ]
+  },
+  "request": {
+    "route": "host.default",
+    "input": {
+      "messages": [
+        { "role": "user", "content": "Summarize the approved release notes." }
+      ]
+    },
+    "max_output_tokens": 256
+  },
+  "response": {
+    "status": "succeeded",
+    "request_sha256": "d0b8b656f17d8a17789f78bd0c0b59251c43591fa330e17a73e36da5ca0892ce",
+    "output": { "text": "Release notes summarized." },
+    "usage": {
+      "source": "provider",
+      "input_tokens": 48,
+      "cached_tokens": 0,
+      "output_tokens": 12
+    }
+  },
+  "idempotent_replay": {
+    "same_request": true,
+    "provider_calls_added": 0,
+    "returns_original_response": true
+  },
+  "strict_budget_admission": {
+    "profile_negotiated": true,
+    "route_authorized": true,
+    "host_metering_configured": true,
+    "egress_isolation_enforced": true,
+    "egress_policy": "deny-all-except-host-relay",
+    "all_nested_model_work_shares_ledger": true,
+    "accepted": true
+  },
+  "required_rejections": [
+    {
+      "case": "missing negotiated profile",
+      "code": "LAP-204",
+      "provider_contacted": false
+    },
+    {
+      "case": "route not authorized for release capability",
+      "code": "LAP-302",
+      "provider_contacted": false
+    },
+    {
+      "case": "egress isolation is not deployment enforced",
+      "code": "LAP-302",
+      "provider_contacted": false
+    },
+    {
+      "case": "route output ceiling exceeded",
+      "code": "LAP-401",
+      "provider_contacted": false
+    },
+    {
+      "case": "route list has a duplicate or is not strictly ordered",
+      "code": "LAP-201",
+      "provider_contacted": false
+    },
+    {
+      "case": "idempotency key reused with a different canonical request",
+      "code": "LAP-201",
+      "provider_contacted": false
+    },
+    {
+      "case": "Agent self-reported usage without Host relay",
+      "code": "LAP-302",
+      "provider_contacted": false
+    }
+  ]
+}

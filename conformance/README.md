@@ -35,6 +35,13 @@ and the required full-reservation fallback when usage is absent. It does not
 prove a Host's private provider integration or pricing calibration; those are
 implementation-local conformance obligations.
 
+`model-relay.json` is a draft `lap-model-relay/0.1` governance vector. It
+fixes the Local profile negotiation, bounded route context, request/response
+payload shapes, idempotent replay, and pre-provider rejection conditions. It
+does not make the profile claimable: the published Core does not yet register
+the relay frame types, and a real Host still needs provider-adapter and
+deployment-isolation evidence.
+
 `workflow-release-admission.json` defines the host-private root scope for a
 draining external release: exact tenant, session, root run, and release set.
 It names the matching child that may continue and the cross-scope, closed, and

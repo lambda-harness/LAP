@@ -133,8 +133,12 @@ for binding the observed response to the request it dispatched. It also does
 not authorize tools, Agent installation, tenant access, or delegated spend.
 
 An interoperable profile for external Agent transports requires a separately
-verifiable request/usage attestation and is intentionally outside
-`lap-host-metering/0.1`.
+verifiable request/usage path and is intentionally outside
+`lap-host-metering/0.1`. The [Model Relay Profile draft](model-relay.md)
+defines one Local-only path in which the Host observes the actual provider
+request and response. It is not current conformance: until the relay and
+deployment-enforced egress isolation are implemented, a Host MUST continue to
+reject strict external budgets.
 
 The [portable arithmetic vector](../conformance/host-metering.json) fixes the
 0.1 rounding and fallback examples. It cannot prove a Host's provider

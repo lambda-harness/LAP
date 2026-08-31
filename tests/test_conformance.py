@@ -194,6 +194,84 @@ class ConformanceKitTests(unittest.TestCase):
         )
         self.assertEqual(fallback["expected_cost_microunits"], reserved)
 
+    def test_model_relay_draft_vector_refuses_unverifiable_external_metering(self) -> None:
+        vector = load_json(ROOT / "conformance" / "model-relay.json")
+        self.assertIsInstance(vector, dict)
+        self.assertEqual(vector["profile"], "lap-model-relay/0.1")
+        self.assertEqual(vector["status"], "draft")
+        self.assertEqual(
+            vector["extension_key"],
+            "io.github.lambda-harness.lap.model-relay",
+        )
+        negotiation = vector["negotiation"]
+        self.assertEqual(
+            negotiation["manifest_profiles"],
+            ["lap-local/0.1", "lap-model-relay/0.1"],
+        )
+        self.assertEqual(negotiation["host_offered_profiles"], negotiation["manifest_profiles"])
+        self.assertEqual(negotiation["agent_verified_profiles"], negotiation["manifest_profiles"])
+
+        validate("model-relay-context.schema.json", vector["context_extension"])
+        validate("model-relay-request.schema.json", vector["request"])
+        validate("model-relay-response.schema.json", vector["response"])
+        self.assertEqual(vector["response"]["usage"]["source"], "provider")
+        self.assertRegex(vector["response"]["request_sha256"], r"^[a-f0-9]{64}$")
+
+        invalid_context = json.loads(json.dumps(vector["context_extension"]))
+        invalid_context["routes"][0]["max_requests"] = 0
+        with self.assertRaises(ValidationError):
+            validate("model-relay-context.schema.json", invalid_context)
+        invalid_request = json.loads(json.dumps(vector["request"]))
+        invalid_request["provider"] = "untrusted-direct-endpoint"
+        with self.assertRaises(ValidationError):
+            validate("model-relay-request.schema.json", invalid_request)
+        failed_response = {
+            "status": "failed",
+            "request_sha256": vector["response"]["request_sha256"],
+            "error": {"code": "LAP-401", "message": "Route ceiling rejected."},
+        }
+        validate("model-relay-response.schema.json", failed_response)
+        failed_response["usage"] = vector["response"]["usage"]
+        with self.assertRaises(ValidationError):
+            validate("model-relay-response.schema.json", failed_response)
+
+        replay = vector["idempotent_replay"]
+        self.assertTrue(replay["same_request"])
+        self.assertTrue(replay["returns_original_response"])
+        self.assertEqual(replay["provider_calls_added"], 0)
+
+        admission = vector["strict_budget_admission"]
+        self.assertTrue(all(
+            admission[name]
+            for name in (
+                "profile_negotiated",
+                "route_authorized",
+                "host_metering_configured",
+                "egress_isolation_enforced",
+                "all_nested_model_work_shares_ledger",
+            )
+        ))
+        self.assertTrue(admission["accepted"])
+        self.assertEqual(admission["egress_policy"], "deny-all-except-host-relay")
+
+        rejections = {item["case"]: item for item in vector["required_rejections"]}
+        self.assertEqual(set(rejections), {
+            "missing negotiated profile",
+            "route not authorized for release capability",
+            "egress isolation is not deployment enforced",
+            "route output ceiling exceeded",
+            "route list has a duplicate or is not strictly ordered",
+            "idempotency key reused with a different canonical request",
+            "Agent self-reported usage without Host relay",
+        })
+        self.assertEqual(rejections["missing negotiated profile"]["code"], "LAP-204")
+        self.assertEqual(rejections["route output ceiling exceeded"]["code"], "LAP-401")
+        self.assertEqual(
+            rejections["route list has a duplicate or is not strictly ordered"]["code"],
+            "LAP-201",
+        )
+        self.assertTrue(all(item["provider_contacted"] is False for item in rejections.values()))
+
     def test_workflow_capability_scopes_vector_is_exact_and_pre_dispatch(self) -> None:
         vector = load_json(ROOT / "conformance" / "workflow-capability-scopes.json")
         self.assertIsInstance(vector, dict)

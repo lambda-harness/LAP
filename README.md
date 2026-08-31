@@ -162,6 +162,9 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   planning context.
 - [Host Metering Profile](profiles/host-metering.md): optional direct-model
   Host accounting for enforceable workflow input and cost budgets.
+- [Model Relay Profile (Draft)](profiles/model-relay.md): a reviewed path for
+  Host-observed model requests from an external Local Agent; it does not yet
+  weaken the current fail-closed external-budget rule.
 - [Go Agent SDK](sdk/go/README.md): dependency-free Agent-side helper for the
   Local Profile; it is not a Host Runtime or a conformance certification.
 - [Agent Manifest](schemas/agent-manifest.schema.json),

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/model-relay-response.schema.json",
+  "title": "LAP Model Relay Response Payload (Draft)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "request_sha256"],
+  "properties": {
+    "status": { "enum": ["succeeded", "failed"] },
+    "request_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "output": {},
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "input_tokens", "cached_tokens", "output_tokens"],
+      "properties": {
+        "source": { "enum": ["provider", "reservation"] },
+        "input_tokens": { "type": "integer", "minimum": 0 },
+        "cached_tokens": { "type": "integer", "minimum": 0 },
+        "output_tokens": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^LAP-[1-5][0-9]{2}$" },
+        "message": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "retryable": { "type": "boolean" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "succeeded" } } },
+      "then": {
+        "required": ["output", "usage"],
+        "not": { "required": ["error"] }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "failed" } } },
+      "then": {
+        "required": ["error"],
+        "not": {
+          "anyOf": [
+            { "required": ["output"] },
+            { "required": ["usage"] }
+          ]
+        }
+      }
+    }
+  ]
+}

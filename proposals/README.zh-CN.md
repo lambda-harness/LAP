@@ -38,3 +38,4 @@ LAP Enhancement Proposal（LEP）是 LAP 规范性行为、schema、profile、�
 | [LEP-0006](LEP-0006-manifest-profile-declaration.md) | Implemented | `0.1.0-draft` | 可发现的包 Profile 声明，以及工作流预检和逐运行证明。 |
 | [LEP-0007](LEP-0007-activation-verified-workflow-profile.md) | Implemented | `0.1.0-draft` | 已声明 Local Workflow Profile 的可选激活期证据，不削弱逐运行证明。 |
 | [LEP-0008](LEP-0008-canonical-profile-namespaces.md) | Implemented | `0.1.0-draft` | canonical `lambda-harness` 扩展命名空间与显式 `0.2` profile 迁移。 |
+| [LEP-0009](LEP-0009-host-model-relay.md) | Draft | `0.1.0-draft` | 面向外部 Local Agent 的 Host 代理模型请求，不信任 Agent 自报用量。 |

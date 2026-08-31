@@ -4,6 +4,11 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added LEP-0009 and the non-claimable `lap-model-relay/0.1` draft: portable
+  route, request, response, idempotency, and rejection contracts for a future
+  Host-observed external Local-Agent model relay. It preserves the current
+  fail-closed strict-budget behavior until provider relay and egress-isolation
+  evidence are implemented.
 - Superseded the former repository-owner extension namespace through LEP-0008.
   Current external workflow and inline-input profiles are `0.2`, use only the
   `io.github.lambda-harness.lap.*` keys, and fail legacy workflow packages
