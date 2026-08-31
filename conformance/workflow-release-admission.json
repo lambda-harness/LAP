@@ -1,5 +1,5 @@
 {
-  "profile": "lap-workflow/0.1",
+  "profile": "lap-workflow/0.2",
   "root": {
     "tenant_id": "tenant-acme",
     "session_id": "session-release-01",

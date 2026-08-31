@@ -43,7 +43,7 @@ itself is deliberately absent from every LAP envelope; implementations prove
 the private registry behavior with local lifecycle tests.
 
 `workflow-capability-scopes.json` defines a capability-scoped dynamic dispatch
-for `lap-workflow/0.1`. It distinguishes one accepted Agent-and-capability
+for `lap-workflow/0.2`. It distinguishes one accepted Agent-and-capability
 pair from an Agent outside the immutable allowlist, a capability declared by
 the Agent but absent from its scope, and an undeclared capability. Every
 rejection starts no target Agent. It also carries missing and extra scope-key
@@ -61,7 +61,7 @@ proof. A missing Workflow Profile fails with `LAP-204` before work starts; a
 failed activation probe leaves the candidate release inactive and unverified,
 while every invocation still requires the live proof.
 
-`a2a-inline-inputs.json` is a deterministic `lap-a2a-inline-inputs/0.1`
+`a2a-inline-inputs.json` is a deterministic `lap-a2a-inline-inputs/0.2`
 admission vector. It proves the manifest opt-in, Host-policy, and selected
 Skill MIME gates; the exact A2A `FilePart.bytes` mapping; and safe metadata.
 It intentionally cannot prove a remote Agent's retention or deletion behavior;

@@ -1,7 +1,7 @@
 {
   "lap": "0.1",
   "protocol_versions": ["0.1"],
-  "profiles": ["lap-local/0.1", "lap-workflow/0.1"],
+  "profiles": ["lap-local/0.1", "lap-workflow/0.2"],
   "id": "org.lap.orchestrator-agent-node",
   "display_name": "LAP Node.js External Orchestrator Agent",
   "version": "0.1.0",

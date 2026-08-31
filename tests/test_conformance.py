@@ -35,7 +35,7 @@ class ConformanceKitTests(unittest.TestCase):
     def test_a2a_inline_input_vector_requires_three_gates_and_preserves_exact_bytes(self) -> None:
         vector = load_json(ROOT / "conformance" / "a2a-inline-inputs.json")
         self.assertIsInstance(vector, dict)
-        self.assertEqual(vector["profile"], "lap-a2a-inline-inputs/0.1")
+        self.assertEqual(vector["profile"], "lap-a2a-inline-inputs/0.2")
         self.assertEqual(vector["a2a_version"], "0.3.0")
         self.assertTrue(vector["host_policy"]["allow_inline_input_artifacts"])
         self.assertGreater(vector["host_policy"]["max_request_bytes"], 0)
@@ -66,7 +66,7 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertEqual(part["file"]["bytes"], artifact["bytes_base64"])
         self.assertEqual(part["file"]["name"], artifact["name"])
         self.assertEqual(part["file"]["mimeType"], artifact["media_type"])
-        metadata = part["metadata"]["io.github.dongrv.lap.a2a.inline-inputs"]
+        metadata = part["metadata"]["io.github.lambda-harness.lap.a2a.inline-inputs"]
         self.assertEqual(metadata, {
             "id": artifact["id"],
             "sha256": artifact["sha256"],
@@ -113,7 +113,7 @@ class ConformanceKitTests(unittest.TestCase):
     def test_workflow_release_admission_vector_scopes_a_draining_release_to_one_root(self) -> None:
         vector = load_json(ROOT / "conformance" / "workflow-release-admission.json")
         self.assertIsInstance(vector, dict)
-        self.assertEqual(vector["profile"], "lap-workflow/0.1")
+        self.assertEqual(vector["profile"], "lap-workflow/0.2")
         root = vector["root"]
         self.assertEqual(set(root), {"tenant_id", "session_id", "workflow_run_id", "release"})
         self.assertTrue(root["tenant_id"])
@@ -197,7 +197,7 @@ class ConformanceKitTests(unittest.TestCase):
     def test_workflow_capability_scopes_vector_is_exact_and_pre_dispatch(self) -> None:
         vector = load_json(ROOT / "conformance" / "workflow-capability-scopes.json")
         self.assertIsInstance(vector, dict)
-        self.assertEqual(vector["profile"], "lap-workflow/0.1")
+        self.assertEqual(vector["profile"], "lap-workflow/0.2")
         workflow = vector["workflow"]
         validate("workflow.schema.json", workflow)
         node = workflow["nodes"][0]
@@ -240,9 +240,9 @@ class ConformanceKitTests(unittest.TestCase):
     def test_external_orchestrator_context_is_exact_and_machine_readable(self) -> None:
         vector = load_json(ROOT / "conformance" / "workflow-orchestrator-context.json")
         self.assertIsInstance(vector, dict)
-        self.assertEqual(vector["profile"], "lap-workflow/0.1")
+        self.assertEqual(vector["profile"], "lap-workflow/0.2")
         extension_key = vector["extension_key"]
-        self.assertEqual(extension_key, "io.github.dongrv.lap.workflow.orchestrator")
+        self.assertEqual(extension_key, "io.github.lambda-harness.lap.workflow.orchestrator")
 
         workflow = vector["workflow"]
         validate("workflow.schema.json", workflow)
@@ -269,8 +269,8 @@ class ConformanceKitTests(unittest.TestCase):
         )
 
         local_negotiation = vector["local_negotiation"]
-        self.assertEqual(local_negotiation["host_profiles"], ["lap-local/0.1", "lap-workflow/0.1"])
-        self.assertEqual(local_negotiation["required_agent_profiles"], ["lap-local/0.1", "lap-workflow/0.1"])
+        self.assertEqual(local_negotiation["host_profiles"], ["lap-local/0.1", "lap-workflow/0.2"])
+        self.assertEqual(local_negotiation["required_agent_profiles"], ["lap-local/0.1", "lap-workflow/0.2"])
         missing_profile = local_negotiation["missing_workflow_profile_rejection"]
         self.assertEqual(missing_profile["code"], "LAP-204")
         self.assertFalse(missing_profile["run_start_sent"])
@@ -278,7 +278,7 @@ class ConformanceKitTests(unittest.TestCase):
         local_manifest = vector["local_manifest_declaration"]
         self.assertEqual(
             local_manifest["profiles"],
-            ["lap-local/0.1", "lap-workflow/0.1"],
+            ["lap-local/0.1", "lap-workflow/0.2"],
         )
         missing_manifest_profile = local_manifest["missing_workflow_profile_rejection"]
         self.assertEqual(missing_manifest_profile["code"], "LAP-204")
@@ -287,15 +287,15 @@ class ConformanceKitTests(unittest.TestCase):
         local_activation = vector["local_activation_probe"]
         self.assertEqual(
             local_activation["manifest_profiles"],
-            ["lap-local/0.1", "lap-workflow/0.1"],
+            ["lap-local/0.1", "lap-workflow/0.2"],
         )
         self.assertEqual(
             local_activation["host_profiles"],
-            ["lap-local/0.1", "lap-workflow/0.1"],
+            ["lap-local/0.1", "lap-workflow/0.2"],
         )
         self.assertEqual(
             local_activation["verified_profiles"],
-            ["lap-local/0.1", "lap-workflow/0.1"],
+            ["lap-local/0.1", "lap-workflow/0.2"],
         )
         missing_activation_profile = local_activation["missing_workflow_profile_rejection"]
         self.assertEqual(missing_activation_profile["code"], "LAP-204")
@@ -485,9 +485,9 @@ class ConformanceKitTests(unittest.TestCase):
             "lap-core/0.1",
             "lap-local/0.1",
             "lap-a2a-bridge/0.1",
-            "lap-a2a-inline-inputs/0.1",
+            "lap-a2a-inline-inputs/0.2",
             "lap-package-signing/0.1",
-            "lap-workflow/0.1",
+            "lap-workflow/0.2",
             "lap-host-metering/0.1",
         ]
         all_published_families["results"] = [

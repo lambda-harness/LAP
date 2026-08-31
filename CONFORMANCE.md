@@ -61,7 +61,7 @@ extensions.
 | A2A-05 | Does not forward broad caller credentials or trust remote tenant claims. |
 | A2A-06 | Rejects an unnegotiated input-artifact transfer before creating a remote task; it never drops the attachment or maps a local URI to a remote URL. |
 
-## A2A Inline Inputs 0.1
+## A2A Inline Inputs 0.2
 
 | ID | Assertion |
 |---|---|
@@ -69,7 +69,7 @@ extensions.
 | INLINE-02 | Rechecks the approved regular source file's identity, size, and SHA-256 immediately before serialization; it sends Base64 bytes in an A2A `FilePart` and never a local path, `lap://` URI, remote URL, tenant identity, or credential. |
 | INLINE-03 | Bounds each serialized request before remote task creation, records only safe artifact identity metadata in progress/audit output, and rejects an admission, MIME, mutation, or size failure with a typed error before remote dispatch. |
 
-## Workflow 0.1
+## Workflow 0.2
 
 | ID | Assertion |
 |---|---|
@@ -85,10 +85,10 @@ extensions.
 | FLOW-10 | If the Host offers YAML workflow author input, bounds and safely parses it, rejects YAML graph/duplicate-key ambiguity and non-JSON data, and normalizes it to the same canonical JSON document before validation, persistence, digesting, or execution. |
 | FLOW-11 | Atomically issues a Host-private workflow release admission for the exact external release set and root tenant/session/run; a draining release admits only matching child scope, and new, cross-scope, closed, or fabricated admissions start no target Agent. |
 | FLOW-12 | When an orchestrator declares `allowed_capabilities`, validates an exact per-Agent mapping and rejects a proposed Agent/capability pair outside that immutable scope with `LAP-301` before the target Agent starts; absent scopes retain Agent-ID-only behavior. |
-| FLOW-13 | For an external orchestrator, derives the exact immutable Agent/capability planning view into `io.github.dongrv.lap.workflow.orchestrator`, includes it in run idempotency equivalence, preserves normal capability input, maps it as a separate A2A JSON data part when bridged, and still rejects an out-of-scope proposal before its target starts. |
-| FLOW-14 | For a Local external orchestrator, offers and verifies `lap-workflow/0.1` alongside `lap-local/0.1` before `run.start`; a missing workflow profile produces `LAP-204` and starts no proposal Run. |
-| FLOW-15 | Before accepting a workflow for execution, verifies that a Local external orchestrator package declares both `lap-local/0.1` and `lap-workflow/0.1` in its manifest; a missing declaration produces `LAP-204`. This discovery-time signal never replaces FLOW-14's per-Run negotiation. |
-| FLOW-16 | A Host claiming activation-time verification for Local workflow packages offers and verifies `lap-workflow/0.1` alongside `lap-local/0.1` when activating a candidate whose manifest declares it. Success is bound to that exact validated release; a missing workflow profile fails the candidate with `LAP-204`, leaves it inactive and unverified, and never replaces FLOW-14 for any invocation. |
+| FLOW-13 | For an external orchestrator, derives the exact immutable Agent/capability planning view into `io.github.lambda-harness.lap.workflow.orchestrator`, includes it in run idempotency equivalence, preserves normal capability input, maps it as a separate A2A JSON data part when bridged, and still rejects an out-of-scope proposal before its target starts. |
+| FLOW-14 | For a Local external orchestrator, offers and verifies `lap-workflow/0.2` alongside `lap-local/0.1` before `run.start`; a missing workflow profile produces `LAP-204` and starts no proposal Run. |
+| FLOW-15 | Before accepting a workflow for execution, verifies that a Local external orchestrator package declares both `lap-local/0.1` and `lap-workflow/0.2` in its manifest; a missing declaration produces `LAP-204`. This discovery-time signal never replaces FLOW-14's per-Run negotiation. |
+| FLOW-16 | A Host claiming activation-time verification for Local workflow packages offers and verifies `lap-workflow/0.2` alongside `lap-local/0.1` when activating a candidate whose manifest declares it. Success is bound to that exact validated release; a missing workflow profile fails the candidate with `LAP-204`, leaves it inactive and unverified, and never replaces FLOW-14 for any invocation. |
 
 ## Host Metering 0.1
 

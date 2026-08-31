@@ -1,5 +1,5 @@
 {
-  "profile": "lap-a2a-inline-inputs/0.1",
+  "profile": "lap-a2a-inline-inputs/0.2",
   "a2a_version": "0.3.0",
   "manifest_transport": {
     "kind": "a2a",
@@ -32,7 +32,7 @@
       "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     },
     "metadata": {
-      "io.github.dongrv.lap.a2a.inline-inputs": {
+      "io.github.lambda-harness.lap.a2a.inline-inputs": {
         "id": "input-01",
         "sha256": "0aa8f7c3b6e6a35126322046160441036d5b5b676564314f4e76a9b7e26107a0",
         "sizeBytes": 17

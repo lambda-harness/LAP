@@ -1,5 +1,5 @@
 {
-  "profile": "lap-workflow/0.1",
+  "profile": "lap-workflow/0.2",
   "strict_output_budget_workflow": {
     "lap": "0.1",
     "id": "com.example.budgeted-release-check",

@@ -184,6 +184,16 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [LAP Enhancement Proposals](proposals/README.md): public design records for
   normative, compatibility, and security changes.
 
+## Draft Migration
+
+The current draft uses `lap-workflow/0.2` and
+`lap-a2a-inline-inputs/0.2` under the canonical
+`io.github.lambda-harness.lap.*` namespace. The former `0.1` profile and key
+identifiers are historical records, not aliases. Upgrade an external workflow
+Agent by rebuilding its package, updating its declared and negotiated profile,
+then re-activating the exact release; a Host never sends both Context Packet
+keys for compatibility. See [LEP-0008](proposals/LEP-0008-canonical-profile-namespaces.md).
+
 ## Minimal Local Package
 
 ```text

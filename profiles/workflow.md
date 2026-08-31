@@ -1,6 +1,7 @@
 # LAP Workflow Profile
 
-- **Profile:** `lap-workflow/0.1`
+- **Profile:** `lap-workflow/0.2`
+- **Status:** Current draft; see [LEP-0008](../proposals/LEP-0008-canonical-profile-namespaces.md).
 - **Depends on:** [LAP Core 0.1](../SPEC.md)
 
 ## 1. Purpose
@@ -149,12 +150,12 @@ it MUST NOT silently downgrade a scoped document to an unscoped one.
 
 When the Agent selected by an `orchestrator` node uses a LAP external
 transport, the Host MUST provide the profile-owned Context Packet extension
-`io.github.dongrv.lap.workflow.orchestrator`. Its exact schema is
+`io.github.lambda-harness.lap.workflow.orchestrator`. Its exact schema is
 [`workflow-orchestrator-context.schema.json`](../schemas/workflow-orchestrator-context.schema.json):
 
 ```json
 {
-  "version": "0.1",
+  "version": "0.2",
   "allowed_dispatches": [
     {
       "agent_id": "com.example.inspector",
@@ -175,17 +176,17 @@ artifact locators, credentials, hidden reasoning, approval decisions, or
 mutable budget state.
 
 For a `lap-local` Agent selected by an `orchestrator` node, the Host MUST
-include both `lap-local/0.1` and `lap-workflow/0.1` in
+include both `lap-local/0.1` and `lap-workflow/0.2` in
 `agent.hello.payload.profiles` for that Run. Before it sends `run.start`, the
 Host MUST verify that `agent.welcome.payload.profiles` includes both profile
-identifiers. If `lap-workflow/0.1` is absent, the Host MUST reject the node with
+identifiers. If `lap-workflow/0.2` is absent, the Host MUST reject the node with
 `LAP-204` and MUST NOT send the Context Packet or start the proposal Run. This
 check is per orchestrator invocation: the same installed package MAY still
 serve ordinary Local capabilities that require only `lap-local/0.1`.
 
 Before a Host accepts a workflow for execution, its resolved Local external
 orchestrator package MUST declare both identifiers in `agent.json.profiles`.
-If the declaration is absent or lacks `lap-workflow/0.1`, the Host MUST reject
+If the declaration is absent or lacks `lap-workflow/0.2`, the Host MUST reject
 that orchestrator reference with `LAP-204` before the root workflow Run starts.
 The package declaration is an early compatibility signal only: a matching
 declaration never replaces the per-invocation `agent.hello` / `agent.welcome`
@@ -195,10 +196,10 @@ authority.
 #### Optional Activation Verification
 
 A Host MAY probe the Workflow Profile while explicitly activating a validated
-Local package that declares `lap-workflow/0.1`. A Host claiming `FLOW-16` MUST
-offer both `lap-local/0.1` and `lap-workflow/0.1` in the candidate's activation
+Local package that declares `lap-workflow/0.2`. A Host claiming `FLOW-16` MUST
+offer both `lap-local/0.1` and `lap-workflow/0.2` in the candidate's activation
 `agent.hello`, and MUST verify that the candidate's `agent.welcome` includes
-both identifiers before recording `lap-workflow/0.1` as activation-verified.
+both identifiers before recording `lap-workflow/0.2` as activation-verified.
 If the Workflow Profile is absent, the candidate activation MUST fail with
 `LAP-204`; the Host MUST NOT make that candidate release active or report its
 Workflow Profile as verified.
@@ -233,6 +234,14 @@ support for the selected Skill; a Host MUST reject the node with `LAP-204`
 before creating a remote task when that support is absent. A Host MUST NOT
 flatten this extension into an ambiguous text-only A2A request and claim this
 external-orchestrator behavior.
+
+### 3.4 Draft Migration From 0.1
+
+`lap-workflow/0.1` and its former extension key are historical draft records,
+not aliases for this profile. A current Host offers only `lap-workflow/0.2` to
+an external orchestrator and sends exactly one canonical Context Packet key.
+An Agent that only advertises `0.1` is rejected with `LAP-204` before planning
+context or `run.start`; it must be rebuilt and re-activated for `0.2`.
 
 ## 4. Edges and Terminal Policy
 

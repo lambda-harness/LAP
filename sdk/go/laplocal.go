@@ -28,7 +28,7 @@ const (
 	Profile = "lap-local/0.1"
 	// WorkflowProfile is the optional LAP Workflow profile used by a local
 	// Agent that can safely consume the Host-scoped orchestrator context.
-	WorkflowProfile = "lap-workflow/0.1"
+	WorkflowProfile = "lap-workflow/0.2"
 )
 
 var (

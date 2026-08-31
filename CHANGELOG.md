@@ -4,6 +4,10 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Superseded the former repository-owner extension namespace through LEP-0008.
+  Current external workflow and inline-input profiles are `0.2`, use only the
+  `io.github.lambda-harness.lap.*` keys, and fail legacy workflow packages
+  closed before planning context or dispatch.
 - Moved the public source identity, JSON Schema `$id` values, and Go SDK module
   to `github.com/lambda-harness/LAP`. Go consumers must update their import
   path before using this draft revision.

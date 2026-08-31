@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["version", "allowed_dispatches"],
   "properties": {
-    "version": { "const": "0.1" },
+    "version": { "const": "0.2" },
     "allowed_dispatches": {
       "type": "array",
       "minItems": 1,

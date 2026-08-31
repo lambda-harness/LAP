@@ -7,7 +7,7 @@ from typing import Any
 
 
 AGENT_ID = "org.lap.orchestrator-agent"
-EXTENSION_KEY = "io.github.dongrv.lap.workflow.orchestrator"
+EXTENSION_KEY = "io.github.lambda-harness.lap.workflow.orchestrator"
 sequence = 0
 
 
@@ -34,7 +34,7 @@ def dispatch_from_context(payload: dict[str, Any]) -> dict[str, Any]:
     context = payload.get("context")
     extensions = context.get("extensions") if isinstance(context, dict) else None
     extension = extensions.get(EXTENSION_KEY) if isinstance(extensions, dict) else None
-    if not isinstance(extension, dict) or extension.get("version") != "0.1":
+    if not isinstance(extension, dict) or extension.get("version") != "0.2":
         raise ValueError("Missing LAP workflow orchestrator context.")
     allowed = extension.get("allowed_dispatches")
     if not isinstance(allowed, list) or not allowed:
@@ -63,7 +63,7 @@ def handle(frame: dict[str, Any]) -> bool:
     if message_type == "agent.hello":
         emit("agent.welcome", {
             "selected_lap": "0.1",
-            "profiles": ["lap-local/0.1", "lap-workflow/0.1"],
+            "profiles": ["lap-local/0.1", "lap-workflow/0.2"],
             "agent_id": AGENT_ID,
             "version": "0.1.0",
             "max_concurrency": 1,

@@ -1,6 +1,6 @@
 {
-  "profile": "lap-workflow/0.1",
-  "extension_key": "io.github.dongrv.lap.workflow.orchestrator",
+  "profile": "lap-workflow/0.2",
+  "extension_key": "io.github.lambda-harness.lap.workflow.orchestrator",
   "workflow": {
     "lap": "0.1",
     "id": "com.example.external-orchestrator",
@@ -34,8 +34,8 @@
   "context_packet": {
     "input": { "target": "release" },
     "extensions": {
-      "io.github.dongrv.lap.workflow.orchestrator": {
-        "version": "0.1",
+      "io.github.lambda-harness.lap.workflow.orchestrator": {
+        "version": "0.2",
         "allowed_dispatches": [
           {
             "agent_id": "com.example.inspector",
@@ -52,11 +52,11 @@
   "local_negotiation": {
     "host_profiles": [
       "lap-local/0.1",
-      "lap-workflow/0.1"
+      "lap-workflow/0.2"
     ],
     "required_agent_profiles": [
       "lap-local/0.1",
-      "lap-workflow/0.1"
+      "lap-workflow/0.2"
     ],
     "missing_workflow_profile_rejection": {
       "code": "LAP-204",
@@ -66,7 +66,7 @@
   "local_manifest_declaration": {
     "profiles": [
       "lap-local/0.1",
-      "lap-workflow/0.1"
+      "lap-workflow/0.2"
     ],
     "missing_workflow_profile_rejection": {
       "code": "LAP-204",
@@ -76,15 +76,15 @@
   "local_activation_probe": {
     "manifest_profiles": [
       "lap-local/0.1",
-      "lap-workflow/0.1"
+      "lap-workflow/0.2"
     ],
     "host_profiles": [
       "lap-local/0.1",
-      "lap-workflow/0.1"
+      "lap-workflow/0.2"
     ],
     "verified_profiles": [
       "lap-local/0.1",
-      "lap-workflow/0.1"
+      "lap-workflow/0.2"
     ],
     "missing_workflow_profile_rejection": {
       "code": "LAP-204",
@@ -106,8 +106,8 @@
     "context_data_part": {
       "kind": "data",
       "data": {
-        "io.github.dongrv.lap.workflow.orchestrator": {
-          "version": "0.1",
+        "io.github.lambda-harness.lap.workflow.orchestrator": {
+          "version": "0.2",
           "allowed_dispatches": [
             {
               "agent_id": "com.example.inspector",
@@ -126,7 +126,7 @@
     {
       "case": "context leaks a Host-private identifier",
       "context_extension": {
-        "version": "0.1",
+        "version": "0.2",
         "allowed_dispatches": [
           {
             "agent_id": "com.example.inspector",

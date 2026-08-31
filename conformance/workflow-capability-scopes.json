@@ -1,5 +1,5 @@
 {
-  "profile": "lap-workflow/0.1",
+  "profile": "lap-workflow/0.2",
   "workflow": {
     "lap": "0.1",
     "id": "com.example.capability-scoped-dispatch",

@@ -160,7 +160,7 @@
         "agent_card_url": { "type": "string", "format": "uri" },
         "input_artifact_transfer": {
           "const": "inline",
-          "description": "Opt in to the optional lap-a2a-inline-inputs/0.1 profile. The Host remains the admission authority."
+          "description": "Opt in to the optional lap-a2a-inline-inputs/0.2 profile. The Host remains the admission authority."
         }
       }
     },

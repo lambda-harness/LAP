@@ -11,10 +11,10 @@ import (
 const (
 	// WorkflowOrchestratorContextExtension is the profile-owned Context Packet
 	// extension that carries an external orchestrator's immutable planning view.
-	WorkflowOrchestratorContextExtension = "io.github.dongrv.lap.workflow.orchestrator"
+	WorkflowOrchestratorContextExtension = "io.github.lambda-harness.lap.workflow.orchestrator"
 	// WorkflowOrchestratorContextVersion is the version of the extension shape.
 	// It is distinct from the LAP Core version so either can evolve independently.
-	WorkflowOrchestratorContextVersion = "0.1"
+	WorkflowOrchestratorContextVersion = "0.2"
 )
 
 var (

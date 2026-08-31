@@ -1,7 +1,7 @@
 # LAP Node.js 外部编排 Agent
 
 这个可运行的 `lap-local/0.1` 包是一个无依赖 Node.js 参考实现，用于演示有界的外部工作流
-编排 Agent。它读取 Host 持有的 `io.github.dongrv.lap.workflow.orchestrator` Context Packet
+编排 Agent。它读取 Host 持有的 `io.github.lambda-harness.lap.workflow.orchestrator` Context Packet
 扩展，并返回一条标准派遣提议。
 
 它刻意不包含目标 Agent 名称、capability、凭据、Host 路径、租户标识或授权逻辑。为了让示例
@@ -16,7 +16,7 @@ Host 工作流范围 -> Context Packet 扩展 -> 外部规划器提议
 ## 包内容
 
 - `agent.json`：带有 `plan.dispatch` capability 和已发布 dispatch 输出 schema 形状的
-  可移植包清单，并声明 `lap-local/0.1` 与 `lap-workflow/0.1`。
+  可移植包清单，并声明 `lap-local/0.1` 与 `lap-workflow/0.2`。
 - `orchestrator_agent.js`：无依赖的 stdin/stdout 协议循环。
 
 清单通过 `node orchestrator_agent.js` 运行它，需要 Node.js 18 或更高版本。Host 在激活前

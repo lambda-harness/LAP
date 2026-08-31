@@ -1,13 +1,13 @@
 # LEP-0004: Portable Orchestrator Context
 
-- **Status:** Implemented
+- **Status:** Superseded
 - **Type:** Standards Track
 - **Target version:** `0.1.0-draft`
 - **Authors:** `@dongrv`
 - **Created:** `2026-08-29`
 - **Requires:** LEP-0003
 - **Supersedes:** None
-- **Superseded by:** None
+- **Superseded by:** LEP-0008
 
 ## Summary
 
@@ -190,12 +190,12 @@ extension as a credential.
 
 ## Resolution Record
 
-- **Decision:** Implemented
-- **Decision date:** 2026-08-29
+- **Decision:** Superseded
+- **Decision date:** 2026-08-31
 - **Target release:** `0.1.0-draft`
-- **Rationale:** A bounded, deterministic Context Packet extension lets
-  independently packaged Agents construct portable dispatch proposals while
-  preserving Host-only authorization and execution.
-- **Required follow-up:** Independent Hosts should publish `FLOW-13` vector
-  results and local no-target-start evidence before making a workflow-profile
-  conformance claim.
+- **Rationale:** The bounded, deterministic Context Packet design remains;
+  LEP-0008 republishes it under the canonical `lambda-harness` extension
+  namespace and an explicitly negotiated `lap-workflow/0.2` profile.
+- **Required follow-up:** Independent Hosts should publish the revised
+  `FLOW-13` vector results and local no-target-start evidence before claiming
+  `lap-workflow/0.2` conformance.

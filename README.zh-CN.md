@@ -165,6 +165,14 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [LAP Enhancement Proposals](proposals/README.zh-CN.md)：规范性、兼容性和安全变更的
   公开设计记录。
 
+## 草案迁移
+
+当前草案在 canonical `io.github.lambda-harness.lap.*` 命名空间下使用
+`lap-workflow/0.2` 和 `lap-a2a-inline-inputs/0.2`。此前的 `0.1` profile 与键标识
+仅是历史记录，不是别名。升级外部工作流 Agent 时，需要重新构建其包、更新已声明和协商的
+profile，然后重新激活精确发布；Host 不会为了兼容性发送两份 Context Packet 键。请参阅
+[LEP-0008](proposals/LEP-0008-canonical-profile-namespaces.md)。
+
 ## 最小本地包
 
 ```text

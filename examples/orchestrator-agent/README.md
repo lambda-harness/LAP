@@ -2,7 +2,7 @@
 
 This runnable `lap-local/0.1` package demonstrates the smallest useful
 external workflow orchestrator. It reads the Host-owned
-`io.github.dongrv.lap.workflow.orchestrator` Context Packet extension and
+`io.github.lambda-harness.lap.workflow.orchestrator` Context Packet extension and
 returns one standard dispatch proposal.
 
 It deliberately contains no target Agent name, capability, credential, Host
@@ -24,7 +24,7 @@ cycles before it can start any target.
 
 - `agent.json`: a portable package manifest with the `plan.dispatch`
   capability, the published dispatch-output schema shape, and declarations for
-  both `lap-local/0.1` and `lap-workflow/0.1`.
+  both `lap-local/0.1` and `lap-workflow/0.2`.
 - `orchestrator_agent.py`: a dependency-free stdin/stdout protocol loop.
 
 The manifest runs `python orchestrator_agent.py`. Packaging it as a Windows

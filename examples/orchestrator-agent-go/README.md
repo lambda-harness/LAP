@@ -3,7 +3,7 @@
 This runnable `lap-local/0.1` package is a Go implementation of a bounded
 external workflow orchestrator. It uses the public [Go Agent SDK](../../sdk/go/README.md)
 to read the Host-owned
-`io.github.dongrv.lap.workflow.orchestrator` Context Packet extension and
+`io.github.lambda-harness.lap.workflow.orchestrator` Context Packet extension and
 return one standard dispatch proposal.
 
 It deliberately contains no target Agent name, capability, credential, Host
@@ -25,7 +25,7 @@ cycles before it can start any target.
 
 - `agent.json`: a portable package manifest with the `plan.dispatch`
   capability, the published dispatch-output schema shape, and declarations for
-  both `lap-local/0.1` and `lap-workflow/0.1`.
+  both `lap-local/0.1` and `lap-workflow/0.2`.
 - `main.go`: a dependency-free Agent implementation built on the Go SDK.
 - `go.mod`: a local SDK replacement so the repository example builds without
   downloading a moving dependency.

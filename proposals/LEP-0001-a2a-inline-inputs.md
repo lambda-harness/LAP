@@ -1,6 +1,6 @@
 # LEP-0001: A2A Inline Input Artifacts
 
-- **Status:** Draft
+- **Status:** Superseded
 - **Type:** Standards Track
 - **Target version:** `0.1.0-draft`
 - **Authors:** `@dongrv`
@@ -8,7 +8,7 @@
 - **Discussion:** No legacy issue is authoritative; follow [LAP Governance](../GOVERNANCE.md) for new discussion.
 - **Requires:** None
 - **Supersedes:** None
-- **Superseded by:** None
+- **Superseded by:** LEP-0008
 
 ## Summary
 
@@ -150,9 +150,11 @@ deletion, or content-safety claim beyond the Host's existing admission policy.
 
 ## Resolution Record
 
-- **Decision:** Pending public review
-- **Decision date:** Not applicable
+- **Decision:** Superseded
+- **Decision date:** `2026-08-31`
 - **Target release:** `0.1.0-draft`
-- **Rationale:** Pending implementer and security review.
-- **Required follow-up:** Review the profile, vector, and at least one
-  independent implementation before acceptance.
+- **Rationale:** The bounded transfer model is retained, but the current draft
+  profile and metadata namespace moved to the canonical `lambda-harness`
+  identity in LEP-0008.
+- **Required follow-up:** Implement and review the `0.2` profile, vector, and
+  at least one independent implementation.

@@ -10,8 +10,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_REPOSITORY = "https://github.com/lambda-harness/LAP"
 CANONICAL_GO_MODULE = "github.com/lambda-harness/LAP/sdk/go"
+CANONICAL_EXTENSION_PREFIX = "io.github.lambda-harness.lap."
 # Keep this split so the test can inspect its own source with the same rule.
 DEPRECATED_REPOSITORY = "github.com/" + "dongrv/LAP"
+DEPRECATED_EXTENSION_PREFIX = "io.github." + "dongrv.lap."
+HISTORICAL_NAMESPACE_RECORDS = frozenset((
+    "proposals/LEP-0001-a2a-inline-inputs.md",
+    "proposals/LEP-0004-portable-orchestrator-context.md",
+    "proposals/LEP-0008-canonical-profile-namespaces.md",
+))
+CANONICAL_EXTENSION_SURFACES = (
+    "profiles/workflow.md",
+    "profiles/a2a-inline-inputs.md",
+    "conformance/workflow-orchestrator-context.json",
+    "conformance/a2a-inline-inputs.json",
+    "sdk/go/workflow_context.go",
+)
 _TEXT_SUFFIXES = frozenset((
     ".md", ".toml", ".py", ".json", ".yml", ".yaml", ".go", ".rs",
 ))
@@ -60,6 +74,26 @@ class RepositoryIdentityTests(unittest.TestCase):
             content = path.read_text(encoding="utf-8")
             self.assertIn(install, content)
             self.assertIn(import_path, content)
+
+    def test_current_draft_sources_use_the_canonical_extension_namespace(self) -> None:
+        offenders: list[str] = []
+        for path in _tracked_text_files():
+            relative = path.relative_to(ROOT).as_posix()
+            content = path.read_text(encoding="utf-8")
+            if relative not in HISTORICAL_NAMESPACE_RECORDS and DEPRECATED_EXTENSION_PREFIX in content:
+                offenders.append(relative)
+
+        for relative in CANONICAL_EXTENSION_SURFACES:
+            self.assertIn(
+                CANONICAL_EXTENSION_PREFIX,
+                (ROOT / relative).read_text(encoding="utf-8"),
+                relative,
+            )
+        self.assertEqual(
+            offenders,
+            [],
+            f"Deprecated LAP extension namespace found in: {', '.join(offenders)}",
+        )
 
     def test_verification_workflow_installs_the_published_go_sdk(self) -> None:
         workflow = (ROOT / ".github" / "workflows" / "verify.yml").read_text(

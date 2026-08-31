@@ -5,7 +5,7 @@ const readline = require("node:readline");
 
 const AGENT_ID = "org.lap.orchestrator-agent-node";
 const AGENT_VERSION = "0.1.0";
-const EXTENSION_KEY = "io.github.dongrv.lap.workflow.orchestrator";
+const EXTENSION_KEY = "io.github.lambda-harness.lap.workflow.orchestrator";
 const AGENT_ID_PATTERN = /^[a-z][a-z0-9.-]{2,127}$/;
 const CAPABILITY_PATTERN = /^[a-z][a-z0-9._-]{2,127}$/;
 let sequence = 0;
@@ -43,7 +43,7 @@ function dispatchFromContext(payload) {
   const context = asObject(payload.context);
   const extensions = asObject(context.extensions);
   const extension = extensions[EXTENSION_KEY];
-  if (!hasExactKeys(extension, ["allowed_dispatches", "version"]) || extension.version !== "0.1") {
+  if (!hasExactKeys(extension, ["allowed_dispatches", "version"]) || extension.version !== "0.2") {
     throw new Error("invalid context");
   }
   const allowed = extension.allowed_dispatches;
@@ -90,7 +90,7 @@ function handle(frame) {
   if (messageType === "agent.hello") {
     emit("agent.welcome", {
       selected_lap: "0.1",
-      profiles: ["lap-local/0.1", "lap-workflow/0.1"],
+      profiles: ["lap-local/0.1", "lap-workflow/0.2"],
       agent_id: AGENT_ID,
       version: AGENT_VERSION,
       max_concurrency: 1,

@@ -28,7 +28,7 @@ conformance 认证。
 作用域、已关闭和伪造 admission 情形。admission token 本身刻意不出现在任何 LAP
 envelope 中；实现通过本地生命周期测试证明私有注册表行为。
 
-`workflow-capability-scopes.json` 定义 `lap-workflow/0.1` 的 capability 收窄动态
+`workflow-capability-scopes.json` 定义 `lap-workflow/0.2` 的 capability 收窄动态
 派遣。它区分一个可接受的 Agent-capability 对，以及不得启动目标 Agent 的三类拒绝：
 不在不可变 allow-list 的 Agent、Agent 已声明但不在其 scope 内的 capability、以及未声明
 的 capability。它还包含缺少或多出 scope key 的文档，要求 Host 在 JSON Schema 之外进行
@@ -42,7 +42,7 @@ Context Packet 扩展。它验证稳定排序的 Agent-capability 规划视图�
 `agent.hello` / `agent.welcome` 证明。workflow Profile 缺失会以 `LAP-204` 在工作开始前
 失败；激活探测失败会使候选发布保持 inactive 和 unverified，但每次调用仍必须完成实时证明。
 
-`a2a-inline-inputs.json` 是确定性的 `lap-a2a-inline-inputs/0.1` 准入向量。它验证
+`a2a-inline-inputs.json` 是确定性的 `lap-a2a-inline-inputs/0.2` 准入向量。它验证
 清单 opt-in、Host 策略和所选 Skill MIME 三道门；精确的 A2A `FilePart.bytes` 映射；
 以及安全元数据。它有意不证明远程 Agent 的保留或删除行为；那仍是管理员信任决策，
 而不是 conformance 声明。

@@ -2,7 +2,7 @@
 
 This runnable `lap-local/0.1` package is a dependency-free Node.js reference
 implementation of a bounded external workflow orchestrator. It reads the
-Host-owned `io.github.dongrv.lap.workflow.orchestrator` Context Packet
+Host-owned `io.github.lambda-harness.lap.workflow.orchestrator` Context Packet
 extension and returns one standard dispatch proposal.
 
 It deliberately contains no target Agent name, capability, credential, Host
@@ -20,7 +20,7 @@ Host workflow scope -> Context Packet extension -> external planner proposal
 
 - `agent.json`: a portable package manifest with the `plan.dispatch`
   capability, the published dispatch-output schema shape, and declarations for
-  both `lap-local/0.1` and `lap-workflow/0.1`.
+  both `lap-local/0.1` and `lap-workflow/0.2`.
 - `orchestrator_agent.js`: a dependency-free stdin/stdout protocol loop.
 
 The manifest runs `node orchestrator_agent.js` and requires Node.js 18 or

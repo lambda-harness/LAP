@@ -30,10 +30,11 @@ LAP Enhancement Proposal（LEP）是 LAP 规范性行为、schema、profile、�
 
 | LEP | 状态 | 目标 | 摘要 |
 |---|---|---|---|
-| [LEP-0001](LEP-0001-a2a-inline-inputs.md) | Draft | `0.1.0-draft` | 可选、有界的 A2A 内联输入 artifact 传输。 |
+| [LEP-0001](LEP-0001-a2a-inline-inputs.md) | Superseded | `0.1.0-draft` | 历史的、有界 A2A 内联输入 artifact 传输。 |
 | [LEP-0002](LEP-0002-scoped-workflow-release-admission.md) | Implemented | `0.1.0-draft` | 用于排空工作流发布的根作用域、Host 私有准入。 |
 | [LEP-0003](LEP-0003-capability-scoped-orchestrator-dispatch.md) | Implemented | `0.1.0-draft` | 面向编排器派遣的可选、按 Agent 收窄的 capability 范围。 |
-| [LEP-0004](LEP-0004-portable-orchestrator-context.md) | Implemented | `0.1.0-draft` | 面向外部编排器的可移植 Context Packet 规划视图。 |
+| [LEP-0004](LEP-0004-portable-orchestrator-context.md) | Superseded | `0.1.0-draft` | 历史的面向外部编排器的可移植 Context Packet 规划视图。 |
 | [LEP-0005](LEP-0005-local-workflow-profile-negotiation.md) | Implemented | `0.1.0-draft` | 外部 Agent 接收工作流编排上下文前的逐运行 Local 协商。 |
 | [LEP-0006](LEP-0006-manifest-profile-declaration.md) | Implemented | `0.1.0-draft` | 可发现的包 Profile 声明，以及工作流预检和逐运行证明。 |
 | [LEP-0007](LEP-0007-activation-verified-workflow-profile.md) | Implemented | `0.1.0-draft` | 已声明 Local Workflow Profile 的可选激活期证据，不削弱逐运行证明。 |
+| [LEP-0008](LEP-0008-canonical-profile-namespaces.md) | Implemented | `0.1.0-draft` | canonical `lambda-harness` 扩展命名空间与显式 `0.2` profile 迁移。 |

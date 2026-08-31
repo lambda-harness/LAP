@@ -1,7 +1,7 @@
 # LAP A2A Inline Inputs Profile
 
-- **Profile:** `lap-a2a-inline-inputs/0.1`
-- **Status:** Draft; see [LEP-0001](../proposals/LEP-0001-a2a-inline-inputs.md).
+- **Profile:** `lap-a2a-inline-inputs/0.2`
+- **Status:** Current draft; see [LEP-0008](../proposals/LEP-0008-canonical-profile-namespaces.md).
 - **Depends on:** [LAP Core 0.1](../SPEC.md),
   [`lap-a2a-bridge/0.1`](a2a-bridge.md), and a negotiated
   [A2A 0.3](https://a2a-protocol.org/v0.3.0/specification/) transport.
@@ -57,7 +57,7 @@ outbound user Message:
     "mimeType": "<approved media type>"
   },
   "metadata": {
-    "io.github.dongrv.lap.a2a.inline-inputs": {
+    "io.github.lambda-harness.lap.a2a.inline-inputs": {
       "id": "<Host artifact id>",
       "sha256": "<lowercase SHA-256>",
       "sizeBytes": 123
@@ -108,6 +108,10 @@ implementations continue to reject attachment-bearing Runs with `LAP-402`.
 Hosts and packages that do not opt in have no wire change. A Host that does not
 support this profile MUST reject rather than silently downgrade a requested
 attachment transfer.
+
+The former `lap-a2a-inline-inputs/0.1` identifier and metadata key are
+historical draft records, not aliases. A current Host emits only the canonical
+`0.2` metadata key and MUST NOT send both keys for one file part.
 
 ## 7. Conformance
 

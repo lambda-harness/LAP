@@ -79,10 +79,10 @@ class ExampleConformanceTests(unittest.TestCase):
         self.assertIsInstance(worker, dict)
         self.assertIsInstance(planner, dict)
         self.assertEqual(worker["profiles"], ["lap-local/0.1"])
-        self.assertEqual(planner["profiles"], ["lap-local/0.1", "lap-workflow/0.1"])
+        self.assertEqual(planner["profiles"], ["lap-local/0.1", "lap-workflow/0.2"])
 
         invalid = dict(worker)
-        invalid["profiles"] = ["lap-workflow/0.1"]
+        invalid["profiles"] = ["lap-workflow/0.2"]
         with self.assertRaises(ValidationError):
             validate("agent-manifest.schema.json", invalid)
 
@@ -169,7 +169,7 @@ class ExampleConformanceTests(unittest.TestCase):
 
     def test_local_orchestrator_agent_reads_host_scoped_context(self) -> None:
         extension = {
-            "version": "0.1",
+            "version": "0.2",
             "allowed_dispatches": [{
                 "agent_id": "com.example.inspector",
                 "capabilities": ["repo.inspect"],
@@ -192,7 +192,7 @@ class ExampleConformanceTests(unittest.TestCase):
                     "capability": "plan.dispatch",
                     "input": {"target": "release"},
                     "context": {"extensions": {
-                        "io.github.dongrv.lap.workflow.orchestrator": extension,
+                        "io.github.lambda-harness.lap.workflow.orchestrator": extension,
                     }},
                 },
             }),
@@ -213,7 +213,7 @@ class ExampleConformanceTests(unittest.TestCase):
         self.assertEqual([item["type"] for item in outputs], [
             "agent.welcome", "run.accepted", "run.progress", "run.result",
         ])
-        self.assertIn("lap-workflow/0.1", outputs[0]["payload"]["profiles"])
+        self.assertIn("lap-workflow/0.2", outputs[0]["payload"]["profiles"])
         for output in outputs:
             validate("envelope.schema.json", output)
         validate("run-result.schema.json", outputs[-1]["payload"])
@@ -267,7 +267,7 @@ class ExampleConformanceTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("node"), "Node.js runtime is not installed")
     def test_node_local_orchestrator_agent_reads_host_scoped_context(self) -> None:
         extension = {
-            "version": "0.1",
+            "version": "0.2",
             "allowed_dispatches": [{
                 "agent_id": "com.example.inspector",
                 "capabilities": ["repo.inspect"],
@@ -290,7 +290,7 @@ class ExampleConformanceTests(unittest.TestCase):
                     "capability": "plan.dispatch",
                     "input": {"target": "release"},
                     "context": {"extensions": {
-                        "io.github.dongrv.lap.workflow.orchestrator": extension,
+                        "io.github.lambda-harness.lap.workflow.orchestrator": extension,
                     }},
                 },
             }),
@@ -311,7 +311,7 @@ class ExampleConformanceTests(unittest.TestCase):
         self.assertEqual([item["type"] for item in outputs], [
             "agent.welcome", "run.accepted", "run.progress", "run.result",
         ])
-        self.assertIn("lap-workflow/0.1", outputs[0]["payload"]["profiles"])
+        self.assertIn("lap-workflow/0.2", outputs[0]["payload"]["profiles"])
         for output in outputs:
             validate("envelope.schema.json", output)
         validate("run-result.schema.json", outputs[-1]["payload"])
@@ -368,7 +368,7 @@ class ExampleConformanceTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("go"), "Go toolchain is not installed")
     def test_go_local_orchestrator_agent_reads_host_scoped_context(self) -> None:
         extension = {
-            "version": "0.1",
+            "version": "0.2",
             "allowed_dispatches": [{
                 "agent_id": "com.example.inspector",
                 "capabilities": ["repo.inspect"],
@@ -391,7 +391,7 @@ class ExampleConformanceTests(unittest.TestCase):
                     "capability": "plan.dispatch",
                     "input": {"target": "release"},
                     "context": {"extensions": {
-                        "io.github.dongrv.lap.workflow.orchestrator": extension,
+                        "io.github.lambda-harness.lap.workflow.orchestrator": extension,
                     }},
                 },
             }),
@@ -412,7 +412,7 @@ class ExampleConformanceTests(unittest.TestCase):
         self.assertEqual([item["type"] for item in outputs], [
             "agent.welcome", "run.accepted", "run.progress", "run.result",
         ])
-        self.assertIn("lap-workflow/0.1", outputs[0]["payload"]["profiles"])
+        self.assertIn("lap-workflow/0.2", outputs[0]["payload"]["profiles"])
         for output in outputs:
             validate("envelope.schema.json", output)
         validate("run-result.schema.json", outputs[-1]["payload"])

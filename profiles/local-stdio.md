@@ -53,7 +53,7 @@ signature.
 
 A Local package MAY declare a `profiles` array in `agent.json`. When present,
 it MUST include `lap-local/0.1`; an external workflow orchestrator declares
-both `lap-local/0.1` and `lap-workflow/0.1`. This declaration lets a Host show
+both `lap-local/0.1` and `lap-workflow/0.2`. This declaration lets a Host show
 the package's intended contracts and reject an incompatible workflow before it
 executes. It is neither a permission nor evidence that the spawned process
 accepted the profile. The per-Run negotiation in section 4 remains mandatory
@@ -61,8 +61,8 @@ for every profile-owned exchange.
 
 A Host MAY separately probe a declared dependent profile while activating a
 validated Local package. A Host claiming `FLOW-16` that probes a package
-declaring `lap-workflow/0.1` MUST offer both `lap-local/0.1` and
-`lap-workflow/0.1` in that activation's `agent.hello`, and MUST verify both in
+declaring `lap-workflow/0.2` MUST offer both `lap-local/0.1` and
+`lap-workflow/0.2` in that activation's `agent.hello`, and MUST verify both in
 `agent.welcome` before it records the Workflow Profile as activation-verified.
 That evidence is bound to the exact validated package release; it is not a
 permission and it never replaces the per-Run negotiation required by section 4.

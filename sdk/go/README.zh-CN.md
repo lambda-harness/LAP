@@ -122,7 +122,7 @@ server, err := laplocal.New(laplocal.Config{
 
 `AdditionalProfiles` 仅声明该可执行文件理解工作流契约，并不授予派遣权限。若 Local Agent 被
 用作 `orchestrator` 节点，符合规范的 Host 会在 `agent.hello` 中请求
-`lap-workflow/0.1`，在 `agent.welcome` 中确认它；缺失时不会发送 `run.start`。普通 Local
+`lap-workflow/0.2`，在 `agent.welcome` 中确认它；缺失时不会发送 `run.start`。普通 Local
 运行仍可只使用 `lap-local/0.1` 保持兼容。
 
 ```go
@@ -146,7 +146,7 @@ return laplocal.Succeeded("Proposed one Host-constrained dispatch.", proposal), 
 ```
 
 `found == false` 对普通 Agent 节点是正常情况。扩展存在时，
-`WorkflowOrchestratorContext` 会严格校验 LEP-0004 / Workflow Profile `0.1` 形状：精确的
+`WorkflowOrchestratorContext` 会严格校验 LEP-0008 / Workflow Profile `0.2` 形状：精确的
 扩展字段、版本、合法 ID、非空目标，以及规范的目标/capability 排序。它不授予调度权限；
 Host 在启动子 Agent 前仍会校验每条提议。请参阅可运行的[外部编排器 Agent 示例](../../examples/orchestrator-agent/README.zh-CN.md)
 和[Workflow Profile](../../profiles/workflow.md#33-external-orchestrator-context)。

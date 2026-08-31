@@ -30,9 +30,9 @@
           "lap-core/0.1",
           "lap-local/0.1",
           "lap-a2a-bridge/0.1",
-          "lap-a2a-inline-inputs/0.1",
+          "lap-a2a-inline-inputs/0.2",
           "lap-package-signing/0.1",
-          "lap-workflow/0.1",
+          "lap-workflow/0.2",
           "lap-host-metering/0.1"
         ]
       }

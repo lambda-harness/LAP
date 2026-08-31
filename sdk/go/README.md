@@ -132,7 +132,7 @@ server, err := laplocal.New(laplocal.Config{
 
 `AdditionalProfiles` advertises that this executable understands the workflow
 contract; it does not grant dispatch authority. For a Local Agent used by an
-`orchestrator` node, a conforming Host requests `lap-workflow/0.1` during
+`orchestrator` node, a conforming Host requests `lap-workflow/0.2` during
 `agent.hello`, verifies it in `agent.welcome`, and sends no `run.start` when
 the profile is absent. Ordinary Local runs remain compatible with only
 `lap-local/0.1`.
@@ -158,8 +158,8 @@ return laplocal.Succeeded("Proposed one Host-constrained dispatch.", proposal), 
 ```
 
 `found == false` is normal for ordinary Agent nodes. When the extension is
-present, `WorkflowOrchestratorContext` strictly verifies the LEP-0004 /
-Workflow Profile `0.1` shape: the exact extension fields, version, valid IDs,
+present, `WorkflowOrchestratorContext` strictly verifies the LEP-0008 /
+Workflow Profile `0.2` shape: the exact extension fields, version, valid IDs,
 non-empty targets, and canonical target/capability ordering. It does not
 authorize a dispatch; the Host validates every proposal before starting a
 child Agent. See the runnable [external orchestrator Agent example](../../examples/orchestrator-agent/README.md)

@@ -2,7 +2,7 @@
 
 这个可运行的 `lap-local/0.1` 包是一个有界外部工作流编排器的 Go 实现。它使用公开的
 [Go Agent SDK](../../sdk/go/README.zh-CN.md) 读取 Host 持有的
-`io.github.dongrv.lap.workflow.orchestrator` Context Packet 扩展，并返回一条标准派遣提议。
+`io.github.lambda-harness.lap.workflow.orchestrator` Context Packet 扩展，并返回一条标准派遣提议。
 
 它刻意不包含目标 Agent 名称、capability、凭据、Host 路径、租户标识或授权逻辑。为了让
 示例可重复，它选择 Host 提供的第一个目标及其第一个允许的 capability。生产级规划器可用
@@ -19,7 +19,7 @@ capability 范围、预算、截止时间、审批和环路。
 ## 包内容
 
 - `agent.json`：带有 `plan.dispatch` capability 和已发布 dispatch 输出 schema 形状的
-  可移植包清单，并声明 `lap-local/0.1` 与 `lap-workflow/0.1`。
+  可移植包清单，并声明 `lap-local/0.1` 与 `lap-workflow/0.2`。
 - `main.go`：基于 Go SDK 的无依赖 Agent 实现。
 - `go.mod`：本地 SDK replacement，使仓库示例无需下载变动依赖即可构建。
 
