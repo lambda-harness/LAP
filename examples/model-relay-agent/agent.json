@@ -1,0 +1,38 @@
+{
+  "lap": "0.1",
+  "protocol_versions": ["0.1"],
+  "profiles": ["lap-local/0.1", "lap-model-relay/0.1"],
+  "id": "org.lap.model-relay-agent",
+  "display_name": "LAP Model Relay Agent",
+  "version": "0.1.0",
+  "description": "Draft model-relay reference Agent for a Host-mediated model request.",
+  "transport": {
+    "kind": "lap-local",
+    "command": ["python", "model_relay_agent.py"],
+    "working_directory": "."
+  },
+  "capabilities": [
+    {
+      "id": "text.summarize_via_host",
+      "description": "Asks the Host relay for a bounded text response.",
+      "input_schema": {
+        "type": "object",
+        "required": ["text"],
+        "properties": { "text": { "type": "string", "minLength": 1 } },
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "required": ["model_text"],
+        "properties": { "model_text": { "type": "string", "minLength": 1 } },
+        "additionalProperties": false
+      },
+      "max_concurrency": 1
+    }
+  ],
+  "permissions": { "requested": [] },
+  "health_check": {
+    "startup_timeout_ms": 5000,
+    "shutdown_timeout_ms": 10000
+  }
+}

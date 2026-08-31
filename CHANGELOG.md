@@ -8,7 +8,8 @@ All notable changes to LAP are documented in this file.
   route, request, response, idempotency, and rejection contracts for a future
   Host-observed external Local-Agent model relay. It preserves the current
   fail-closed strict-budget behavior until provider relay and egress-isolation
-  evidence are implemented.
+  evidence are implemented. Added a deterministic Python reference Agent and
+  author-side stdio probe that exercise only the proposed exchange.
 - Superseded the former repository-owner extension namespace through LEP-0008.
   Current external workflow and inline-input profiles are `0.2`, use only the
   `io.github.lambda-harness.lap.*` keys, and fail legacy workflow packages

@@ -115,6 +115,11 @@ not a Host Runtime certification or authorization boundary.
 - **Compose a governed workflow:** use the
   [Workflow Profile](profiles/workflow.md) and the validated
   [workflow example](examples/release-check.workflow.json).
+- **Exercise the draft model relay:** run the
+  [reference Agent](examples/model-relay-agent/README.md) through
+  `python tools/lap_model_relay_probe.py --package examples/model-relay-agent`.
+  It verifies only the deterministic draft exchange and makes no provider,
+  isolation, metering, or Host conformance claim.
 
 ## Why LAP
 
@@ -165,6 +170,9 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Model Relay Profile (Draft)](profiles/model-relay.md): a reviewed path for
   Host-observed model requests from an external Local Agent; it does not yet
   weaken the current fail-closed external-budget rule.
+- [Model Relay Probe](tools/lap_model_relay_probe.py): an author-side,
+  deterministic Local stdio check for the draft request/response exchange;
+  it never calls a provider or certifies a Host Runtime.
 - [Go Agent SDK](sdk/go/README.md): dependency-free Agent-side helper for the
   Local Profile; it is not a Host Runtime or a conformance certification.
 - [Agent Manifest](schemas/agent-manifest.schema.json),

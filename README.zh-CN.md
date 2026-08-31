@@ -104,6 +104,10 @@ python tools/lap_local_probe.py --package /path/to/my-agent \
   [Conformance](CONFORMANCE.md) 形成可复现的实现声明。
 - **组合受治理的工作流：** 使用 [Workflow Profile](profiles/workflow.md) 与已经验证的
   [工作流示例](examples/release-check.workflow.json)。
+- **验证草案 Model Relay：** 通过
+  [参考 Agent](examples/model-relay-agent/README.zh-CN.md) 运行
+  `python tools/lap_model_relay_probe.py --package examples/model-relay-agent`。
+  它只验证确定性的草案交换，不对提供方、隔离、计量或 Host conformance 作出声明。
 
 ## 为什么需要 LAP
 
@@ -147,6 +151,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   预算的可选 Host 直连模型计量。
 - [Model Relay Profile（草案）](profiles/model-relay.md)：面向外部 Local Agent 的
   Host 可观测模型请求路径；在实现前不会放宽当前对外部预算的默认拒绝。
+- [Model Relay Probe](tools/lap_model_relay_probe.py)：面向作者的、确定性的 Local
+  stdio 草案请求/响应检查；它绝不调用提供方，也不认证 Host Runtime。
 - [Go Agent SDK](sdk/go/README.zh-CN.md)：无依赖的本地 Profile Agent 侧辅助工具；它不是
   Host Runtime，也不是 conformance 认证。
 - [Agent Manifest](schemas/agent-manifest.schema.json)、

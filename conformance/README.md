@@ -42,6 +42,12 @@ does not make the profile claimable: the published Core does not yet register
 the relay frame types, and a real Host still needs provider-adapter and
 deployment-isolation evidence.
 
+`tools/lap_model_relay_probe.py` drives the published Python relay reference
+through a deterministic stdin/stdout exchange. It validates the draft profile
+handshake, route context, idempotency key, correlated response, and terminal
+output contract without contacting a provider. It is Agent-side draft evidence,
+not a Host metering or sandbox certification.
+
 `workflow-release-admission.json` defines the host-private root scope for a
 draining external release: exact tenant, session, root run, and release set.
 It names the matching child that may continue and the cross-scope, closed, and

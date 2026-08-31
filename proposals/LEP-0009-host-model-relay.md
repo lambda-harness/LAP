@@ -141,6 +141,11 @@ portable contract, not a Host's provider adapter or sandbox. A future
 Implemented profile claim must add executable Local round-trip evidence and
 the matching rows in `CONFORMANCE.md`.
 
+`tools/lap_model_relay_probe.py` and the Python reference Agent provide that
+draft round-trip evidence with a deterministic simulated Host response. They
+do not contact a provider, certify a Host, or satisfy the isolation prerequisite
+for a production metering claim.
+
 ## Alternatives Considered
 
 | Alternative | Decision |

@@ -111,4 +111,8 @@ safe audit facts.
 This is a draft contract. LAP Core 0.1 does not yet register the proposed
 `model.request` and `model.response` envelope types, and no current Host may
 claim `lap-model-relay/0.1`. The portable vector documents the intended
-behavior for review without weakening current external-budget rejection.
+behavior for review without weakening current external-budget rejection. The
+[Model Relay Probe](../tools/lap_model_relay_probe.py) and its runnable
+[reference Agent](../examples/model-relay-agent/README.md) exercise only the
+deterministic author-side exchange; they do not call a provider or prove
+egress isolation.

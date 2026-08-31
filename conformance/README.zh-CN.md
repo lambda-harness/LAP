@@ -28,6 +28,10 @@ conformance 认证。
 该 Profile 变得可声明：已发布的 Core 尚未注册 relay 帧类型，真实 Host 仍需证明提供方
 适配器和部署隔离。
 
+`tools/lap_model_relay_probe.py` 会通过确定性的 stdin/stdout 交换驱动已发布的 Python
+Relay 参考实现。它验证草案 Profile 握手、路由上下文、幂等键、关联响应和终态输出契约，
+不会调用提供方。它是 Agent 侧的草案证据，不是 Host 计量或沙箱认证。
+
 `workflow-release-admission.json` 定义排空外部发布的 Host 私有根作用域：精确的租户、
 会话、根运行和发布集合。它列出可继续执行的匹配子任务，以及不得启动目标 Agent 的跨
 作用域、已关闭和伪造 admission 情形。admission token 本身刻意不出现在任何 LAP
