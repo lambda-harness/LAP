@@ -21,7 +21,7 @@ capability 范围、预算、截止时间、审批和环路。
 - `agent.json`：带有 `plan.dispatch` capability 和已发布 dispatch 输出 schema 形状的
   可移植包清单，并声明 `lap-local/0.1` 与 `lap-workflow/0.2`。
 - `main.go`：基于 Go SDK 的无依赖 Agent 实现。
-- `go.mod`：本地 SDK replacement，使仓库示例无需下载变动依赖即可构建。
+- `go.mod` 与 `go.sum`：固定的公开 Go SDK 依赖，使该源码包在 LAP 仓库外解压后也能构建。
 
 源码清单通过 `go run .` 运行，使 conformance 套件可在支持的平台上执行同一份源码。
 Host 在激活前仍必须显式允许 Go 可执行文件。该声明支持工作流预检，但 Host 仍会在每次运行

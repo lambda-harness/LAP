@@ -27,8 +27,8 @@ cycles before it can start any target.
   capability, the published dispatch-output schema shape, and declarations for
   both `lap-local/0.1` and `lap-workflow/0.2`.
 - `main.go`: a dependency-free Agent implementation built on the Go SDK.
-- `go.mod`: a local SDK replacement so the repository example builds without
-  downloading a moving dependency.
+- `go.mod` and `go.sum`: a pinned public Go SDK dependency, so this source
+  package also builds after extraction outside the LAP repository.
 
 The source manifest runs `go run .` so the conformance suite can execute the
 same source on supported platforms. A Host must still explicitly allow the Go
