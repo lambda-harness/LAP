@@ -30,7 +30,7 @@
   ],
   "permissions": { "requested": [] },
   "health_check": {
-    "startup_timeout_ms": 5000,
+    "startup_timeout_ms": 30000,
     "shutdown_timeout_ms": 10000
   }
 }
