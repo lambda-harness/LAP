@@ -1,4 +1,5 @@
 """Portable LAP 0.1 contract checks and the published local round trip."""
+
 from __future__ import annotations
 
 import base64
@@ -9,17 +10,20 @@ import subprocess
 import sys
 import unittest
 from pathlib import Path
+from typing import Any, cast
 
 from jsonschema import Draft202012Validator, FormatChecker
 from jsonschema.exceptions import ValidationError
-
 
 ROOT = Path(__file__).resolve().parents[1]
 CHECKER = FormatChecker()
 
 
-def load_json(path: Path) -> object:
-    return json.loads(path.read_text(encoding="utf-8"))
+def load_json(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise TypeError(f"Expected a JSON object in {path}.")
+    return cast(dict[str, Any], value)
 
 
 def validate(schema_name: str, value: object) -> None:
@@ -32,7 +36,9 @@ def ceil_div(numerator: int, denominator: int) -> int:
 
 
 class ConformanceKitTests(unittest.TestCase):
-    def test_a2a_inline_input_vector_requires_three_gates_and_preserves_exact_bytes(self) -> None:
+    def test_a2a_inline_input_vector_requires_three_gates_and_preserves_exact_bytes(
+        self,
+    ) -> None:
         vector = load_json(ROOT / "conformance" / "a2a-inline-inputs.json")
         self.assertIsInstance(vector, dict)
         self.assertEqual(vector["profile"], "lap-a2a-inline-inputs/0.2")
@@ -41,17 +47,22 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertGreater(vector["host_policy"]["max_request_bytes"], 0)
 
         transport = vector["manifest_transport"]
-        validate("agent-manifest.schema.json", {
-            "lap": "0.1",
-            "id": "org.lap.remote-workbook",
-            "display_name": "Remote workbook",
-            "version": "0.1.0",
-            "transport": transport,
-            "capabilities": [{
-                "id": "workbook.inspect",
-                "description": "Inspect an approved workbook.",
-            }],
-        })
+        validate(
+            "agent-manifest.schema.json",
+            {
+                "lap": "0.1",
+                "id": "org.lap.remote-workbook",
+                "display_name": "Remote workbook",
+                "version": "0.1.0",
+                "transport": transport,
+                "capabilities": [
+                    {
+                        "id": "workbook.inspect",
+                        "description": "Inspect an approved workbook.",
+                    }
+                ],
+            },
+        )
         self.assertEqual(transport["input_artifact_transfer"], "inline")
 
         artifact = vector["input_artifact"]
@@ -67,34 +78,50 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertEqual(part["file"]["name"], artifact["name"])
         self.assertEqual(part["file"]["mimeType"], artifact["media_type"])
         metadata = part["metadata"]["io.github.lambda-harness.lap.a2a.inline-inputs"]
-        self.assertEqual(metadata, {
-            "id": artifact["id"],
-            "sha256": artifact["sha256"],
-            "sizeBytes": artifact["size_bytes"],
-        })
+        self.assertEqual(
+            metadata,
+            {
+                "id": artifact["id"],
+                "sha256": artifact["sha256"],
+                "sizeBytes": artifact["size_bytes"],
+            },
+        )
 
         failures = {item["case"]: item for item in vector["required_rejections"]}
-        self.assertEqual(set(failures), {
-            "host policy disabled",
-            "manifest omitted inline opt-in",
-            "selected skill MIME mismatch",
-            "source digest changed before transfer",
-            "serialized request exceeds Host bound",
-        })
+        self.assertEqual(
+            set(failures),
+            {
+                "host policy disabled",
+                "manifest omitted inline opt-in",
+                "selected skill MIME mismatch",
+                "source digest changed before transfer",
+                "serialized request exceeds Host bound",
+            },
+        )
         self.assertEqual(failures["host policy disabled"]["code"], "LAP-402")
         self.assertEqual(failures["manifest omitted inline opt-in"]["code"], "LAP-402")
         self.assertEqual(failures["selected skill MIME mismatch"]["code"], "LAP-402")
-        self.assertEqual(failures["source digest changed before transfer"]["code"], "LAP-409")
-        self.assertEqual(failures["serialized request exceeds Host bound"]["code"], "LAP-401")
-        self.assertTrue(all(item["remote_task_created"] is False for item in failures.values()))
+        self.assertEqual(
+            failures["source digest changed before transfer"]["code"], "LAP-409"
+        )
+        self.assertEqual(
+            failures["serialized request exceeds Host bound"]["code"], "LAP-401"
+        )
+        self.assertTrue(
+            all(item["remote_task_created"] is False for item in failures.values())
+        )
 
-    def test_workflow_budget_vector_defines_explicit_static_and_dynamic_allocations(self) -> None:
+    def test_workflow_budget_vector_defines_explicit_static_and_dynamic_allocations(
+        self,
+    ) -> None:
         vector = load_json(ROOT / "conformance" / "workflow-budget.json")
         self.assertIsInstance(vector, dict)
         workflow = vector["strict_output_budget_workflow"]
         validate("workflow.schema.json", workflow)
         policy = workflow["policy"]
-        allocations = [node["budget"]["max_output_tokens"] for node in workflow["nodes"]]
+        allocations = [
+            node["budget"]["max_output_tokens"] for node in workflow["nodes"]
+        ]
         self.assertLessEqual(sum(allocations), policy["max_output_tokens"])
         proposal = vector["dynamic_dispatch"]
         self.assertEqual(set(proposal), {"agent_id", "capability", "input", "budget"})
@@ -107,15 +134,23 @@ class ConformanceKitTests(unittest.TestCase):
 
         oversubscribed = vector["oversubscribed_static_allocations"]
         validate("workflow.schema.json", oversubscribed)
-        invalid_allocations = [node["budget"]["max_output_tokens"] for node in oversubscribed["nodes"]]
-        self.assertGreater(sum(invalid_allocations), oversubscribed["policy"]["max_output_tokens"])
+        invalid_allocations = [
+            node["budget"]["max_output_tokens"] for node in oversubscribed["nodes"]
+        ]
+        self.assertGreater(
+            sum(invalid_allocations), oversubscribed["policy"]["max_output_tokens"]
+        )
 
-    def test_workflow_release_admission_vector_scopes_a_draining_release_to_one_root(self) -> None:
+    def test_workflow_release_admission_vector_scopes_a_draining_release_to_one_root(
+        self,
+    ) -> None:
         vector = load_json(ROOT / "conformance" / "workflow-release-admission.json")
         self.assertIsInstance(vector, dict)
         self.assertEqual(vector["profile"], "lap-workflow/0.2")
         root = vector["root"]
-        self.assertEqual(set(root), {"tenant_id", "session_id", "workflow_run_id", "release"})
+        self.assertEqual(
+            set(root), {"tenant_id", "session_id", "workflow_run_id", "release"}
+        )
         self.assertTrue(root["tenant_id"])
         self.assertTrue(root["session_id"])
         self.assertTrue(root["workflow_run_id"])
@@ -123,11 +158,14 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertRegex(root["release"]["release_identity"], r"^sha256:[a-f0-9]{64}$")
 
         admission = vector["admission"]
-        self.assertEqual(admission, {
-            "host_private": True,
-            "serialized_to_agent": False,
-            "invalidated_on_root_terminal": True,
-        })
+        self.assertEqual(
+            admission,
+            {
+                "host_private": True,
+                "serialized_to_agent": False,
+                "invalidated_on_root_terminal": True,
+            },
+        )
         accepted = vector["accepted_child"]
         self.assertEqual(accepted["tenant_id"], root["tenant_id"])
         self.assertEqual(accepted["session_id"], root["session_id"])
@@ -135,22 +173,31 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertTrue(accepted["agent_started"])
 
         rejections = {item["case"]: item for item in vector["required_rejections"]}
-        self.assertEqual(set(rejections), {
-            "new root after release begins draining",
-            "tenant mismatch",
-            "session mismatch",
-            "root run mismatch",
-            "closed admission",
-            "fabricated admission",
-        })
-        self.assertTrue(all(item["agent_started"] is False for item in rejections.values()))
+        self.assertEqual(
+            set(rejections),
+            {
+                "new root after release begins draining",
+                "tenant mismatch",
+                "session mismatch",
+                "root run mismatch",
+                "closed admission",
+                "fabricated admission",
+            },
+        )
+        self.assertTrue(
+            all(item["agent_started"] is False for item in rejections.values())
+        )
         self.assertEqual(rejections["tenant mismatch"]["tenant_id"], "tenant-other")
         self.assertEqual(rejections["session mismatch"]["session_id"], "session-other")
-        self.assertEqual(rejections["root run mismatch"]["parent_run_id"], "workflow-other")
+        self.assertEqual(
+            rejections["root run mismatch"]["parent_run_id"], "workflow-other"
+        )
         self.assertEqual(rejections["closed admission"]["admission"], "closed")
         self.assertEqual(rejections["fabricated admission"]["admission"], "fabricated")
 
-    def test_host_metering_vector_uses_integer_reservation_and_conservative_fallback(self) -> None:
+    def test_host_metering_vector_uses_integer_reservation_and_conservative_fallback(
+        self,
+    ) -> None:
         vector = load_json(ROOT / "conformance" / "host-metering.json")
         self.assertIsInstance(vector, dict)
         self.assertEqual(vector["profile"], "lap-host-metering/0.1")
@@ -167,34 +214,39 @@ class ConformanceKitTests(unittest.TestCase):
                 + ceil_div(output_tokens * prices["output"], denominator)
             )
 
-        reserved = (
-            ceil_div(
-                reservation["input_upper_bound_tokens"]
-                * max(prices["input"], prices["cached_input"]),
-                denominator,
-            )
-            + ceil_div(
-                reservation["output_upper_bound_tokens"] * prices["output"],
-                denominator,
-            )
+        reserved = ceil_div(
+            reservation["input_upper_bound_tokens"]
+            * max(prices["input"], prices["cached_input"]),
+            denominator,
+        ) + ceil_div(
+            reservation["output_upper_bound_tokens"] * prices["output"],
+            denominator,
         )
         self.assertEqual(reserved, reservation["expected_cost_microunits"])
 
         settlement = vector["settlement"]
         observed = settlement["provider_usage"]
         self.assertEqual(
-            cost(observed["input_tokens"], observed["cached_tokens"], observed["output_tokens"]),
+            cost(
+                observed["input_tokens"],
+                observed["cached_tokens"],
+                observed["output_tokens"],
+            ),
             settlement["expected_cost_microunits"],
         )
 
         fallback = vector["missing_usage_settlement"]
         self.assertEqual(
-            cost(fallback["expected_input_tokens"], 0, fallback["expected_output_tokens"]),
+            cost(
+                fallback["expected_input_tokens"], 0, fallback["expected_output_tokens"]
+            ),
             fallback["expected_cost_microunits"],
         )
         self.assertEqual(fallback["expected_cost_microunits"], reserved)
 
-    def test_model_relay_draft_vector_refuses_unverifiable_external_metering(self) -> None:
+    def test_model_relay_draft_vector_refuses_unverifiable_external_metering(
+        self,
+    ) -> None:
         vector = load_json(ROOT / "conformance" / "model-relay.json")
         self.assertIsInstance(vector, dict)
         self.assertEqual(vector["profile"], "lap-model-relay/0.1")
@@ -208,8 +260,12 @@ class ConformanceKitTests(unittest.TestCase):
             negotiation["manifest_profiles"],
             ["lap-local/0.1", "lap-model-relay/0.1"],
         )
-        self.assertEqual(negotiation["host_offered_profiles"], negotiation["manifest_profiles"])
-        self.assertEqual(negotiation["agent_verified_profiles"], negotiation["manifest_profiles"])
+        self.assertEqual(
+            negotiation["host_offered_profiles"], negotiation["manifest_profiles"]
+        )
+        self.assertEqual(
+            negotiation["agent_verified_profiles"], negotiation["manifest_profiles"]
+        )
 
         validate("model-relay-context.schema.json", vector["context_extension"])
         validate("model-relay-request.schema.json", vector["request"])
@@ -241,36 +297,43 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertEqual(replay["provider_calls_added"], 0)
 
         admission = vector["strict_budget_admission"]
-        self.assertTrue(all(
-            admission[name]
-            for name in (
-                "profile_negotiated",
-                "route_authorized",
-                "host_metering_configured",
-                "egress_isolation_enforced",
-                "all_nested_model_work_shares_ledger",
+        self.assertTrue(
+            all(
+                admission[name]
+                for name in (
+                    "profile_negotiated",
+                    "route_authorized",
+                    "host_metering_configured",
+                    "egress_isolation_enforced",
+                    "all_nested_model_work_shares_ledger",
+                )
             )
-        ))
+        )
         self.assertTrue(admission["accepted"])
         self.assertEqual(admission["egress_policy"], "deny-all-except-host-relay")
 
         rejections = {item["case"]: item for item in vector["required_rejections"]}
-        self.assertEqual(set(rejections), {
-            "missing negotiated profile",
-            "route not authorized for release capability",
-            "egress isolation is not deployment enforced",
-            "route output ceiling exceeded",
-            "route list has a duplicate or is not strictly ordered",
-            "idempotency key reused with a different canonical request",
-            "Agent self-reported usage without Host relay",
-        })
+        self.assertEqual(
+            set(rejections),
+            {
+                "missing negotiated profile",
+                "route not authorized for release capability",
+                "egress isolation is not deployment enforced",
+                "route output ceiling exceeded",
+                "route list has a duplicate or is not strictly ordered",
+                "idempotency key reused with a different canonical request",
+                "Agent self-reported usage without Host relay",
+            },
+        )
         self.assertEqual(rejections["missing negotiated profile"]["code"], "LAP-204")
         self.assertEqual(rejections["route output ceiling exceeded"]["code"], "LAP-401")
         self.assertEqual(
             rejections["route list has a duplicate or is not strictly ordered"]["code"],
             "LAP-201",
         )
-        self.assertTrue(all(item["provider_contacted"] is False for item in rejections.values()))
+        self.assertTrue(
+            all(item["provider_contacted"] is False for item in rejections.values())
+        )
 
     def test_workflow_capability_scopes_vector_is_exact_and_pre_dispatch(self) -> None:
         vector = load_json(ROOT / "conformance" / "workflow-capability-scopes.json")
@@ -282,7 +345,11 @@ class ConformanceKitTests(unittest.TestCase):
         allowed = set(node["allowed_agent_ids"])
         scopes = node["allowed_capabilities"]
         self.assertEqual(set(scopes), allowed)
-        self.assertTrue(all(values and len(values) == len(set(values)) for values in scopes.values()))
+        self.assertTrue(
+            all(
+                values and len(values) == len(set(values)) for values in scopes.values()
+            )
+        )
 
         admitted = vector["admitted_capabilities"]
         accepted = vector["accepted_dispatch"]
@@ -292,15 +359,25 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertTrue(accepted["target_agent_started"])
 
         rejections = {item["case"]: item for item in vector["required_rejections"]}
-        self.assertEqual(set(rejections), {
-            "Agent outside immutable allowlist",
-            "Declared capability outside scoped mapping",
-            "Undeclared capability",
-        })
+        self.assertEqual(
+            set(rejections),
+            {
+                "Agent outside immutable allowlist",
+                "Declared capability outside scoped mapping",
+                "Undeclared capability",
+            },
+        )
         self.assertTrue(all(item["code"] == "LAP-301" for item in rejections.values()))
-        self.assertTrue(all(item["target_agent_started"] is False for item in rejections.values()))
-        self.assertNotIn(rejections["Agent outside immutable allowlist"]["proposal"]["agent_id"], allowed)
-        scoped_out = rejections["Declared capability outside scoped mapping"]["proposal"]
+        self.assertTrue(
+            all(item["target_agent_started"] is False for item in rejections.values())
+        )
+        self.assertNotIn(
+            rejections["Agent outside immutable allowlist"]["proposal"]["agent_id"],
+            allowed,
+        )
+        scoped_out = rejections["Declared capability outside scoped mapping"][
+            "proposal"
+        ]
         self.assertIn(scoped_out["agent_id"], allowed)
         self.assertNotIn(scoped_out["capability"], scopes[scoped_out["agent_id"]])
         self.assertIn(scoped_out["capability"], admitted[scoped_out["agent_id"]])
@@ -320,7 +397,9 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertIsInstance(vector, dict)
         self.assertEqual(vector["profile"], "lap-workflow/0.2")
         extension_key = vector["extension_key"]
-        self.assertEqual(extension_key, "io.github.lambda-harness.lap.workflow.orchestrator")
+        self.assertEqual(
+            extension_key, "io.github.lambda-harness.lap.workflow.orchestrator"
+        )
 
         workflow = vector["workflow"]
         validate("workflow.schema.json", workflow)
@@ -333,10 +412,12 @@ class ConformanceKitTests(unittest.TestCase):
             [item["agent_id"] for item in extension["allowed_dispatches"]],
             sorted(node["allowed_agent_ids"]),
         )
-        self.assertTrue(all(
-            item["capabilities"] == sorted(item["capabilities"])
-            for item in extension["allowed_dispatches"]
-        ))
+        self.assertTrue(
+            all(
+                item["capabilities"] == sorted(item["capabilities"])
+                for item in extension["allowed_dispatches"]
+            )
+        )
         scopes = node["allowed_capabilities"]
         self.assertEqual(
             {
@@ -347,8 +428,13 @@ class ConformanceKitTests(unittest.TestCase):
         )
 
         local_negotiation = vector["local_negotiation"]
-        self.assertEqual(local_negotiation["host_profiles"], ["lap-local/0.1", "lap-workflow/0.2"])
-        self.assertEqual(local_negotiation["required_agent_profiles"], ["lap-local/0.1", "lap-workflow/0.2"])
+        self.assertEqual(
+            local_negotiation["host_profiles"], ["lap-local/0.1", "lap-workflow/0.2"]
+        )
+        self.assertEqual(
+            local_negotiation["required_agent_profiles"],
+            ["lap-local/0.1", "lap-workflow/0.2"],
+        )
         missing_profile = local_negotiation["missing_workflow_profile_rejection"]
         self.assertEqual(missing_profile["code"], "LAP-204")
         self.assertFalse(missing_profile["run_start_sent"])
@@ -375,7 +461,9 @@ class ConformanceKitTests(unittest.TestCase):
             local_activation["verified_profiles"],
             ["lap-local/0.1", "lap-workflow/0.2"],
         )
-        missing_activation_profile = local_activation["missing_workflow_profile_rejection"]
+        missing_activation_profile = local_activation[
+            "missing_workflow_profile_rejection"
+        ]
         self.assertEqual(missing_activation_profile["code"], "LAP-204")
         self.assertFalse(missing_activation_profile["release_active"])
         self.assertEqual(missing_activation_profile["verified_profiles"], [])
@@ -387,18 +475,26 @@ class ConformanceKitTests(unittest.TestCase):
 
         a2a_mapping = vector["a2a_mapping"]
         self.assertEqual(a2a_mapping["required_input_mode"], "application/json")
-        self.assertEqual(a2a_mapping["context_data_part"], {
-            "kind": "data",
-            "data": {extension_key: extension},
-        })
+        self.assertEqual(
+            a2a_mapping["context_data_part"],
+            {
+                "kind": "data",
+                "data": {extension_key: extension},
+            },
+        )
 
         rejections = {item["case"]: item for item in vector["required_rejections"]}
-        self.assertEqual(set(rejections), {
-            "context leaks a Host-private identifier",
-            "proposal exceeds immutable scope",
-            "A2A skill lacks JSON input support",
-        })
-        leaked_context = rejections["context leaks a Host-private identifier"]["context_extension"]
+        self.assertEqual(
+            set(rejections),
+            {
+                "context leaks a Host-private identifier",
+                "proposal exceeds immutable scope",
+                "A2A skill lacks JSON input support",
+            },
+        )
+        leaked_context = rejections["context leaks a Host-private identifier"][
+            "context_extension"
+        ]
         with self.assertRaises(ValidationError):
             validate("workflow-orchestrator-context.schema.json", leaked_context)
         out_of_scope = rejections["proposal exceeds immutable scope"]
@@ -409,11 +505,15 @@ class ConformanceKitTests(unittest.TestCase):
         self.assertEqual(no_json["code"], "LAP-204")
         self.assertFalse(no_json["remote_task_created"])
 
-    def test_capability_contract_vector_has_distinct_valid_and_invalid_instances(self) -> None:
+    def test_capability_contract_vector_has_distinct_valid_and_invalid_instances(
+        self,
+    ) -> None:
         vector = load_json(ROOT / "conformance" / "capability-contract.json")
         self.assertIsInstance(vector, dict)
         self.assertEqual(vector["lap"], "0.1")
-        self.assertEqual(vector["schema_draft"], "https://json-schema.org/draft/2020-12/schema")
+        self.assertEqual(
+            vector["schema_draft"], "https://json-schema.org/draft/2020-12/schema"
+        )
         capability = vector["capability"]
         self.assertIsInstance(capability, dict)
         for field, valid_key, invalid_key in (
@@ -428,8 +528,9 @@ class ConformanceKitTests(unittest.TestCase):
             with self.assertRaises(ValidationError):
                 validator.validate(vector[invalid_key])
 
-    def _assert_local_roundtrip(self, command: list[str], directory: Path, *,
-                                agent_id: str, version: str) -> None:
+    def _assert_local_roundtrip(
+        self, command: list[str], directory: Path, *, agent_id: str, version: str
+    ) -> None:
         vector = load_json(ROOT / "conformance" / "local-stdio-roundtrip.json")
         self.assertIsInstance(vector, dict)
         host_frames = vector["host_frames"]
@@ -455,7 +556,9 @@ class ConformanceKitTests(unittest.TestCase):
         )
         outputs = [json.loads(line) for line in completed.stdout.splitlines()]
         self.assertEqual([frame["type"] for frame in outputs], expected["agent_types"])
-        self.assertEqual([frame["seq"] for frame in outputs], list(range(1, len(outputs) + 1)))
+        self.assertEqual(
+            [frame["seq"] for frame in outputs], list(range(1, len(outputs) + 1))
+        )
         self.assertEqual(len({frame["id"] for frame in outputs}), len(outputs))
         for frame in outputs:
             validate("envelope.schema.json", frame)
@@ -532,25 +635,29 @@ class ConformanceKitTests(unittest.TestCase):
 
     def test_context_schema_requires_a_digest_for_local_input_artifacts(self) -> None:
         invalid = {
-            "artifacts": [{
-                "id": "input-01",
-                "name": "brief.txt",
-                "media_type": "text/plain",
-                "uri": "lap://run/input/001-input-01.txt",
-            }]
+            "artifacts": [
+                {
+                    "id": "input-01",
+                    "name": "brief.txt",
+                    "media_type": "text/plain",
+                    "uri": "lap://run/input/001-input-01.txt",
+                }
+            ]
         }
         with self.assertRaises(ValidationError):
             validate("context-packet.schema.json", invalid)
 
     def test_context_schema_rejects_an_unsafe_local_input_uri(self) -> None:
         invalid = {
-            "artifacts": [{
-                "id": "input-01",
-                "name": "brief.txt",
-                "media_type": "text/plain",
-                "uri": "lap://run/input/../private.txt",
-                "sha256": "3e3a7f18d29f5288be1f9238ce70c90e9af3cba55cf3cac2910eeec8a7528bb1",
-            }]
+            "artifacts": [
+                {
+                    "id": "input-01",
+                    "name": "brief.txt",
+                    "media_type": "text/plain",
+                    "uri": "lap://run/input/../private.txt",
+                    "sha256": "3e3a7f18d29f5288be1f9238ce70c90e9af3cba55cf3cac2910eeec8a7528bb1",
+                }
+            ]
         }
         with self.assertRaises(ValidationError):
             validate("context-packet.schema.json", invalid)
@@ -572,7 +679,11 @@ class ConformanceKitTests(unittest.TestCase):
             {"id": "SIGN-01", "status": "passed", "evidence": "signature test"},
             {"id": "INLINE-01", "status": "passed", "evidence": "inline vector"},
             {"id": "METER-01", "status": "passed", "evidence": "metering vector"},
-            {"id": "FLOW-11", "status": "passed", "evidence": "workflow admission test"},
+            {
+                "id": "FLOW-11",
+                "status": "passed",
+                "evidence": "workflow admission test",
+            },
         ]
         validate("conformance-report.schema.json", all_published_families)
         invalid = dict(report)
@@ -580,7 +691,9 @@ class ConformanceKitTests(unittest.TestCase):
         with self.assertRaises(ValidationError):
             validate("conformance-report.schema.json", invalid)
         invalid_id = dict(report)
-        invalid_id["results"] = [{"id": "UNKNOWN-01", "status": "passed", "evidence": "invalid"}]
+        invalid_id["results"] = [
+            {"id": "UNKNOWN-01", "status": "passed", "evidence": "invalid"}
+        ]
         with self.assertRaises(ValidationError):
             validate("conformance-report.schema.json", invalid_id)
 

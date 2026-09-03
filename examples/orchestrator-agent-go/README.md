@@ -90,7 +90,7 @@ From the repository root:
 
 ```bash
 go test ./sdk/go/...
-python -m unittest discover -s tests -p "test_examples.py" -v
+python -m pytest tests/test_examples.py -v
 ```
 
 The test sends a real `agent.hello` and `run.start` exchange, validates every

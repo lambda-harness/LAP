@@ -48,7 +48,7 @@ From the repository root:
 ```bash
 node --check examples/echo-agent-node/echo_agent.js
 node --check examples/orchestrator-agent-node/orchestrator_agent.js
-python -m unittest discover -s tests -p "test_examples.py" -v
+python -m pytest tests/test_examples.py -v
 ```
 
 The test sends real `agent.hello` and `run.start` exchanges, validates every

@@ -94,8 +94,8 @@ must include a concise reproducible evidence reference.
 ## Run The Published Checks
 
 ```bash
-python -m pip install -r requirements-dev.txt
-python -m unittest discover -s tests -p "test_*.py"
+python -m pip install -e ".[dev]"
+python -m pytest
 
 # Run a bounded Agent-side Local wire probe against one package entry point.
 python tools/lap_local_probe.py --package /path/to/my-agent \

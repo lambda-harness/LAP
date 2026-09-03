@@ -1,11 +1,11 @@
 """Verify the canonical repository and Go SDK identities published by LAP."""
+
 from __future__ import annotations
 
 import json
 import subprocess
 import unittest
 from pathlib import Path
-
 
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_REPOSITORY = "https://github.com/lambda-harness/LAP"
@@ -14,11 +14,13 @@ CANONICAL_EXTENSION_PREFIX = "io.github.lambda-harness.lap."
 # Keep this split so the test can inspect its own source with the same rule.
 DEPRECATED_REPOSITORY = "github.com/" + "dongrv/LAP"
 DEPRECATED_EXTENSION_PREFIX = "io.github." + "dongrv.lap."
-HISTORICAL_NAMESPACE_RECORDS = frozenset((
-    "proposals/LEP-0001-a2a-inline-inputs.md",
-    "proposals/LEP-0004-portable-orchestrator-context.md",
-    "proposals/LEP-0008-canonical-profile-namespaces.md",
-))
+HISTORICAL_NAMESPACE_RECORDS = frozenset(
+    (
+        "proposals/LEP-0001-a2a-inline-inputs.md",
+        "proposals/LEP-0004-portable-orchestrator-context.md",
+        "proposals/LEP-0008-canonical-profile-namespaces.md",
+    )
+)
 CANONICAL_EXTENSION_SURFACES = (
     "profiles/workflow.md",
     "profiles/a2a-inline-inputs.md",
@@ -26,9 +28,18 @@ CANONICAL_EXTENSION_SURFACES = (
     "conformance/a2a-inline-inputs.json",
     "sdk/go/workflow_context.go",
 )
-_TEXT_SUFFIXES = frozenset((
-    ".md", ".toml", ".py", ".json", ".yml", ".yaml", ".go", ".rs",
-))
+_TEXT_SUFFIXES = frozenset(
+    (
+        ".md",
+        ".toml",
+        ".py",
+        ".json",
+        ".yml",
+        ".yaml",
+        ".go",
+        ".rs",
+    )
+)
 
 
 def _tracked_text_files() -> list[Path]:
@@ -80,7 +91,10 @@ class RepositoryIdentityTests(unittest.TestCase):
         for path in _tracked_text_files():
             relative = path.relative_to(ROOT).as_posix()
             content = path.read_text(encoding="utf-8")
-            if relative not in HISTORICAL_NAMESPACE_RECORDS and DEPRECATED_EXTENSION_PREFIX in content:
+            if (
+                relative not in HISTORICAL_NAMESPACE_RECORDS
+                and DEPRECATED_EXTENSION_PREFIX in content
+            ):
                 offenders.append(relative)
 
         for relative in CANONICAL_EXTENSION_SURFACES:
@@ -103,6 +117,24 @@ class RepositoryIdentityTests(unittest.TestCase):
         self.assertIn(f"LAP_MODULE: {CANONICAL_GO_MODULE}", workflow)
         self.assertIn('go get "${LAP_MODULE}@${LAP_REVISION}"', workflow)
         self.assertIn(f'import _ "{CANONICAL_GO_MODULE}"', workflow)
+
+    def test_verification_workflow_enforces_python_quality_policy(self) -> None:
+        workflow = (ROOT / ".github" / "workflows" / "verify.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("branches: [main]", workflow)
+        for version in ("3.10", "3.11", "3.12", "3.13", "3.14"):
+            self.assertIn(f'"{version}"', workflow)
+        for command in (
+            'python -m pip install -e ".[dev]"',
+            "python -m black --check src tests tools examples",
+            "python -m isort --check-only src tests tools examples",
+            "python -m ruff check src tests tools examples",
+            "python -m mypy --strict src tests tools examples",
+            "python -m pytest",
+            "python tools/check_coverage.py --input coverage.xml --minimum-line-rate 90 --minimum-branch-rate 80",
+        ):
+            self.assertIn(command, workflow)
 
     def test_published_schema_ids_use_the_canonical_repository(self) -> None:
         for path in sorted((ROOT / "schemas").glob("*.schema.json")):

@@ -76,7 +76,7 @@ go build -o bin\lap-go-orchestrator.exe .
 
 ```bash
 go test ./sdk/go/...
-python -m unittest discover -s tests -p "test_examples.py" -v
+python -m pytest tests/test_examples.py -v
 ```
 
 测试会发送一次真实的 `agent.hello` 和 `run.start` 交换，校验每一个返回 envelope，并检查

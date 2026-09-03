@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lattice-agent-protocol"
+version = "0.1.0.dev0"
+description = "Reference helpers and conformance tooling for Lattice Agent Protocol."
+readme = "README.md"
+requires-python = ">=3.10,<3.15"
+license = { file = "LICENSE" }
+authors = [{ name = "Lambda Harness" }]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Software Development :: Libraries",
+  "Typing :: Typed",
+]
+dependencies = [
+  "cryptography>=42,<51",
+  "jsonschema>=4.0,<5",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black>=25.1,<27",
+  "isort>=6.0,<7",
+  "mypy>=1.15,<2",
+  "pre-commit>=4.0,<5",
+  "pytest>=8.3,<10",
+  "pytest-cov>=6.0,<8",
+  "ruff>=0.11,<1",
+  "types-jsonschema>=4.0,<5",
+]
+
+[project.scripts]
+lap-package-sign = "lap_protocol.package_sign_cli:main"
+
+[project.urls]
+Homepage = "https://github.com/lambda-harness/LAP"
+Documentation = "https://github.com/lambda-harness/LAP"
+Repository = "https://github.com/lambda-harness/LAP"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+extend-exclude = "^(dist|build)/"
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["lap_protocol"]
+skip_gitignore = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+extend-exclude = ["dist", "build"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "D", "N", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["src", "tests", "tools", "examples"]
+warn_unreachable = true
+warn_unused_ignores = true
+no_implicit_reexport = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-config --strict-markers --cov=lap_protocol --cov-branch --cov-report=term-missing --cov-report=xml:coverage.xml --cov-fail-under=90"
+
+[tool.coverage.run]
+branch = true
+source = ["lap_protocol"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_empty = true

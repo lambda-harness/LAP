@@ -3,7 +3,8 @@
 [![Verify LAP Draft](https://img.shields.io/github/actions/workflow/status/lambda-harness/LAP/verify.yml?branch=main&style=flat-square&label=verify)](https://github.com/lambda-harness/LAP/actions/workflows/verify.yml)
 [![Protocol status](https://img.shields.io/badge/protocol-0.1.0--draft-5b7c99?style=flat-square)](SPEC.md)
 [![License](https://img.shields.io/badge/license-Apache--2.0-3da639?style=flat-square)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.11%2B-3776AB?style=flat-square)](.github/workflows/verify.yml)
+[![Python](https://img.shields.io/badge/python-3.10--3.14-3776AB?style=flat-square)](.github/workflows/verify.yml)
+[![Coverage policy](https://img.shields.io/badge/coverage-line%2090%25%20%7C%20branch%2080%25-2f855a?style=flat-square)](pyproject.toml)
 
 > **Orchestrate Any Agent. Connect Everything.**
 
@@ -33,8 +34,8 @@ Runtime 是控制点：它准入发布、授予 capability、监管运行并记�
 LAP 是规范与 conformance 工具包。无需托管服务、API Key 或全局安装，即可验证 Local
 Profile。
 
-**前置条件：** Git 和 Python 3.11 或更高版本。仅运行 Node.js 参考 Agent 时需要 Node.js 18
-或更高版本。公共 CI 验证 Python 3.11、3.12、3.13 以及 Node.js 22。
+**前置条件：** Git 和 Python 3.10 至 3.14。仅运行 Node.js 参考 Agent 时需要 Node.js 18
+或更高版本。公共 CI 验证 Python 3.10、3.11、3.12、3.13、3.14 以及 Node.js 22。
 
 ### 1. 克隆并准备环境
 
@@ -60,12 +61,20 @@ source .venv/bin/activate
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install -r requirements-dev.txt
-python -m unittest discover -s tests -p "test_*.py" -v
+python -m pip install -e ".[dev]"
+python -m pytest
 ```
 
 该套件会验证已发布的 schema 和向量，随后通过真实 stdin/stdout LAP 交换驱动 Python
 Echo Agent。若 `PATH` 中有 Node.js、Go 或 Cargo，还会运行相应语言的参考实现。
+该套件会对可安装 Python 包强制执行至少 90% 行覆盖率和 80% 分支覆盖率。
+
+在 POSIX shell 中可通过 `make verify` 运行同一套本地检查；也可以依次执行
+`python -m black --check src tests tools examples`、
+`python -m isort --check-only src tests tools examples`、
+`python -m ruff check src tests tools examples`、
+`python -m mypy --strict src tests tools examples` 和
+`python tools/check_coverage.py --input coverage.xml`。通过 `pre-commit install` 可安装可选本地门禁。
 
 ### 3. 探测外部 Agent 包
 

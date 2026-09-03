@@ -1,4 +1,5 @@
 """Black-box checks for the draft LAP Model Relay author-side probe."""
+
 from __future__ import annotations
 
 import json
@@ -9,14 +10,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PROBE = ROOT / "tools" / "lap_model_relay_probe.py"
 REFERENCE_PACKAGE = ROOT / "examples" / "model-relay-agent"
 
 
 class ModelRelayProbeTests(unittest.TestCase):
-    def _invoke(self, package: Path, *arguments: str) -> subprocess.CompletedProcess[str]:
+    def _invoke(
+        self, package: Path, *arguments: str
+    ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [sys.executable, str(PROBE), "--package", str(package), *arguments],
             cwd=ROOT,
@@ -35,25 +37,42 @@ class ModelRelayProbeTests(unittest.TestCase):
         self.assertTrue(report["valid"])
         self.assertEqual(report["suite"], "lap-model-relay-probe/0.1-draft")
         self.assertEqual(report["profile"], "lap-model-relay/0.1")
-        self.assertEqual(report["agent"], {
-            "id": "org.lap.model-relay-agent",
-            "version": "0.1.0",
-            "capability": "text.summarize_via_host",
-        })
-        self.assertEqual(report["relay"], {
-            "route": "host.default",
-            "response": "deterministic-host-simulation",
-            "provider_calls": 0,
-        })
-        self.assertEqual(report["frames"]["types"], [
-            "agent.welcome", "run.accepted", "run.progress", "model.request",
-            "run.progress", "run.result",
-        ])
+        self.assertEqual(
+            report["agent"],
+            {
+                "id": "org.lap.model-relay-agent",
+                "version": "0.1.0",
+                "capability": "text.summarize_via_host",
+            },
+        )
+        self.assertEqual(
+            report["relay"],
+            {
+                "route": "host.default",
+                "response": "deterministic-host-simulation",
+                "provider_calls": 0,
+            },
+        )
+        self.assertEqual(
+            report["frames"]["types"],
+            [
+                "agent.welcome",
+                "run.accepted",
+                "run.progress",
+                "model.request",
+                "run.progress",
+                "run.result",
+            ],
+        )
         self.assertNotIn("LAP Local conformance probe", completed.stdout)
         self.assertNotIn("Relay probe response.", completed.stdout)
 
-    def test_accepts_explicit_capability_json_without_exposing_it_in_the_report(self) -> None:
-        completed = self._invoke(REFERENCE_PACKAGE, "--input", '{"text":"Tenant-specific probe input"}')
+    def test_accepts_explicit_capability_json_without_exposing_it_in_the_report(
+        self,
+    ) -> None:
+        completed = self._invoke(
+            REFERENCE_PACKAGE, "--input", '{"text":"Tenant-specific probe input"}'
+        )
 
         self.assertEqual(completed.returncode, 0, completed.stderr)
         self.assertNotIn("Tenant-specific probe input", completed.stdout)

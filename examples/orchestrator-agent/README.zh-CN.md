@@ -61,7 +61,7 @@ capability 范围、预算、截止时间、审批和环路。
 在仓库根目录执行：
 
 ```bash
-python -m unittest discover -s tests -p "test_examples.py" -v
+python -m pytest tests/test_examples.py -v
 ```
 
 测试会发送一次真实的 `agent.hello` 和 `run.start` 交换，校验每一个返回 envelope，并确认

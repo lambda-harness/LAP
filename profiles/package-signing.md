@@ -139,6 +139,7 @@ not conforming.
 
 An implementation claiming `LAP Package Signing 0.1` MUST satisfy `SIGN-01`
 through `SIGN-07` in [CONFORMANCE.md](../CONFORMANCE.md). The reference helper
-[`lap_package_signing.py`](../lap_package_signing.py) and
-[`tools/package_sign.py`](../tools/package_sign.py) are executable examples,
-not a required implementation dependency.
+[`lap_protocol.package_signing`](../src/lap_protocol/package_signing.py) and
+the installed `lap-package-sign` command (with
+[`tools/package_sign.py`](../tools/package_sign.py) as a compatibility wrapper)
+are executable examples, not a required implementation dependency.

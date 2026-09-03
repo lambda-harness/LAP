@@ -41,7 +41,7 @@ Host 工作流范围 -> Context Packet 扩展 -> 外部规划器提议
 ```bash
 node --check examples/echo-agent-node/echo_agent.js
 node --check examples/orchestrator-agent-node/orchestrator_agent.js
-python -m unittest discover -s tests -p "test_examples.py" -v
+python -m pytest tests/test_examples.py -v
 ```
 
 测试会发送真实的 `agent.hello` 和 `run.start` 交换，校验每一个返回 envelope，并确认提议

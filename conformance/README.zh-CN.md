@@ -69,8 +69,8 @@ conformance 声明是符合
 ## 运行已发布检查
 
 ```bash
-python -m pip install -r requirements-dev.txt
-python -m unittest discover -s tests -p "test_*.py"
+python -m pip install -e ".[dev]"
+python -m pytest
 
 # 对一个包入口运行有界的 Agent 侧 Local 线协议探测。
 python tools/lap_local_probe.py --package /path/to/my-agent \

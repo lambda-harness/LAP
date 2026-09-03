@@ -2,6 +2,7 @@ name: Verify LAP Draft
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:
@@ -11,16 +12,22 @@ jobs:
   python:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install -r requirements-dev.txt
-      - run: python -m unittest discover -s tests -p "test_*.py" -v
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m black --check src tests tools examples
+      - run: python -m isort --check-only src tests tools examples
+      - run: python -m ruff check src tests tools examples
+      - run: python -m mypy --strict src tests tools examples
+      - run: python -m pytest
+      - run: python tools/check_coverage.py --input coverage.xml --minimum-line-rate 90 --minimum-branch-rate 80
 
   node-reference:
     runs-on: ubuntu-latest
@@ -33,10 +40,11 @@ jobs:
         with:
           node-version: "22.x"
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install -e ".[dev]"
       - run: node --check examples/echo-agent-node/echo_agent.js
       - run: node --check examples/orchestrator-agent-node/orchestrator_agent.js
-      - run: python -m unittest discover -s tests -p "test_*.py" -v
+      - run: python -m pytest
+      - run: python tools/check_coverage.py --input coverage.xml --minimum-line-rate 90 --minimum-branch-rate 80
 
   go-reference:
     runs-on: ubuntu-latest
@@ -49,7 +57,7 @@ jobs:
         with:
           go-version: "1.21.x"
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install -e ".[dev]"
       - run: go test ./...
         working-directory: sdk/go
       - name: Verify canonical Go module identity
@@ -59,7 +67,8 @@ jobs:
         working-directory: sdk/go
       - run: go build .
         working-directory: examples/echo-agent-go
-      - run: python -m unittest discover -s tests -p "test_*.py" -v
+      - run: python -m pytest
+      - run: python tools/check_coverage.py --input coverage.xml --minimum-line-rate 90 --minimum-branch-rate 80
 
   published-go-sdk:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -97,7 +106,8 @@ jobs:
           python-version: "3.12"
       - uses: dtolnay/rust-toolchain@1.75.0
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install -e ".[dev]"
       - run: cargo test --locked
         working-directory: examples/echo-agent-rust
-      - run: python -m unittest discover -s tests -p "test_*.py" -v
+      - run: python -m pytest
+      - run: python tools/check_coverage.py --input coverage.xml --minimum-line-rate 90 --minimum-branch-rate 80

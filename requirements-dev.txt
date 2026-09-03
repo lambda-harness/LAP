@@ -1,2 +1,0 @@
-jsonschema>=4.0,<5
-cryptography>=42,<51

@@ -3,7 +3,8 @@
 [![Verify LAP Draft](https://img.shields.io/github/actions/workflow/status/lambda-harness/LAP/verify.yml?branch=main&style=flat-square&label=verify)](https://github.com/lambda-harness/LAP/actions/workflows/verify.yml)
 [![Protocol status](https://img.shields.io/badge/protocol-0.1.0--draft-5b7c99?style=flat-square)](SPEC.md)
 [![License](https://img.shields.io/badge/license-Apache--2.0-3da639?style=flat-square)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.11%2B-3776AB?style=flat-square)](.github/workflows/verify.yml)
+[![Python](https://img.shields.io/badge/python-3.10--3.14-3776AB?style=flat-square)](.github/workflows/verify.yml)
+[![Coverage policy](https://img.shields.io/badge/coverage-line%2090%25%20%7C%20branch%2080%25-2f855a?style=flat-square)](pyproject.toml)
 
 > **Orchestrate Any Agent. Connect Everything.**
 
@@ -37,9 +38,9 @@ and records results.
 LAP is a specification and conformance kit. You can validate the Local Profile
 without a hosted service, API key, or global installation.
 
-**Prerequisites:** Git and Python 3.11 or later. Node.js 18 or later is
+**Prerequisites:** Git and Python 3.10 through 3.14. Node.js 18 or later is
 needed only to run the Node.js reference Agents. Public CI verifies Python
-3.11, 3.12, and 3.13, plus Node.js 22.
+3.10, 3.11, 3.12, 3.13, and 3.14, plus Node.js 22.
 
 ### 1. Clone and prepare the environment
 
@@ -65,13 +66,22 @@ source .venv/bin/activate
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install -r requirements-dev.txt
-python -m unittest discover -s tests -p "test_*.py" -v
+python -m pip install -e ".[dev]"
+python -m pytest
 ```
 
 The suite validates the published schemas and vectors, then drives the Python
 echo Agent through a real stdin/stdout LAP exchange. When Node.js, Go, or
 Cargo is on `PATH`, it also exercises the matching reference implementation.
+The suite enforces at least 90% line coverage and 80% branch coverage for the
+installable Python package.
+
+For the same local checks used by CI, run `make verify` on a POSIX shell, or
+run `python -m black --check src tests tools examples`, `python -m isort
+--check-only src tests tools examples`, `python -m ruff check src tests tools
+examples`, `python -m mypy --strict src tests tools examples`, and
+`python tools/check_coverage.py --input coverage.xml`. Install the optional
+local gate with `pre-commit install`.
 
 ### 3. Probe an external Agent package
 

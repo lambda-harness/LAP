@@ -1,4 +1,5 @@
 """Black-box checks for the public LAP Local Agent probe CLI."""
+
 from __future__ import annotations
 
 import json
@@ -9,7 +10,6 @@ import textwrap
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PROBE = ROOT / "tools" / "lap_local_probe.py"
 
@@ -17,34 +17,46 @@ PROBE = ROOT / "tools" / "lap_local_probe.py"
 def _write_agent(package: Path, *, invalid_output: bool = False) -> None:
     package.mkdir()
     agent_id = "com.example.probe-agent"
-    package.joinpath("agent.json").write_text(json.dumps({
-        "lap": "0.1",
-        "protocol_versions": ["0.1"],
-        "profiles": ["lap-local/0.1"],
-        "id": agent_id,
-        "display_name": "Probe Agent",
-        "version": "1.0.0",
-        "description": "A local probe fixture.",
-        "transport": {"kind": "lap-local", "command": [sys.executable, "agent.py"], "working_directory": "."},
-        "capabilities": [{
-            "id": "ticket.execute",
-            "description": "Returns a ticket identifier.",
-            "input_schema": {
-                "type": "object",
-                "required": ["ticket"],
-                "properties": {"ticket": {"type": "string"}},
-                "additionalProperties": False,
-            },
-            "output_schema": {
-                "type": "object",
-                "required": ["ticket"],
-                "properties": {"ticket": {"type": "string"}},
-                "additionalProperties": False,
-            },
-        }],
-    }), encoding="utf-8")
-    output = "{\"wrong\": \"value\"}" if invalid_output else "{\"ticket\": ticket}"
-    package.joinpath("agent.py").write_text(textwrap.dedent(f'''\
+    package.joinpath("agent.json").write_text(
+        json.dumps(
+            {
+                "lap": "0.1",
+                "protocol_versions": ["0.1"],
+                "profiles": ["lap-local/0.1"],
+                "id": agent_id,
+                "display_name": "Probe Agent",
+                "version": "1.0.0",
+                "description": "A local probe fixture.",
+                "transport": {
+                    "kind": "lap-local",
+                    "command": [sys.executable, "agent.py"],
+                    "working_directory": ".",
+                },
+                "capabilities": [
+                    {
+                        "id": "ticket.execute",
+                        "description": "Returns a ticket identifier.",
+                        "input_schema": {
+                            "type": "object",
+                            "required": ["ticket"],
+                            "properties": {"ticket": {"type": "string"}},
+                            "additionalProperties": False,
+                        },
+                        "output_schema": {
+                            "type": "object",
+                            "required": ["ticket"],
+                            "properties": {"ticket": {"type": "string"}},
+                            "additionalProperties": False,
+                        },
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    output = '{"wrong": "value"}' if invalid_output else '{"ticket": ticket}'
+    package.joinpath("agent.py").write_text(
+        textwrap.dedent(f"""\
         import json
         from pathlib import Path
         import sys
@@ -81,7 +93,9 @@ def _write_agent(package: Path, *, invalid_output: bool = False) -> None:
                 emit("run.result", {{"status": "succeeded", "summary": "Ticket complete.", "output": {output}}}, run=run)
             elif frame.get("type") == "agent.shutdown":
                 break
-    '''), encoding="utf-8")
+    """),
+        encoding="utf-8",
+    )
 
 
 class LocalProbeTests(unittest.TestCase):
@@ -96,29 +110,45 @@ class LocalProbeTests(unittest.TestCase):
             check=False,
         )
 
-    def test_runs_the_published_python_reference_with_its_declared_command(self) -> None:
+    def test_runs_the_published_python_reference_with_its_declared_command(
+        self,
+    ) -> None:
         completed = self._invoke("--package", str(ROOT / "examples" / "echo-agent"))
 
         self.assertEqual(completed.returncode, 0, completed.stderr)
         report = json.loads(completed.stdout)
-        self.assertEqual(report["agent"], {
-            "id": "org.lap.echo-agent",
-            "version": "0.1.0",
-            "capability": "text.echo",
-        })
-        self.assertEqual(report["frames"]["types"], [
-            "agent.welcome", "run.accepted", "run.progress", "run.result",
-        ])
-        self.assertEqual(report["terminal"], {"status": "succeeded", "output_contract": "validated"})
+        self.assertEqual(
+            report["agent"],
+            {
+                "id": "org.lap.echo-agent",
+                "version": "0.1.0",
+                "capability": "text.echo",
+            },
+        )
+        self.assertEqual(
+            report["frames"]["types"],
+            [
+                "agent.welcome",
+                "run.accepted",
+                "run.progress",
+                "run.result",
+            ],
+        )
+        self.assertEqual(
+            report["terminal"], {"status": "succeeded", "output_contract": "validated"}
+        )
 
     def test_accepts_explicit_json_for_an_arbitrary_declared_capability(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             package = Path(temporary) / "probe-agent"
             _write_agent(package)
             completed = self._invoke(
-                "--package", str(package),
-                "--capability", "ticket.execute",
-                "--input", '{"ticket":"OPS-17"}',
+                "--package",
+                str(package),
+                "--capability",
+                "ticket.execute",
+                "--input",
+                '{"ticket":"OPS-17"}',
             )
 
         self.assertEqual(completed.returncode, 0, completed.stderr)
@@ -131,20 +161,27 @@ class LocalProbeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             package = Path(temporary) / "probe-agent"
             _write_agent(package)
-            completed = self._invoke("--package", str(package), "--capability", "ticket.execute")
+            completed = self._invoke(
+                "--package", str(package), "--capability", "ticket.execute"
+            )
             self.assertFalse((package / "started.txt").exists())
 
         self.assertEqual(completed.returncode, 2)
         self.assertEqual(json.loads(completed.stderr)["error"]["code"], "LAP-201")
 
-    def test_rejects_a_successful_terminal_output_that_breaks_the_manifest_contract(self) -> None:
+    def test_rejects_a_successful_terminal_output_that_breaks_the_manifest_contract(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             package = Path(temporary) / "probe-agent"
             _write_agent(package, invalid_output=True)
             completed = self._invoke(
-                "--package", str(package),
-                "--capability", "ticket.execute",
-                "--input", '{"ticket":"OPS-17"}',
+                "--package",
+                str(package),
+                "--capability",
+                "ticket.execute",
+                "--input",
+                '{"ticket":"OPS-17"}',
             )
 
         self.assertEqual(completed.returncode, 2)
