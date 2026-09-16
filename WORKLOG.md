@@ -50,3 +50,16 @@ Status values: pending, passed, failed, blocked.
   `30026444ab339821ce7bb5d7d00f654e9cc68f66b31b587ced60a9a2c1f59a17`;
   Linux amd64 SHA-256
   `263a9606701eddba1c939fc3b344c72590282748ba42faedfc306853c442665b`.
+
+### AIBot operations Agent 0.3 identity compatibility
+
+- Authorization prefers the signed Host actor extension containing the raw OA
+  AdminID. For older company Hosts, the Agent accepts only the Host-generated
+  LAP run tenant and normalizes `user-118` to AdminID `118`; capability input
+  still cannot provide an identity.
+- Authorization rejection now uses the protocol-valid `failed` terminal with
+  `LAP-403`, rather than the unsupported `denied` terminal status.
+- Windows amd64 ZIP SHA-256:
+  `d8b5c875eb751355f3b85e684722efcb91f79787e4ca12adfb83f4c04ee6ef25`.
+- Linux amd64 ZIP SHA-256:
+  `69e32206125ab94b6d1c2129871288e9c6bed18cc5500c277f85bd53ffce8750`.
