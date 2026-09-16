@@ -201,6 +201,27 @@ arbitrary Host resources. An input artifact MUST be tenant-scoped and immutable
 for the Run; an output artifact MUST additionally be immutable once included in
 a terminal result.
 
+An output Artifact is a first-class protocol object, not an incidental field
+inside Agent-specific output. A `run.artifact` event MUST identify the artifact
+with stable metadata (`id`, `name`, `media_type`, and, when available,
+`size_bytes` and `sha256`). It MAY include a `delivery` policy describing how
+the Host makes the artifact available:
+
+| Field | Meaning |
+|---|---|
+| `kind` | `download`, `reference`, or `inline`. |
+| `required` | Whether the Host MUST expose the artifact to the user or next Run. |
+| `disposition` | `attachment` for download or `inline` for in-place display. |
+| `scope` | Lifetime/isolation boundary: `run`, `session`, or `tenant`. |
+| `semantic` | Optional role and human-facing title/description, such as `final_result`. |
+
+The Host MUST validate this policy, preserve it in the terminal result and
+durable replay record, and enforce tenant/session access control. A Host MAY
+add a user-facing download URL or equivalent capability reference, but MUST
+NOT expose a private filesystem path as that URL. If `required` is true and the
+Host cannot materialize the requested delivery mode, the Run MUST fail with a
+typed error rather than silently dropping the artifact.
+
 "lap://run/input/<opaque-name>" is the Core URI form for a Host-granted local
 input artifact. Such a reference MUST include id, name, media_type, uri, and
 the lowercase SHA-256 sha256 of the exact bytes made available to the Agent.

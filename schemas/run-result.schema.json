@@ -23,7 +23,19 @@
           "media_type": { "type": "string", "minLength": 1, "maxLength": 160 },
           "uri": { "type": "string", "format": "uri" },
           "size_bytes": { "type": "integer", "minimum": 0 },
-          "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" }
+          "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+          "delivery": {
+            "type": "object", "additionalProperties": false,
+            "properties": {
+              "kind": {"enum": ["download", "reference", "inline"]},
+              "required": {"type": "boolean"},
+              "disposition": {"enum": ["attachment", "inline"]},
+              "scope": {"enum": ["run", "session", "tenant"]},
+              "expires_at": {"type": "string"},
+              "semantic": {"type": "object", "additionalProperties": false,
+                "properties": {"role": {"enum": ["intermediate", "preview", "final_result", "error_report"]}, "title": {"type": "string", "maxLength": 400}, "description": {"type": "string", "maxLength": 400}, "source_count": {"type": "integer", "minimum": 0}}}
+            }
+          }
         }
       }
     },
