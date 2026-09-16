@@ -1,0 +1,40 @@
+{
+  "lap": "0.1",
+  "protocol_versions": ["0.1"],
+  "profiles": ["lap-local/0.1"],
+  "id": "io.github.lambda-harness.vat-invoice-agent",
+  "display_name": "VAT Invoice Extraction Agent",
+  "version": "0.1.0",
+  "description": "Extracts Chinese VAT invoices from images and PDFs into one validated Excel workbook.",
+  "transport": {
+    "kind": "lap-local",
+    "command": ["python", "-B", "invoice_agent.py"],
+    "working_directory": "."
+  },
+  "capabilities": [{
+    "id": "invoice.extract",
+    "description": "Recognize one or more Chinese VAT invoice images/PDFs and produce a downloadable XLSX summary.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "detail": {"type": "string", "enum": ["original", "high", "auto", "low"], "default": "original"}
+      },
+      "additionalProperties": false
+    },
+    "output_schema": {
+      "type": "object",
+      "required": ["invoice_count", "source_count", "workbook"],
+      "properties": {
+        "invoice_count": {"type": "integer", "minimum": 0},
+        "source_count": {"type": "integer", "minimum": 1},
+        "workbook": {"type": "string"},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "artifact_media_types": ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
+    "max_concurrency": 1
+  }],
+  "permissions": {"requested": ["network:deepseek-vision"]},
+  "health_check": {"startup_timeout_ms": 5000, "shutdown_timeout_ms": 10000}
+}
