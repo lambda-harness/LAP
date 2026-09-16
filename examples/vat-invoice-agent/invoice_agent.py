@@ -20,7 +20,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
 AGENT_ID = "io.github.lambda-harness.vat-invoice-agent"
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 XLSX_MEDIA = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 MAX_FILES = 20
 MAX_FILE_BYTES = 10 * 1024 * 1024
@@ -202,7 +202,8 @@ def execute(payload: dict[str, Any], run: dict[str, Any], seq: int) -> int:
         target = root / "output" / "vat-invoices.xlsx"
         workbook(rows, target)
         digest = hashlib.sha256(target.read_bytes()).hexdigest()
-        artifact = {"id": "vat-invoices", "name": target.name, "media_type": XLSX_MEDIA, "size_bytes": target.stat().st_size, "sha256": digest,
+        artifact = {"id": "vat-invoices", "name": target.name, "media_type": XLSX_MEDIA,
+                    "uri": "lap://run/output/vat-invoices.xlsx", "size_bytes": target.stat().st_size, "sha256": digest,
                     "delivery": {"kind": "download", "required": True, "disposition": "attachment", "scope": "session",
                                   "semantic": {"role": "final_result", "title": "增值税发票整理结果",
                                                 "description": f"已识别 {len(rows)} 张发票并整理为 Excel。", "source_count": len(sources)}}}

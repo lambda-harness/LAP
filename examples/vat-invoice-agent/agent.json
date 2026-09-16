@@ -4,7 +4,7 @@
   "profiles": ["lap-local/0.1"],
   "id": "io.github.lambda-harness.vat-invoice-agent",
   "display_name": "VAT Invoice Extraction Agent",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Extracts Chinese VAT invoices from images and PDFs into one validated Excel workbook with a first-class downloadable artifact.",
   "transport": {
     "kind": "lap-local",
