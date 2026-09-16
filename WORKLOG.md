@@ -22,7 +22,7 @@ Status values: pending, passed, failed, blocked.
 
 | Check | Status | Evidence |
 | --- | --- | --- |
-| Invoice manifest/package validation | passed | Harness package validator; ZIP SHA-256 `e9dd41779451a2a720c8fbacb8b417503ff3091ae696d6d4dedf3185ee164e2b` |
+| Invoice manifest/package validation | passed | Harness package validator; sanitized ZIP SHA-256 `ea28fa38efc2507b32f6ae5bf36da723f76c240dc8249932185425b03689e1d5` |
 | Invoice Local 0.1 exchange | passed | welcome, accepted, progress, artifact, succeeded, shutdown against the sample PDF |
 | Multi-image/PDF input staging | passed | digest-checked multi-artifact regression test |
 | Sample PDF extraction and XLSX round trip | passed | 20-digit invoice identifier matched the source; 159.25 + 9.55 = 168.80; XLSX reopened successfully |
