@@ -217,6 +217,9 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Core 0.2 Run Ledger Reference](docs/core-0.2-run-ledger.md): executable
   Host-owned lifecycle, first-terminal-wins, structured-error, and
   `indeterminate` semantics; it is not a Host conformance claim.
+- [Core 0.2 Scoped Token Reference](docs/core-0.2-token-registry.md):
+  executable opaque scope, audience, purpose, expiry, revocation, and
+  cross-tenant safe-denial semantics; it is not a Host conformance claim.
 - [LAP Enhancement Proposals](proposals/README.md): public design records for
   normative, compatibility, and security changes.
 

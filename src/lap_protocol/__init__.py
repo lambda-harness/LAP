@@ -57,6 +57,15 @@ from .stream_ledger import (
     StreamLedgerError,
     StreamSnapshot,
 )
+from .token_registry import (
+    IssuedScopedToken,
+    ScopedTokenGrant,
+    ScopedTokenRegistry,
+    TokenCapacityError,
+    TokenDeniedError,
+    TokenRegistryError,
+    TokenValidationError,
+)
 
 __all__ = [
     "ArtifactConflictError",
@@ -108,4 +117,11 @@ __all__ = [
     "StreamSnapshot",
     "TerminalAck",
     "TerminalRecord",
+    "IssuedScopedToken",
+    "ScopedTokenGrant",
+    "ScopedTokenRegistry",
+    "TokenCapacityError",
+    "TokenDeniedError",
+    "TokenRegistryError",
+    "TokenValidationError",
 ]

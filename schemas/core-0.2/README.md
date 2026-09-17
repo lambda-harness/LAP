@@ -33,6 +33,12 @@ These schemas are draft material for accepted LEP-0010, not a released Core
   first-terminal-wins, structured errors, and `indeterminate` semantics
   executable reference evidence. They do not implement Host durability,
   redaction, provider reconciliation, or upgrade pending runtime assertions.
+- `../../src/lap_protocol/token_registry.py` and
+  `../../tests/test_core_02_token_registry.py` make opaque scoped resume and
+  Artifact-token issuance, audience/purpose binding, expiry, revocation, and
+  generic cross-scope denial executable reference evidence. They do not
+  implement Host key management, durable token storage, or upgrade pending
+  runtime assertions.
 
 The payload contracts are fully specified as draft material. A row remains
 `draft` until a Host implements it with positive/negative vectors and runtime

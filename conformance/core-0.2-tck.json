@@ -6,6 +6,7 @@
     "blockers": [
       "No Core 0.2 Host adapter has implemented the durable Stream, ACK, replay, resume, epoch-fencing, and Run-terminal requirements.",
       "No Core 0.2 Host Artifact commit and terminal-gating adapter has completed its required fault tests.",
+      "No Core 0.2 Host adapter has implemented durable scoped-token issuance, revocation, protected delivery, and security fault tests.",
       "No independent second Host has supplied a complete signed Core 0.2 TCK report."
     ]
   },
@@ -238,6 +239,12 @@
         "kind": "security-test",
         "status": "planned",
         "scenario": "Replay a receipt and resume token from a different tenant and verify indistinguishable safe denial without artifact or Run existence disclosure."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_token_registry.py",
+        "test": "tests/test_core_02_token_registry.py::Core02TokenRegistryTests.test_cross_tenant_artifact_and_resume_replay_are_indistinguishable",
+        "limitations": "Reference in-memory token state only; no Host key management, session delivery, durable revocation audit, rate limiting, or timing-side-channel assessment."
       }
     }
   ]

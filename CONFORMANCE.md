@@ -29,7 +29,7 @@ whether that evidence exists. It is deliberately separate from the published
 | C02-RUN-01 | Cancel/result races produce one terminal ledger record. | Reference state-machine test verified; Host fault injection pending. |
 | C02-RUN-02 | Unprovable external outcome becomes `indeterminate`. | Reference state-machine test verified; Effect Profile and Host integration pending. |
 | C02-ERR-01 | Contract failure returns safe actionable error metadata. | Reference state-machine test verified; Host adapter/redaction integration pending. |
-| C02-SEC-01 | Cross-tenant receipt/resume replay is safely denied. | Pending security test. |
+| C02-SEC-01 | Cross-tenant receipt/resume replay is safely denied. | Reference state-machine test verified; Host session/key-management integration pending. |
 
 The registry is not a self-attestation format. A future claimable Core 0.2 TCK
 will require every assertion to have executable evidence, a complete report

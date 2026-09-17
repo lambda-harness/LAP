@@ -24,6 +24,10 @@ conformance 声明。Core 0.1 的 Schema 与运行时行为保持不变。
   `../../tests/test_core_02_run_ledger.py` 将 Host 的 Run 状态迁移、首终态获胜、结构化错误和
   `indeterminate` 语义做成可执行的参考证据；它们不实现 Host 持久化、脱敏、Provider 对账，
   也不会把待完成的运行时断言升级为已完成。
+- `../../src/lap_protocol/token_registry.py` 和
+  `../../tests/test_core_02_token_registry.py` 将不透明的 Artifact/恢复令牌签发、受众/用途
+  绑定、过期、撤销和跨作用域通用拒绝做成可执行的参考证据；它们不实现 Host 密钥管理、
+  持久化令牌存储，也不会把待完成的运行时断言升级为已完成。
 
 payload 契约已完整定义为草案材料。只有 Host 用正反向向量和运行时 conformance
 证据实现后，对应条目才可从 `draft` 标为 `implemented`。Schema 校验本身不能证明

@@ -39,6 +39,7 @@ REFERENCE_ASSERTION_IDS = frozenset(
         "C02-RUN-01",
         "C02-RUN-02",
         "C02-ERR-01",
+        "C02-SEC-01",
     )
 )
 

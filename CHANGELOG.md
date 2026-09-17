@@ -4,6 +4,12 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added a Core 0.2 reference scoped-token registry for opaque Artifact-download
+  and Run-resume secrets. It binds every token to an audience, tenant/Run scope,
+  purpose, expiry, and revocation state, with one generic cross-scope denial.
+  It is executable reference evidence only; no Core 0.2 Host runtime or
+  conformance claim is enabled.
+
 - Added a Core 0.2 reference Run ledger with Host-owned lifecycle transitions,
   structured safe-error validation, Artifact receipt gates for all terminal
   references, first-terminal-wins conflict handling, immutable terminal ACKs,

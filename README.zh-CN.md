@@ -187,6 +187,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   字节完整性与成功终态门禁语义；它不是 Host conformance 声明。
 - [Core 0.2 Run 账本参考实现](docs/core-0.2-run-ledger.md)：可执行的 Host 生命周期、
   首终态获胜、结构化错误与 `indeterminate` 语义；它不是 Host conformance 声明。
+- [Core 0.2 作用域令牌参考实现](docs/core-0.2-token-registry.md)：可执行的不透明作用域、
+  受众、用途、过期、撤销与跨租户安全拒绝语义；它不是 Host conformance 声明。
 - [LAP Enhancement Proposals](proposals/README.zh-CN.md)：规范性、兼容性和安全变更的
   公开设计记录。
 

@@ -139,3 +139,18 @@ Status values: pending, passed, failed, blocked.
 - The reference has no durable transaction, distributed lease, effect-provider
   adapter, secret redaction service, or outbox. TCK C02-RUN-01/02 and
   C02-ERR-01 remain pending Host/runtime evidence.
+
+## 2026-09-17 - Core 0.2 scoped token reference
+
+- Added an executable, in-memory token registry for opaque Artifact-download
+  and Run-resume capabilities. The raw secret contains neither tenant nor Run
+  identity; registry records retain only its SHA-256 lookup digest plus a
+  non-secret grant record.
+- Tokens are Host-issued with a bounded lifetime and bind to exact tenant/Run
+  scope, audience, and purpose. Unknown, expired, revoked, cross-tenant,
+  wrong-audience, and wrong-purpose requests all receive the same `LAP-403`
+  denial, so they do not reveal protected resource existence.
+- Revocation never accepts a raw token as authority and capacity cleanup removes
+  expired/revoked in-memory records. A real Host still needs durable issuance,
+  revocation audit, protected delivery, key management, session binding, and
+  rate limiting. TCK C02-SEC-01 remains pending Host security integration.

@@ -187,6 +187,9 @@ prove that untrusted text is safe.
 - Tenant and principal are Host-issued and never accepted from Agent input.
 - Resume and receipt tokens are unguessable, audience-bound, scoped, and
   revocable.
+- The [reference scoped-token registry](core-0.2-token-registry.md) makes
+  these token properties executable, but a Host still owns durable issuance,
+  session binding, protected delivery, key management, and revocation audit.
 - Contract schemas are self-contained and never trigger ambient retrieval.
 - Long-lived credentials are prohibited from Core messages.
 - Artifact references cannot expose private Host filesystem paths.
@@ -265,9 +268,12 @@ attestation.
 6. Bind the [reference Run ledger](core-0.2-run-ledger.md) to the Host Run
    transaction, terminal ACK outbox, structured-error redaction, and
    `indeterminate` reconciliation boundary.
-7. Publish a migration adapter and compatibility matrix.
-8. Implement separate commercial Profiles through their own LEPs.
-9. Validate against a second independent Host before 1.0.
+7. Bind the [reference scoped-token registry](core-0.2-token-registry.md) to
+   durable issuance/revocation, authenticated session delivery, and protected
+   Artifact/resume access endpoints.
+8. Publish a migration adapter and compatibility matrix.
+9. Implement separate commercial Profiles through their own LEPs.
+10. Validate against a second independent Host before 1.0.
 
 ## Open Questions and Risks
 
