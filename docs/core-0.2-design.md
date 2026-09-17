@@ -2,7 +2,8 @@
 
 ## Status
 
-Accepted for specification. Implementation has not started.
+Accepted for specification. Draft Schema, vector, and TCK-registry work is in
+progress; Core 0.2 Host runtime implementation has not started.
 
 ## Abstract
 

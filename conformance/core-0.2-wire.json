@@ -325,51 +325,135 @@
     {
       "id": "C02-WIRE-21",
       "valid_case": "C02-WIRE-02",
-      "path": "/payload",
-      "value": {},
-      "reason": "agent.welcome requires negotiated identity"
+      "path": "/sender",
+      "value": "host",
+      "reason": "agent.welcome is Agent-only"
     },
     {
       "id": "C02-WIRE-22",
+      "valid_case": "C02-WIRE-03",
+      "path": "/sender",
+      "value": "agent",
+      "reason": "agent.probe is Host-only"
+    },
+    {
+      "id": "C02-WIRE-23",
+      "valid_case": "C02-WIRE-04",
+      "path": "/sender",
+      "value": "host",
+      "reason": "agent.probe.result is Agent-only"
+    },
+    {
+      "id": "C02-WIRE-24",
+      "valid_case": "C02-WIRE-05",
+      "path": "/sender",
+      "value": "agent",
+      "reason": "agent.shutdown is Host-only"
+    },
+    {
+      "id": "C02-WIRE-25",
       "valid_case": "C02-WIRE-06",
       "path": "/idempotency_key",
       "delete": true,
       "reason": "run.start must be replay-safe"
     },
     {
-      "id": "C02-WIRE-23",
+      "id": "C02-WIRE-26",
+      "valid_case": "C02-WIRE-07",
+      "path": "/sender",
+      "value": "host",
+      "reason": "run.accepted is Agent-only"
+    },
+    {
+      "id": "C02-WIRE-27",
+      "valid_case": "C02-WIRE-08",
+      "path": "/sender",
+      "value": "host",
+      "reason": "run.progress is Agent-only"
+    },
+    {
+      "id": "C02-WIRE-28",
       "valid_case": "C02-WIRE-09",
       "path": "/payload",
       "value": {"artifact_id": "artifact-001"},
       "reason": "artifact offers require immutable delivery metadata"
     },
     {
-      "id": "C02-WIRE-24",
+      "id": "C02-WIRE-29",
+      "valid_case": "C02-WIRE-10",
+      "path": "/sender",
+      "value": "agent",
+      "reason": "artifact.committed is Host-only"
+    },
+    {
+      "id": "C02-WIRE-30",
+      "valid_case": "C02-WIRE-11",
+      "path": "/sender",
+      "value": "host",
+      "reason": "run.input_required is Agent-only"
+    },
+    {
+      "id": "C02-WIRE-31",
       "valid_case": "C02-WIRE-12",
       "path": "/payload",
       "value": {"request_id": "request-001", "outcome": "submitted"},
       "reason": "submitted input requires a response"
     },
     {
-      "id": "C02-WIRE-25",
+      "id": "C02-WIRE-32",
+      "valid_case": "C02-WIRE-13",
+      "path": "/sender",
+      "value": "agent",
+      "reason": "run.cancel is Host-only"
+    },
+    {
+      "id": "C02-WIRE-33",
+      "valid_case": "C02-WIRE-14",
+      "path": "/sender",
+      "value": "host",
+      "reason": "run.cancelled is Agent-only"
+    },
+    {
+      "id": "C02-WIRE-34",
       "valid_case": "C02-WIRE-15",
       "path": "/payload",
       "value": {"status": "succeeded", "summary": "Missing output"},
       "reason": "successful result requires output"
     },
     {
-      "id": "C02-WIRE-26",
-      "valid_case": "C02-WIRE-15",
-      "path": "/payload",
-      "value": {"status": "indeterminate", "summary": "Effect could not be reconciled"},
-      "reason": "indeterminate result requires a structured error"
+      "id": "C02-WIRE-35",
+      "valid_case": "C02-WIRE-16",
+      "path": "/sender",
+      "value": "agent",
+      "reason": "run.result.ack is Host-only"
     },
     {
-      "id": "C02-WIRE-27",
+      "id": "C02-WIRE-36",
+      "valid_case": "C02-WIRE-17",
+      "path": "/sender",
+      "value": "agent",
+      "reason": "run.resume is Host-only"
+    },
+    {
+      "id": "C02-WIRE-37",
+      "valid_case": "C02-WIRE-18",
+      "path": "/sender",
+      "value": "host",
+      "reason": "run.snapshot is Agent-only"
+    },
+    {
+      "id": "C02-WIRE-38",
       "valid_case": "C02-WIRE-19",
       "path": "/ack_seq",
       "delete": true,
       "reason": "durable stream acknowledgement needs a contiguous waterline"
+    },
+    {
+      "id": "C02-WIRE-39",
+      "valid_case": "C02-WIRE-15",
+      "path": "/payload",
+      "value": {"status": "indeterminate", "summary": "Effect could not be reconciled"},
+      "reason": "indeterminate result requires a structured error"
     }
   ]
 }

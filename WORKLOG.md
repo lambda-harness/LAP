@@ -82,6 +82,11 @@ Status values: pending, passed, failed, blocked.
   `run.result.ack`; it requires a structured error and does not permit a blind
   success fallback.
 - The portable wire vector covers one valid instance of every Core message and
-  targeted invalid sender, idempotency, Artifact, input, terminal-result, and
-  ACK cases. This is draft contract evidence only. Stream fencing, durable ACK,
+  one invalid instance of every Core message, including sender, idempotency,
+  Artifact, input, terminal-result, and ACK cases.
+- The Core 0.2 TCK registry now tracks all 13 required assertions. Only the
+  typed-wire assertion has verified draft evidence; all Host-runtime assertions
+  are explicitly pending, and the registry prohibits a Core 0.2 claim until
+  its listed blockers are closed.
+- This remains draft contract evidence only. Stream fencing, durable ACK,
   replay, authorization, and terminal persistence remain Host runtime work.

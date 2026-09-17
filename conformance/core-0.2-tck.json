@@ -1,0 +1,184 @@
+{
+  "lap": "0.2",
+  "suite_version": "0.2.0-draft.1",
+  "claimability": {
+    "status": "not_claimable",
+    "blockers": [
+      "No Core 0.2 Host adapter has implemented the durable stream ledger, ACK, replay, resume, and epoch-fencing requirements.",
+      "No Core 0.2 Artifact commit and terminal-gating implementation has completed its required fault tests.",
+      "No independent second Host has supplied a complete signed Core 0.2 TCK report."
+    ]
+  },
+  "assertions": [
+    {
+      "id": "C02-WIRE-01",
+      "category": "wire",
+      "summary": "Every registered Core message accepts only its declared sender and payload shape.",
+      "scope": "portable",
+      "status": "verified_draft",
+      "source": "docs/core-0.2-spec.md#C02-WIRE-01",
+      "verification": {
+        "kind": "schema-vector",
+        "status": "verified",
+        "location": "conformance/core-0.2-wire.json",
+        "test": "tests/test_core_02_schema.py::Core02SchemaTests.test_positive_and_negative_wire_vectors"
+      }
+    },
+    {
+      "id": "C02-CONTRACT-01",
+      "category": "contract",
+      "summary": "A release or capability digest mismatch is rejected before business context is disclosed.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-CONTRACT-01",
+      "verification": {
+        "kind": "integration-test",
+        "status": "planned",
+        "scenario": "Inject a running release or capability digest mismatch and verify that no input artifact, context, or credential reaches the Agent."
+      }
+    },
+    {
+      "id": "C02-STREAM-01",
+      "category": "stream",
+      "summary": "A restarted writer uses a higher epoch without colliding with prior sequence values.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-STREAM-01",
+      "verification": {
+        "kind": "fault-injection",
+        "status": "planned",
+        "scenario": "Restart an Agent writer after persisted events and prove that the Host fences the old epoch while accepting the higher epoch."
+      }
+    },
+    {
+      "id": "C02-STREAM-02",
+      "category": "stream",
+      "summary": "Loss of an ACK after durable application replays the prior response without duplicate state.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-STREAM-02",
+      "verification": {
+        "kind": "fault-injection",
+        "status": "planned",
+        "scenario": "Drop an ACK after durable application, reconnect, and prove that replay returns the existing durable response without a second transition."
+      }
+    },
+    {
+      "id": "C02-STREAM-03",
+      "category": "stream",
+      "summary": "A stale epoch cannot emit a result, cancel a Run, or commit an Artifact.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-STREAM-03",
+      "verification": {
+        "kind": "fault-injection",
+        "status": "planned",
+        "scenario": "After failover, submit terminal and Artifact frames from the fenced epoch and verify rejection plus safe audit evidence."
+      }
+    },
+    {
+      "id": "C02-RESUME-01",
+      "category": "resume",
+      "summary": "A Host or Agent restart restores only provable Run state using snapshot and replay evidence.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-RESUME-01",
+      "verification": {
+        "kind": "fault-injection",
+        "status": "planned",
+        "scenario": "Kill each peer mid-Run, retain the ledger, and prove that resume either restores the correct waterline or produces a typed truthful failure."
+      }
+    },
+    {
+      "id": "C02-ART-01",
+      "category": "artifact",
+      "summary": "A required Artifact receipt precedes a successful authoritative terminal record.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-ART-01",
+      "verification": {
+        "kind": "integration-test",
+        "status": "planned",
+        "scenario": "Offer a required Artifact and verify a success proposal is rejected until the Host issues a durable matching receipt."
+      }
+    },
+    {
+      "id": "C02-ART-02",
+      "category": "artifact",
+      "summary": "Digest, path, media policy, or quota mismatch fails safely without exposing a deliverable.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-ART-02",
+      "verification": {
+        "kind": "fault-injection",
+        "status": "planned",
+        "scenario": "Inject mismatched bytes, unsafe source references, disallowed media types, and quota exhaustion; verify typed rejection and no access receipt."
+      }
+    },
+    {
+      "id": "C02-ART-03",
+      "category": "artifact",
+      "summary": "A duplicate Artifact offer returns the prior receipt only for identical bytes and conflicts on changed bytes.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-ART-03",
+      "verification": {
+        "kind": "integration-test",
+        "status": "planned",
+        "scenario": "Submit repeated offers with the same Artifact ID and digest, then with changed bytes, and verify idempotent receipt versus LAP-109 conflict."
+      }
+    },
+    {
+      "id": "C02-RUN-01",
+      "category": "run",
+      "summary": "A cancellation-result race produces exactly one authoritative terminal ledger record.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-RUN-01",
+      "verification": {
+        "kind": "fault-injection",
+        "status": "planned",
+        "scenario": "Race valid cancellation and terminal result frames across repeated schedules and verify one immutable Host terminal record every time."
+      }
+    },
+    {
+      "id": "C02-RUN-02",
+      "category": "run",
+      "summary": "An external outcome that cannot be proven becomes indeterminate and is not blindly retried.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-RUN-02",
+      "verification": {
+        "kind": "integration-test",
+        "status": "planned",
+        "scenario": "Make a reconciled external operation unavailable past deadline and verify the original Run becomes indeterminate without automatic effect repetition."
+      }
+    },
+    {
+      "id": "C02-ERR-01",
+      "category": "error",
+      "summary": "A contract violation reports a safe JSON pointer and actionable recovery metadata.",
+      "scope": "host-runtime",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-ERR-01",
+      "verification": {
+        "kind": "integration-test",
+        "status": "planned",
+        "scenario": "Submit a contract-invalid input and output through the Host adapter and verify safe structured error fields with no secret or path disclosure."
+      }
+    },
+    {
+      "id": "C02-SEC-01",
+      "category": "security",
+      "summary": "A receipt or resume token cannot cross tenant scope or disclose target existence.",
+      "scope": "security",
+      "status": "pending_runtime",
+      "source": "docs/core-0.2-spec.md#C02-SEC-01",
+      "verification": {
+        "kind": "security-test",
+        "status": "planned",
+        "scenario": "Replay a receipt and resume token from a different tenant and verify indistinguishable safe denial without artifact or Run existence disclosure."
+      }
+    }
+  ]
+}

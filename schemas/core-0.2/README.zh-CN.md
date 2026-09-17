@@ -9,8 +9,11 @@ conformance 声明。Core 0.1 的 Schema 与运行时行为保持不变。
   片段。
 - `registry.json` 记录发送方、关键性、payload 片段、状态机位置和实现状态。
 - `state-machine.json` 固定激活、Run 与流事件的合法状态。
-- `../../conformance/core-0.2-wire.json` 为全部 19 类消息提供正向案例，并为
-  发送方、幂等性、Artifact、输入、终态结果和 ACK 约束提供反向案例。
+- `tck-registry.schema.json` 校验 Core 0.2 草案 TCK 断言注册表及其证据状态。
+- `../../conformance/core-0.2-wire.json` 为全部 19 类消息提供正向和反向案例，
+  覆盖发送方、幂等性、Artifact、输入、终态结果和 ACK 约束。
+- `../../conformance/core-0.2-tck.json` 将全部必需 Core 断言映射到已验证的草案证据或
+  待实现的运行时场景。其当前 `not_claimable` 状态对 Core 0.2 兼容性声明具有约束力。
 
 payload 契约已完整定义为草案材料。只有 Host 用正反向向量和运行时 conformance
 证据实现后，对应条目才可从 `draft` 标为 `implemented`。Schema 校验本身不能证明

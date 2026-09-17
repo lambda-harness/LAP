@@ -11,9 +11,14 @@ These schemas are draft material for accepted LEP-0010, not a released Core
 - `registry.json` records sender, criticality, payload fragment, state-machine
   location, and implementation status.
 - `state-machine.json` fixes legal activation, Run, and stream event states.
-- `../../conformance/core-0.2-wire.json` provides positive cases for all 19
-  messages and negative cases for sender, idempotency, Artifact, input,
+- `tck-registry.schema.json` validates the draft Core 0.2 TCK assertion
+  registry and its evidence state.
+- `../../conformance/core-0.2-wire.json` provides positive and negative cases
+  for all 19 messages, including sender, idempotency, Artifact, input,
   terminal-result, and ACK constraints.
+- `../../conformance/core-0.2-tck.json` maps all required Core assertions to
+  verified draft evidence or a pending runtime scenario. Its current
+  `not_claimable` status is normative for Core 0.2 claims.
 
 The payload contracts are fully specified as draft material. A row remains
 `draft` until a Host implements it with positive/negative vectors and runtime

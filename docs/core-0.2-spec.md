@@ -237,6 +237,13 @@ out-of-order events, process kill, storage failure, lost responses, and Host
 failover. Reports are complete, signed attestations bound to source, binary,
 package, TCK, and environment digests.
 
+The published draft registry is
+[`../conformance/core-0.2-tck.json`](../conformance/core-0.2-tck.json). It
+must list every row above exactly once and declare the current evidence state.
+While its `claimability.status` is `not_claimable`, no implementation may make
+a Core 0.2 conformance claim; draft Schema evidence is not a Host runtime
+attestation.
+
 ## Implementation Plan
 
 1. Accept this LEP and freeze new Core 0.1 features.

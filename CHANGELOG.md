@@ -7,8 +7,9 @@ All notable changes to LAP are documented in this file.
 - Added isolated Core 0.2 draft envelope and message registry with mandatory
   stream identity, explicit sender role, Run scope, request correlation,
   idempotency checks, typed payload contracts for all registered messages, a
-  legal state matrix, and portable positive/negative wire vectors. Runtime
-  support remains pending; Core 0.1 is unchanged.
+  legal state matrix, portable positive/negative wire vectors, and a
+  machine-readable TCK assertion registry. Runtime support remains pending;
+  Core 0.1 is unchanged.
 
 - Accepted LEP-0010 and added the commercial-grade PRD, Core 0.2 Design, and
   implementation-level reliability SPEC. This is design approval only; Core

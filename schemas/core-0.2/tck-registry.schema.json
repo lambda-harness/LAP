@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/core-0.2/tck-registry.schema.json",
+  "title": "LAP Core 0.2 Draft TCK Registry",
+  "description": "Machine-readable draft Core 0.2 conformance obligations and evidence state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lap", "suite_version", "claimability", "assertions"],
+  "properties": {
+    "lap": { "const": "0.2" },
+    "suite_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "claimability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "blockers"],
+      "properties": {
+        "status": { "enum": ["not_claimable", "claimable"] },
+        "blockers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 1000 }
+        }
+      }
+    },
+    "assertions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/assertion" }
+    }
+  },
+  "$defs": {
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "category",
+        "summary",
+        "scope",
+        "status",
+        "source",
+        "verification"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^C02-(WIRE|CONTRACT|STREAM|RESUME|ART|RUN|ERR|SEC)-[0-9]{2}$"
+        },
+        "category": {
+          "enum": [
+            "wire",
+            "contract",
+            "stream",
+            "resume",
+            "artifact",
+            "run",
+            "error",
+            "security"
+          ]
+        },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "scope": { "enum": ["portable", "host-runtime", "security"] },
+        "status": { "enum": ["verified_draft", "pending_runtime"] },
+        "source": {
+          "type": "string",
+          "pattern": "^docs/core-0\\.2-spec\\.md#C02-[A-Z]+-[0-9]{2}$"
+        },
+        "verification": { "$ref": "#/$defs/verification" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "verified_draft" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "verification": {
+                "properties": { "status": { "const": "verified" } },
+                "required": ["status", "location", "test"]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "status": { "const": "pending_runtime" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "verification": {
+                "properties": { "status": { "const": "planned" } },
+                "required": ["status", "scenario"]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "status"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "schema-vector",
+            "integration-test",
+            "fault-injection",
+            "security-test"
+          ]
+        },
+        "status": { "enum": ["verified", "planned"] },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:conformance|tests|tools)/[A-Za-z0-9._/-]+$"
+        },
+        "test": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "scenario": { "type": "string", "minLength": 1, "maxLength": 2000 }
+      }
+    }
+  }
+}

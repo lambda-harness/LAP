@@ -9,6 +9,8 @@ htmlcov/
 *.egg-info/
 .venv/
 venv/
+.codex-go-cache/
+.codex-pytest-tmp/
 dist/
 build/
 examples/echo-agent-go/echo-agent-go

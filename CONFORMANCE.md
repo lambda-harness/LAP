@@ -5,6 +5,37 @@ LAP profile. A conformance report identifies the implementation, version,
 operating system, profile version, test suite version, and any optional
 extensions.
 
+## Core 0.2 Draft: Not Claimable
+
+[`conformance/core-0.2-tck.json`](conformance/core-0.2-tck.json) is the
+machine-readable Core 0.2 draft TCK registry, validated by
+[`schemas/core-0.2/tck-registry.schema.json`](schemas/core-0.2/tck-registry.schema.json).
+It records every mandatory Core 0.2 assertion, the required evidence form, and
+whether that evidence exists. It is deliberately separate from the published
+0.1 conformance-report schema: until its `claimability.status` changes to
+`claimable`, no implementation may advertise Core 0.2 conformance.
+
+| ID | Assertion | Current evidence state |
+|---|---|---|
+| C02-WIRE-01 | Every registered message accepts only its declared sender and payload shape. | Draft schema vector verified. |
+| C02-CONTRACT-01 | Digest mismatch is rejected before context disclosure. | Pending Host integration. |
+| C02-STREAM-01 | A restarted writer uses a new epoch without sequence collision. | Pending fault injection. |
+| C02-STREAM-02 | A lost ACK replays without duplicating state. | Pending fault injection. |
+| C02-STREAM-03 | A stale epoch cannot affect Run or Artifact state. | Pending fault injection. |
+| C02-RESUME-01 | Restart recovery restores only provable Run state. | Pending fault injection. |
+| C02-ART-01 | Required Artifact receipt precedes successful terminal state. | Pending Host integration. |
+| C02-ART-02 | Artifact validation failure exposes no deliverable. | Pending fault injection. |
+| C02-ART-03 | Duplicate Artifact offer is idempotent only for identical bytes. | Pending Host integration. |
+| C02-RUN-01 | Cancel/result races produce one terminal ledger record. | Pending fault injection. |
+| C02-RUN-02 | Unprovable external outcome becomes `indeterminate`. | Pending Host integration. |
+| C02-ERR-01 | Contract failure returns safe actionable error metadata. | Pending Host integration. |
+| C02-SEC-01 | Cross-tenant receipt/resume replay is safely denied. | Pending security test. |
+
+The registry is not a self-attestation format. A future claimable Core 0.2 TCK
+will require every assertion to have executable evidence, a complete report
+bound to implementation identity, and the independent-Host gate in the Core
+0.2 specification.
+
 ## Core 0.1
 
 | ID | Assertion |
@@ -107,6 +138,9 @@ The repository includes the portable material in
 
 | Kit item | Executable evidence |
 |---|---|
+| `core-0.2-wire.json` | Draft Core 0.2 valid and invalid payload vectors for every registered message. |
+| `core-0.2-tck.json` | Draft Core 0.2 assertion registry, evidence state, and non-claimable blockers. |
+| `tests/test_core_02_schema.py` and `tests/test_core_02_tck.py` | Validate the Core 0.2 typed-wire vectors, state matrix, TCK completeness, evidence paths, and claim boundary without enabling a runtime. |
 | `local-stdio-roundtrip.json` | Valid Core envelopes, ordered producer frames, a digest-identified local input-artifact reference, version/profile selection, correlated acceptance, preserved run identity, and one typed terminal result. |
 | `capability-contract.json` | A Draft 2020-12 capability input/output contract with valid and invalid JSON instances for Host-side contract checks. |
 | `workflow-budget.json` | A strict workflow output-budget example, an explicit dynamic allocation, and a structurally valid oversubscription that every Host must reject during semantic validation. |

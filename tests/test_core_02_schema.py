@@ -102,6 +102,13 @@ class Core02SchemaTests(unittest.TestCase):
         self.assertEqual(
             {case["type"] for case in valid_cases.values()}, registry_types
         )
+        self.assertEqual(
+            {
+                valid_cases[case["valid_case"]]["type"]
+                for case in self.vector["negative_cases"]
+            },
+            registry_types,
+        )
 
         for sequence, case in enumerate(valid_cases.values(), start=1):
             with self.subTest(case=case["id"]):
