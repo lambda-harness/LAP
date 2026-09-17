@@ -5,6 +5,12 @@
 
 ## 可移植内容
 
+`core-0.2-wire.json` 是 Core 0.2 的草案类型化线协议材料。它提供固定的流、Run、
+Release fixture，以及每一类 Core 消息的一个有效 payload 案例和有针对性的无效变更。
+仓库测试会在 Schema 校验前补全固定 envelope 字段。它证明 payload 形态、声明的发送方、
+必填关联/幂等字段和持久 ACK 水位；不声明 Core 0.2 Host 实现、传输对端认证、重放或
+持久 ledger 行为。
+
 `local-stdio-roundtrip.json` 是标准 `lap-local/0.1` 交换。它包含成功运行的 Host
 帧与预期 Agent 消息序列。兼容的本地 Agent 可以接收相同 Host 帧，并验证向量中记录的
 不变字段。其 Context Packet 包含带摘要的 `lap://run/input/...` artifact 引用；该向量

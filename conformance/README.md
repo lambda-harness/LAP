@@ -7,6 +7,14 @@ supervision behavior with implementation-local tests.
 
 ## What Is Portable
 
+`core-0.2-wire.json` is draft Core 0.2 typed-wire material. It supplies a
+fixed stream/Run/release fixture plus one valid payload case for every Core
+message and targeted invalid mutations. The repository test materializes the
+fixed envelope fields before schema validation. It proves payload shape,
+declared sender, required correlation/idempotency, and the durable ACK
+waterline; it does not claim a Core 0.2 Host implementation, transport-peer
+authentication, replay, or durable ledger behavior.
+
 `local-stdio-roundtrip.json` is a canonical `lap-local/0.1` exchange. It
 contains Host frames and the expected Agent message sequence for a successful
 run. A compatible local Agent can be tested by supplying its executable with

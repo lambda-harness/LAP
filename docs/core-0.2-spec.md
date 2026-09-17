@@ -89,6 +89,15 @@ Every message has an independent JSON Schema and fixes sender, required
 Envelope fields, payload, legal prior state, idempotency behavior, and error
 mapping.
 
+The draft source of truth is
+[`../schemas/core-0.2/envelope.schema.json`](../schemas/core-0.2/envelope.schema.json).
+Each payload contract is published as a stable `$defs` fragment and registered
+by JSON Pointer in `registry.json`; this keeps one self-contained validation
+document while allowing each message to be addressed independently. The
+envelope carries an explicit `sender` role. A receiving transport adapter MUST
+compare it with the authenticated or negotiated peer; the field alone grants
+no authority.
+
 | Message | Sender | Critical | Required outcome |
 |---|---|---:|---|
 | `agent.hello` | Host | yes | Offers Core/Profile versions and expected release/contract digests. |

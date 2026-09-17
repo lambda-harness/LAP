@@ -1,7 +1,140 @@
 {
   "lap": "0.2",
   "envelope": "envelope.schema.json",
+  "state_machine": "state-machine.json",
   "messages": [
-    {"type":"agent.hello","sender":"host","critical":true,"schema_status":"draft"}, {"type":"agent.welcome","sender":"agent","critical":true,"schema_status":"draft"}, {"type":"agent.probe","sender":"host","critical":true,"schema_status":"draft"}, {"type":"agent.probe.result","sender":"agent","critical":true,"schema_status":"draft"}, {"type":"agent.shutdown","sender":"host","critical":true,"schema_status":"draft"}, {"type":"run.start","sender":"host","critical":true,"schema_status":"draft"}, {"type":"run.accepted","sender":"agent","critical":true,"schema_status":"draft"}, {"type":"run.progress","sender":"agent","critical":false,"schema_status":"draft"}, {"type":"artifact.offer","sender":"agent","critical":true,"schema_status":"draft"}, {"type":"artifact.committed","sender":"host","critical":true,"schema_status":"draft"}, {"type":"run.input_required","sender":"agent","critical":true,"schema_status":"draft"}, {"type":"run.input_response","sender":"host","critical":true,"schema_status":"draft"}, {"type":"run.cancel","sender":"host","critical":true,"schema_status":"draft"}, {"type":"run.cancelled","sender":"agent","critical":true,"schema_status":"draft"}, {"type":"run.result","sender":"agent","critical":true,"schema_status":"draft"}, {"type":"run.result.ack","sender":"host","critical":true,"schema_status":"draft"}, {"type":"run.resume","sender":"host","critical":true,"schema_status":"draft"}, {"type":"run.snapshot","sender":"agent","critical":true,"schema_status":"draft"}, {"type":"stream.ack","sender":"either","critical":true,"schema_status":"draft"}
+    {
+      "type": "agent.hello",
+      "sender": "host",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/agent_hello_payload"
+    },
+    {
+      "type": "agent.welcome",
+      "sender": "agent",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/agent_welcome_payload"
+    },
+    {
+      "type": "agent.probe",
+      "sender": "host",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/agent_probe_payload"
+    },
+    {
+      "type": "agent.probe.result",
+      "sender": "agent",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/agent_probe_result_payload"
+    },
+    {
+      "type": "agent.shutdown",
+      "sender": "host",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/agent_shutdown_payload"
+    },
+    {
+      "type": "run.start",
+      "sender": "host",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_start_payload"
+    },
+    {
+      "type": "run.accepted",
+      "sender": "agent",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_accepted_payload"
+    },
+    {
+      "type": "run.progress",
+      "sender": "agent",
+      "critical": false,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_progress_payload"
+    },
+    {
+      "type": "artifact.offer",
+      "sender": "agent",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/artifact_offer_payload"
+    },
+    {
+      "type": "artifact.committed",
+      "sender": "host",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/artifact_committed_payload"
+    },
+    {
+      "type": "run.input_required",
+      "sender": "agent",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_input_required_payload"
+    },
+    {
+      "type": "run.input_response",
+      "sender": "host",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_input_response_payload"
+    },
+    {
+      "type": "run.cancel",
+      "sender": "host",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_cancel_payload"
+    },
+    {
+      "type": "run.cancelled",
+      "sender": "agent",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_cancelled_payload"
+    },
+    {
+      "type": "run.result",
+      "sender": "agent",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_result_payload"
+    },
+    {
+      "type": "run.result.ack",
+      "sender": "host",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_result_ack_payload"
+    },
+    {
+      "type": "run.resume",
+      "sender": "host",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_resume_payload"
+    },
+    {
+      "type": "run.snapshot",
+      "sender": "agent",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/run_snapshot_payload"
+    },
+    {
+      "type": "stream.ack",
+      "sender": "either",
+      "critical": true,
+      "schema_status": "draft",
+      "payload_schema": "envelope.schema.json#/$defs/stream_ack_payload"
+    }
   ]
 }

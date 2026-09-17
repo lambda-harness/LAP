@@ -1,0 +1,167 @@
+{
+  "lap": "0.2",
+  "description": "Draft Core 0.2 legal message-state matrix. The Host remains the sole authoritative Run-state writer.",
+  "activation": {
+    "initial": "idle",
+    "states": ["idle", "negotiating", "ready", "probing", "stopping"],
+    "events": [
+      {
+        "type": "agent.hello",
+        "sender": "host",
+        "from": ["idle"],
+        "to": "negotiating"
+      },
+      {
+        "type": "agent.welcome",
+        "sender": "agent",
+        "from": ["negotiating"],
+        "to": "ready"
+      },
+      {
+        "type": "agent.probe",
+        "sender": "host",
+        "from": ["ready"],
+        "to": "probing"
+      },
+      {
+        "type": "agent.probe.result",
+        "sender": "agent",
+        "from": ["probing"],
+        "to": "ready"
+      },
+      {
+        "type": "agent.shutdown",
+        "sender": "host",
+        "from": ["negotiating", "ready", "probing"],
+        "to": "stopping"
+      }
+    ]
+  },
+  "run": {
+    "initial": "queued",
+    "states": [
+      "queued",
+      "starting",
+      "running",
+      "input_required",
+      "approval_required",
+      "reconciling",
+      "succeeded",
+      "failed",
+      "cancelled",
+      "timed_out",
+      "indeterminate"
+    ],
+    "terminal": [
+      "succeeded",
+      "failed",
+      "cancelled",
+      "timed_out",
+      "indeterminate"
+    ],
+    "events": [
+      {
+        "type": "run.start",
+        "sender": "host",
+        "from": ["queued"],
+        "to": "starting"
+      },
+      {
+        "type": "run.accepted",
+        "sender": "agent",
+        "from": ["starting"],
+        "to": "running"
+      },
+      {
+        "type": "run.progress",
+        "sender": "agent",
+        "from": ["running", "reconciling"],
+        "to": "$same"
+      },
+      {
+        "type": "artifact.offer",
+        "sender": "agent",
+        "from": ["running", "reconciling"],
+        "to": "$same"
+      },
+      {
+        "type": "artifact.committed",
+        "sender": "host",
+        "from": ["running", "reconciling"],
+        "to": "$same"
+      },
+      {
+        "type": "run.input_required",
+        "sender": "agent",
+        "from": ["running"],
+        "to": "input_required"
+      },
+      {
+        "type": "run.input_response",
+        "sender": "host",
+        "from": ["input_required"],
+        "to": "running"
+      },
+      {
+        "type": "run.cancel",
+        "sender": "host",
+        "from": ["starting", "running", "input_required", "approval_required", "reconciling"],
+        "to": "$same"
+      },
+      {
+        "type": "run.cancelled",
+        "sender": "agent",
+        "from": ["starting", "running", "input_required", "approval_required", "reconciling"],
+        "to": "cancelled"
+      },
+      {
+        "type": "run.result",
+        "sender": "agent",
+        "from": ["running", "input_required", "approval_required", "reconciling"],
+        "to": "$terminal_from_payload"
+      },
+      {
+        "type": "run.result.ack",
+        "sender": "host",
+        "from": ["succeeded", "failed", "cancelled", "timed_out", "indeterminate"],
+        "to": "$same"
+      },
+      {
+        "type": "run.resume",
+        "sender": "host",
+        "from": ["starting", "running", "input_required", "approval_required", "reconciling"],
+        "to": "$same"
+      },
+      {
+        "type": "run.snapshot",
+        "sender": "agent",
+        "from": [
+          "queued",
+          "starting",
+          "running",
+          "input_required",
+          "approval_required",
+          "reconciling",
+          "succeeded",
+          "failed",
+          "cancelled",
+          "timed_out",
+          "indeterminate"
+        ],
+        "to": "$same"
+      }
+    ]
+  },
+  "stream": {
+    "states": ["open"],
+    "events": [
+      {
+        "type": "stream.ack",
+        "sender": "either",
+        "from": ["open"],
+        "to": "$same",
+        "ack_of_ack": false
+      }
+    ]
+  }
+}

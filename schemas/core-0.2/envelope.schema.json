@@ -2,30 +2,698 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/lambda-harness/LAP/schemas/core-0.2/envelope.schema.json",
   "title": "LAP Core 0.2 Envelope",
+  "description": "Draft Core 0.2 wire contract. It does not activate Core 0.2 runtime support.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["lap", "id", "producer", "stream_id", "epoch", "seq", "type", "payload"],
+  "required": [
+    "lap",
+    "id",
+    "producer",
+    "sender",
+    "stream_id",
+    "epoch",
+    "seq",
+    "type",
+    "payload"
+  ],
   "properties": {
     "lap": { "const": "0.2" },
-    "id": { "type": "string", "minLength": 1, "maxLength": 240 },
-    "correlation_id": { "type": "string", "minLength": 1, "maxLength": 240 },
-    "causation_id": { "type": "string", "minLength": 1, "maxLength": 240 },
-    "producer": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "id": { "$ref": "#/$defs/opaque_id" },
+    "correlation_id": { "$ref": "#/$defs/opaque_id" },
+    "causation_id": { "$ref": "#/$defs/opaque_id" },
+    "producer": { "$ref": "#/$defs/opaque_id" },
+    "sender": { "enum": ["host", "agent"] },
     "stream_id": { "type": "string", "minLength": 16, "maxLength": 240 },
     "epoch": { "type": "integer", "minimum": 1 },
     "seq": { "type": "integer", "minimum": 1 },
     "occurred_at": { "type": "string", "format": "date-time" },
-    "type": { "enum": ["agent.hello", "agent.welcome", "agent.probe", "agent.probe.result", "agent.shutdown", "run.start", "run.accepted", "run.progress", "artifact.offer", "artifact.committed", "run.input_required", "run.input_response", "run.cancel", "run.cancelled", "run.result", "run.result.ack", "run.resume", "run.snapshot", "stream.ack"] },
+    "type": {
+      "enum": [
+        "agent.hello",
+        "agent.welcome",
+        "agent.probe",
+        "agent.probe.result",
+        "agent.shutdown",
+        "run.start",
+        "run.accepted",
+        "run.progress",
+        "artifact.offer",
+        "artifact.committed",
+        "run.input_required",
+        "run.input_response",
+        "run.cancel",
+        "run.cancelled",
+        "run.result",
+        "run.result.ack",
+        "run.resume",
+        "run.snapshot",
+        "stream.ack"
+      ]
+    },
     "run": { "$ref": "#/$defs/run" },
-    "idempotency_key": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "idempotency_key": { "$ref": "#/$defs/opaque_id" },
     "ack_seq": { "type": "integer", "minimum": 0 },
     "payload": { "type": "object" },
-    "extensions": { "type": "object", "propertyNames": { "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z0-9-]+)+$" }, "additionalProperties": true }
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z0-9-]+)+$"
+      },
+      "additionalProperties": true
+    }
   },
   "allOf": [
-    {"if": {"properties": {"type": {"pattern": "^(run\\.|artifact\\.)"}}}, "then": {"required": ["run"]}},
-    {"if": {"properties": {"type": {"enum": ["run.start", "artifact.offer", "run.input_response", "run.cancel"]}}}, "then": {"required": ["idempotency_key"]}},
-    {"if": {"properties": {"type": {"enum": ["agent.welcome", "agent.probe.result", "run.accepted", "artifact.committed", "run.input_response", "run.cancelled", "run.result.ack", "run.snapshot"]}}}, "then": {"required": ["correlation_id"]}}
+    {
+      "if": {
+        "properties": { "type": { "pattern": "^(run\\.|artifact\\.)" } },
+        "required": ["type"]
+      },
+      "then": { "required": ["run"] }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "run.start",
+              "artifact.offer",
+              "run.input_response",
+              "run.cancel"
+            ]
+          }
+        },
+        "required": ["type"]
+      },
+      "then": { "required": ["idempotency_key"] }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "agent.welcome",
+              "agent.probe.result",
+              "run.accepted",
+              "run.progress",
+              "artifact.offer",
+              "artifact.committed",
+              "run.input_required",
+              "run.input_response",
+              "run.cancelled",
+              "run.result",
+              "run.result.ack",
+              "run.snapshot"
+            ]
+          }
+        },
+        "required": ["type"]
+      },
+      "then": { "required": ["correlation_id"] }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "stream.ack" } },
+        "required": ["type"]
+      },
+      "then": { "required": ["ack_seq"] }
+    }
   ],
-  "$defs": { "run": { "type": "object", "additionalProperties": false, "required": ["tenant_id", "session_id", "run_id", "trace_id"], "properties": { "tenant_id": { "type": "string", "minLength": 1, "maxLength": 240 }, "session_id": { "type": "string", "minLength": 1, "maxLength": 240 }, "run_id": { "type": "string", "minLength": 1, "maxLength": 240 }, "parent_run_id": { "type": "string", "minLength": 1, "maxLength": 240 }, "trace_id": { "type": "string", "minLength": 1, "maxLength": 240 } } } }
+  "oneOf": [
+    {
+      "properties": {
+        "type": { "const": "agent.hello" },
+        "sender": { "const": "host" },
+        "payload": { "$ref": "#/$defs/agent_hello_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "agent.welcome" },
+        "sender": { "const": "agent" },
+        "payload": { "$ref": "#/$defs/agent_welcome_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "agent.probe" },
+        "sender": { "const": "host" },
+        "payload": { "$ref": "#/$defs/agent_probe_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "agent.probe.result" },
+        "sender": { "const": "agent" },
+        "payload": { "$ref": "#/$defs/agent_probe_result_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "agent.shutdown" },
+        "sender": { "const": "host" },
+        "payload": { "$ref": "#/$defs/agent_shutdown_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.start" },
+        "sender": { "const": "host" },
+        "payload": { "$ref": "#/$defs/run_start_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.accepted" },
+        "sender": { "const": "agent" },
+        "payload": { "$ref": "#/$defs/run_accepted_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.progress" },
+        "sender": { "const": "agent" },
+        "payload": { "$ref": "#/$defs/run_progress_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "artifact.offer" },
+        "sender": { "const": "agent" },
+        "payload": { "$ref": "#/$defs/artifact_offer_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "artifact.committed" },
+        "sender": { "const": "host" },
+        "payload": { "$ref": "#/$defs/artifact_committed_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.input_required" },
+        "sender": { "const": "agent" },
+        "payload": { "$ref": "#/$defs/run_input_required_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.input_response" },
+        "sender": { "const": "host" },
+        "payload": { "$ref": "#/$defs/run_input_response_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.cancel" },
+        "sender": { "const": "host" },
+        "payload": { "$ref": "#/$defs/run_cancel_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.cancelled" },
+        "sender": { "const": "agent" },
+        "payload": { "$ref": "#/$defs/run_cancelled_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.result" },
+        "sender": { "const": "agent" },
+        "payload": { "$ref": "#/$defs/run_result_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.result.ack" },
+        "sender": { "const": "host" },
+        "payload": { "$ref": "#/$defs/run_result_ack_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.resume" },
+        "sender": { "const": "host" },
+        "payload": { "$ref": "#/$defs/run_resume_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "run.snapshot" },
+        "sender": { "const": "agent" },
+        "payload": { "$ref": "#/$defs/run_snapshot_payload" }
+      }
+    },
+    {
+      "properties": {
+        "type": { "const": "stream.ack" },
+        "payload": { "$ref": "#/$defs/stream_ack_payload" }
+      }
+    }
+  ],
+  "$defs": {
+    "opaque_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenant_id", "session_id", "run_id", "trace_id"],
+      "properties": {
+        "tenant_id": { "$ref": "#/$defs/opaque_id" },
+        "session_id": { "$ref": "#/$defs/opaque_id" },
+        "run_id": { "$ref": "#/$defs/opaque_id" },
+        "parent_run_id": { "$ref": "#/$defs/opaque_id" },
+        "trace_id": { "$ref": "#/$defs/opaque_id" }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_id",
+        "version",
+        "package_digest",
+        "manifest_digest",
+        "capability_contracts"
+      ],
+      "properties": {
+        "agent_id": { "$ref": "#/$defs/opaque_id" },
+        "version": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "package_digest": { "$ref": "#/$defs/digest" },
+        "manifest_digest": { "$ref": "#/$defs/digest" },
+        "capability_contracts": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "minLength": 1, "maxLength": 240 },
+          "additionalProperties": { "$ref": "#/$defs/digest" }
+        }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "contract_digest"],
+      "properties": {
+        "id": { "$ref": "#/$defs/opaque_id" },
+        "contract_digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "safe_error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^LAP-[1-5][0-9]{2}$" },
+        "message": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "retryable": { "type": "boolean" },
+        "phase": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "json_pointer": { "type": "string", "maxLength": 1024 },
+        "constraint": { "type": "string", "maxLength": 240 },
+        "cause_code": { "type": "string", "maxLength": 240 },
+        "responsibility": { "enum": ["host", "agent", "transport", "profile"] },
+        "operator_correlation_id": { "$ref": "#/$defs/opaque_id" },
+        "recovery": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action"],
+          "properties": {
+            "action": { "type": "string", "minLength": 1, "maxLength": 240 },
+            "retry_after_ms": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "artifact_delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "required", "disposition", "scope", "retention"],
+      "properties": {
+        "kind": { "enum": ["download", "reference", "inline"] },
+        "required": { "type": "boolean" },
+        "disposition": { "enum": ["attachment", "inline"] },
+        "scope": { "enum": ["run", "session", "tenant"] },
+        "retention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["class"],
+          "properties": {
+            "class": { "type": "string", "minLength": 1, "maxLength": 120 },
+            "expires_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    },
+    "artifact_semantic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role"],
+      "properties": {
+        "role": { "enum": ["intermediate", "preview", "final_result", "error_report"] },
+        "title": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "description": { "type": "string", "maxLength": 400 },
+        "source_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "artifact_offer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "name",
+        "media_type",
+        "size_bytes",
+        "sha256",
+        "source_ref",
+        "delivery",
+        "semantic"
+      ],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/opaque_id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "media_type": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "size_bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/digest" },
+        "source_ref": {
+          "type": "string",
+          "pattern": "^(?:lap://|urn:)[A-Za-z0-9][A-Za-z0-9._~:/-]{0,1023}$"
+        },
+        "delivery": { "$ref": "#/$defs/artifact_delivery" },
+        "semantic": { "$ref": "#/$defs/artifact_semantic" }
+      }
+    },
+    "artifact_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "receipt_id",
+        "canonical_ref",
+        "sha256",
+        "size_bytes",
+        "scope"
+      ],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/opaque_id" },
+        "receipt_id": { "$ref": "#/$defs/opaque_id" },
+        "canonical_ref": {
+          "type": "string",
+          "pattern": "^lap://artifact/[A-Za-z0-9][A-Za-z0-9._~/-]{0,239}$"
+        },
+        "sha256": { "$ref": "#/$defs/digest" },
+        "size_bytes": { "type": "integer", "minimum": 0 },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tenant_id", "run_id"],
+          "properties": {
+            "tenant_id": { "$ref": "#/$defs/opaque_id" },
+            "run_id": { "$ref": "#/$defs/opaque_id" }
+          }
+        }
+      }
+    },
+    "probe_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "status"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "status": { "enum": ["ready", "degraded", "unavailable"] },
+        "detail": { "type": "string", "maxLength": 400 }
+      }
+    },
+    "agent_hello_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["core_versions", "profiles", "expected_release"],
+      "properties": {
+        "core_versions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 40 }
+        },
+        "profiles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 240 }
+        },
+        "expected_release": { "$ref": "#/$defs/release" },
+        "frame_limit_bytes": { "type": "integer", "minimum": 1024, "maximum": 1048576 },
+        "heartbeat_ms": { "type": "integer", "minimum": 1000, "maximum": 300000 }
+      }
+    },
+    "agent_welcome_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected_core", "release"],
+      "properties": {
+        "selected_core": { "const": "0.2" },
+        "selected_profiles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 240 }
+        },
+        "release": { "$ref": "#/$defs/release" },
+        "frame_limit_bytes": { "type": "integer", "minimum": 1024, "maximum": 1048576 },
+        "heartbeat_ms": { "type": "integer", "minimum": 1000, "maximum": 300000 }
+      }
+    },
+    "agent_probe_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe_id", "release", "checks"],
+      "properties": {
+        "probe_id": { "$ref": "#/$defs/opaque_id" },
+        "release": { "$ref": "#/$defs/release" },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 240 }
+        }
+      }
+    },
+    "agent_probe_result_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe_id", "ready", "release", "checks"],
+      "properties": {
+        "probe_id": { "$ref": "#/$defs/opaque_id" },
+        "ready": { "type": "boolean" },
+        "release": { "$ref": "#/$defs/release" },
+        "checks": { "type": "array", "items": { "$ref": "#/$defs/probe_check" } },
+        "error": { "$ref": "#/$defs/safe_error" }
+      }
+    },
+    "agent_shutdown_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "deadline_at"],
+      "properties": {
+        "reason": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "deadline_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "run_start_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["release", "capability", "input", "context"],
+      "properties": {
+        "release": { "$ref": "#/$defs/release" },
+        "capability": { "$ref": "#/$defs/capability" },
+        "input": {},
+        "context": { "type": "object" },
+        "deadline_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "run_accepted_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["admission_id", "release", "capability", "accepted_at"],
+      "properties": {
+        "admission_id": { "$ref": "#/$defs/opaque_id" },
+        "release": { "$ref": "#/$defs/release" },
+        "capability": { "$ref": "#/$defs/capability" },
+        "accepted_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "run_progress_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase", "observed_at"],
+      "properties": {
+        "phase": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "message": { "type": "string", "maxLength": 4000 },
+        "percent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "observed_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "artifact_offer_payload": { "$ref": "#/$defs/artifact_offer" },
+    "artifact_committed_payload": { "$ref": "#/$defs/artifact_receipt" },
+    "run_input_required_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "input_schema", "expires_at"],
+      "properties": {
+        "request_id": { "$ref": "#/$defs/opaque_id" },
+        "input_schema": { "type": "object" },
+        "prompt": { "type": "string", "maxLength": 4000 },
+        "expires_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "run_input_response_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "outcome"],
+      "properties": {
+        "request_id": { "$ref": "#/$defs/opaque_id" },
+        "outcome": { "enum": ["submitted", "declined"] },
+        "response": {},
+        "reason": { "type": "string", "minLength": 1, "maxLength": 4000 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "outcome": { "const": "submitted" } },
+            "required": ["outcome"]
+          },
+          "then": { "required": ["response"] }
+        },
+        {
+          "if": {
+            "properties": { "outcome": { "const": "declined" } },
+            "required": ["outcome"]
+          },
+          "then": { "required": ["reason"] }
+        }
+      ]
+    },
+    "run_cancel_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "deadline_at"],
+      "properties": {
+        "reason": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "deadline_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "run_cancelled_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason", "stopped_at"],
+      "properties": {
+        "reason": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "stopped_at": { "type": "string", "format": "date-time" },
+        "error": { "$ref": "#/$defs/safe_error" }
+      }
+    },
+    "run_result_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "summary"],
+      "properties": {
+        "status": {
+          "enum": ["succeeded", "failed", "cancelled", "timed_out", "indeterminate"]
+        },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "output": {},
+        "artifact_receipt_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/opaque_id" }
+        },
+        "error": { "$ref": "#/$defs/safe_error" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "succeeded" } },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["output"],
+            "not": { "required": ["error"] }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["failed", "cancelled", "timed_out", "indeterminate"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": { "required": ["error"] }
+        }
+      ]
+    },
+    "run_result_ack_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["terminal_status", "ledger_record_id", "recorded_at"],
+      "properties": {
+        "terminal_status": {
+          "enum": ["succeeded", "failed", "cancelled", "timed_out", "indeterminate"]
+        },
+        "ledger_record_id": { "$ref": "#/$defs/opaque_id" },
+        "recorded_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "run_resume_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resume_token", "last_acked_seq", "requested_at"],
+      "properties": {
+        "resume_token": { "$ref": "#/$defs/opaque_id" },
+        "last_acked_seq": { "type": "integer", "minimum": 0 },
+        "requested_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "run_snapshot_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "critical_seq", "replay_available"],
+      "properties": {
+        "state": {
+          "enum": [
+            "queued",
+            "starting",
+            "running",
+            "input_required",
+            "approval_required",
+            "reconciling",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "timed_out",
+            "indeterminate"
+          ]
+        },
+        "critical_seq": { "type": "integer", "minimum": 0 },
+        "replay_available": { "type": "boolean" },
+        "terminal_status": {
+          "enum": ["succeeded", "failed", "cancelled", "timed_out", "indeterminate"]
+        }
+      }
+    },
+    "stream_ack_payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["applied_event_id", "durable_at"],
+      "properties": {
+        "applied_event_id": { "$ref": "#/$defs/opaque_id" },
+        "durable_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
 }

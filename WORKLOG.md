@@ -31,6 +31,7 @@ Status values: pending, passed, failed, blocked.
 | AIBot Linux amd64 build | passed | integrity SHA-256 `933c26b0250f5b871ffcdeee88185cca2ffd5d3b820fa9806da7f0bb3ff68263` |
 | AIBot manifest/package validation | passed | both platform packages passed Harness validation |
 | AIBot Local 0.1 conformance | passed | CORE-02, LOCAL-01/02/05/07; `release.plan` terminal succeeded with no side effect |
+| Core 0.2 typed wire draft | passed | 19 positive payload vectors, 8 negative vectors, registry/state-machine coverage, and Core 0.1 isolation test |
 
 ## 2026-09-16 - OA-authorized Jenkins execution
 
@@ -63,3 +64,24 @@ Status values: pending, passed, failed, blocked.
   `d8b5c875eb751355f3b85e684722efcb91f79787e4ca12adfb83f4c04ee6ef25`.
 - Linux amd64 ZIP SHA-256:
   `69e32206125ab94b6d1c2129871288e9c6bed18cc5500c277f85bd53ffce8750`.
+
+## 2026-09-17 - Core 0.2 typed-wire baseline
+
+- Core 0.2 now has a self-contained draft envelope with one addressable payload
+  contract for each of the 19 registered Core messages. The registry maps each
+  message to a stable JSON Pointer rather than duplicating partially divergent
+  schema files.
+- The envelope has an explicit `sender` role. It enables schema and TCK checks,
+  but it is not an authorization mechanism: a Host transport must still match
+  it to its authenticated or negotiated peer.
+- A machine-readable activation/Run/stream state matrix records legal prior
+  states. It preserves the Core decision that only the Host writes the
+  authoritative Run ledger; a Schema or Agent event cannot rewrite terminal
+  history.
+- The `indeterminate` terminal state is represented in `run.result` and
+  `run.result.ack`; it requires a structured error and does not permit a blind
+  success fallback.
+- The portable wire vector covers one valid instance of every Core message and
+  targeted invalid sender, idempotency, Artifact, input, terminal-result, and
+  ACK cases. This is draft contract evidence only. Stream fencing, durable ACK,
+  replay, authorization, and terminal persistence remain Host runtime work.
