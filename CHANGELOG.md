@@ -4,6 +4,12 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added a Core 0.2 reference Artifact ledger with immutable Offer identity,
+  delivery/media/quota policy checks, exact-byte receipt validation, opaque
+  scoped receipt references, idempotent commits, and required-deliverable
+  terminal gating. It is executable reference evidence only; no Core 0.2 Host
+  runtime or conformance claim is enabled.
+
 - Added a Core 0.2 reference stream ledger with strict epoch fencing,
   sequence-gap detection, same-position conflict rejection, bounded replay,
   duplicate identities retained beyond replay-body eviction, ACK waterlines,

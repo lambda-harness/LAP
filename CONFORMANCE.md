@@ -23,9 +23,9 @@ whether that evidence exists. It is deliberately separate from the published
 | C02-STREAM-02 | A lost ACK replays without duplicating state. | Reference state-machine test verified; Host fault injection pending. |
 | C02-STREAM-03 | A stale epoch cannot affect Run or Artifact state. | Reference state-machine test verified; Host fault injection pending. |
 | C02-RESUME-01 | Restart recovery restores only provable Run state. | Reference checkpoint test verified; Host fault injection pending. |
-| C02-ART-01 | Required Artifact receipt precedes successful terminal state. | Pending Host integration. |
-| C02-ART-02 | Artifact validation failure exposes no deliverable. | Pending fault injection. |
-| C02-ART-03 | Duplicate Artifact offer is idempotent only for identical bytes. | Pending Host integration. |
+| C02-ART-01 | Required Artifact receipt precedes successful terminal state. | Reference state-machine test verified; Host integration pending. |
+| C02-ART-02 | Artifact validation failure exposes no deliverable. | Reference state-machine test verified; Host fault injection pending. |
+| C02-ART-03 | Duplicate Artifact offer is idempotent only for identical bytes. | Reference state-machine test verified; Host integration pending. |
 | C02-RUN-01 | Cancel/result races produce one terminal ledger record. | Pending fault injection. |
 | C02-RUN-02 | Unprovable external outcome becomes `indeterminate`. | Pending Host integration. |
 | C02-ERR-01 | Contract failure returns safe actionable error metadata. | Pending Host integration. |

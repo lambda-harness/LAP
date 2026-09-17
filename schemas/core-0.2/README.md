@@ -23,6 +23,11 @@ These schemas are draft material for accepted LEP-0010, not a released Core
   `../../tests/test_core_02_stream_ledger.py` make the epoch, sequence, ACK,
   replay, and checkpoint semantics executable reference evidence. They do not
   replace a Host's durable transaction or upgrade pending runtime assertions.
+- `../../src/lap_protocol/artifact_ledger.py` and
+  `../../tests/test_core_02_artifact_ledger.py` make Artifact Offer, byte
+  validation, receipt, and success-gating semantics executable reference
+  evidence. They do not implement a Host object store or upgrade pending
+  runtime assertions.
 
 The payload contracts are fully specified as draft material. A row remains
 `draft` until a Host implements it with positive/negative vectors and runtime

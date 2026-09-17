@@ -183,6 +183,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Core 0.2 规范](docs/core-0.2-spec.md)：拟议消息、状态、安全、测试与迁移。
 - [Core 0.2 流账本参考实现](docs/core-0.2-stream-ledger.md)：可执行的 epoch、序列、ACK、
   重放与检查点语义；它不是 Host conformance 声明。
+- [Core 0.2 Artifact 账本参考实现](docs/core-0.2-artifact-ledger.md)：可执行的 Offer、收据、
+  字节完整性与成功终态门禁语义；它不是 Host conformance 声明。
 - [LAP Enhancement Proposals](proposals/README.zh-CN.md)：规范性、兼容性和安全变更的
   公开设计记录。
 

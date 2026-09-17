@@ -5,7 +5,7 @@
     "status": "not_claimable",
     "blockers": [
       "No Core 0.2 Host adapter has implemented the durable stream ledger, ACK, replay, resume, and epoch-fencing requirements.",
-      "No Core 0.2 Artifact commit and terminal-gating implementation has completed its required fault tests.",
+      "No Core 0.2 Host Artifact commit and terminal-gating adapter has completed its required fault tests.",
       "No independent second Host has supplied a complete signed Core 0.2 TCK report."
     ]
   },
@@ -124,6 +124,12 @@
         "kind": "integration-test",
         "status": "planned",
         "scenario": "Offer a required Artifact and verify a success proposal is rejected until the Host issues a durable matching receipt."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_artifact_ledger.py",
+        "test": "tests/test_core_02_artifact_ledger.py::Core02ArtifactLedgerTests.test_commits_required_artifact_and_gates_success_by_receipt",
+        "limitations": "Reference in-memory semantics only; no Host object-store durability, outbox, or terminal transaction integration."
       }
     },
     {
@@ -137,6 +143,12 @@
         "kind": "fault-injection",
         "status": "planned",
         "scenario": "Inject mismatched bytes, unsafe source references, disallowed media types, and quota exhaustion; verify typed rejection and no access receipt."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_artifact_ledger.py",
+        "test": "tests/test_core_02_artifact_ledger.py::Core02ArtifactLedgerTests.test_integrity_failure_creates_no_receipt_or_deliverable",
+        "limitations": "Reference in-memory metadata and byte validation only; no scanner, object-store, or Host access-path fault injection."
       }
     },
     {
@@ -150,6 +162,12 @@
         "kind": "integration-test",
         "status": "planned",
         "scenario": "Submit repeated offers with the same Artifact ID and digest, then with changed bytes, and verify idempotent receipt versus LAP-109 conflict."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_artifact_ledger.py",
+        "test": "tests/test_core_02_artifact_ledger.py::Core02ArtifactLedgerTests.test_offer_and_commit_are_idempotent_but_changed_identity_conflicts",
+        "limitations": "Reference in-memory semantics only; no Host durable receipt transaction or multi-process concurrency integration."
       }
     },
     {

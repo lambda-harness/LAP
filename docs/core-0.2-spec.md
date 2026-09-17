@@ -252,7 +252,9 @@ attestation.
 4. Bind the [reference stream ledger](core-0.2-stream-ledger.md) to a durable
    Host transaction, ACK outbox, replay transport, resume token, and writer
    lease implementation.
-5. Implement Artifact store receipts and terminal gating.
+5. Bind the [reference Artifact ledger](core-0.2-artifact-ledger.md) to a
+   durable Host object store, receipt/outbox transaction, access scope, and
+   success terminal gate.
 6. Implement structured errors and terminal `indeterminate`.
 7. Publish a migration adapter and compatibility matrix.
 8. Implement separate commercial Profiles through their own LEPs.

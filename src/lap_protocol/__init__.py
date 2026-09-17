@@ -1,5 +1,18 @@
 """Public Python helpers for the Lattice Agent Protocol reference kit."""
 
+from .artifact_ledger import (
+    ArtifactConflictError,
+    ArtifactIntegrityError,
+    ArtifactLedger,
+    ArtifactLedgerError,
+    ArtifactOffer,
+    ArtifactPolicyError,
+    ArtifactQuotaError,
+    ArtifactReceipt,
+    ArtifactScope,
+    ArtifactTerminalError,
+    ArtifactValidationError,
+)
 from .package_signing import (
     PackageSignature,
     PackageSignatureVerification,
@@ -31,6 +44,17 @@ from .stream_ledger import (
 )
 
 __all__ = [
+    "ArtifactConflictError",
+    "ArtifactIntegrityError",
+    "ArtifactLedger",
+    "ArtifactLedgerError",
+    "ArtifactOffer",
+    "ArtifactPolicyError",
+    "ArtifactQuotaError",
+    "ArtifactReceipt",
+    "ArtifactScope",
+    "ArtifactTerminalError",
+    "ArtifactValidationError",
     "PackageSignature",
     "PackageSignatureVerification",
     "PackageSigningError",

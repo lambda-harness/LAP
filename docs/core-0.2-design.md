@@ -3,7 +3,8 @@
 ## Status
 
 Accepted for specification. Draft Schema, vector, TCK-registry, and reference
-stream-state-machine work exists; no Core 0.2 Host runtime adapter has started.
+stream/Artifact state-machine work exists; no Core 0.2 Host runtime adapter
+has started.
 
 ## Abstract
 

@@ -106,3 +106,18 @@ Status values: pending, passed, failed, blocked.
 - The reference remains in-memory by design. A commercial Host must persist
   its checkpoint, run-state update, and outbound ACK intent atomically; TCK
   C02-STREAM-01..03 and C02-RESUME-01 remain pending Host fault injection.
+
+## 2026-09-17 - Core 0.2 reference Artifact ledger
+
+- Added an executable, isolated Artifact Offer/receipt state machine to the
+  installable Python reference kit. It validates immutable Offer metadata,
+  policy and quota boundaries, exact byte size/SHA-256, opaque scoped receipts,
+  and the rule that required deliverables must be receipted before success.
+- Duplicate Offer/commit behavior is explicit: the same identity is
+  idempotent; the same Artifact ID with changed identity fails as `LAP-109`.
+  Validation failure creates no receipt or download-capable reference.
+- Receipt selection is scope-bound and returns identifiers only. The reference
+  never exposes a source path or stores deliverable bytes itself.
+- A commercial Host must atomically persist copied bytes, the receipt/audit
+  record, outbound `artifact.committed`, and terminal gate. TCK C02-ART-01..03
+  remain pending Host integration and fault injection.
