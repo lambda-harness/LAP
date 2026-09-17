@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/core-0.2/message-registry.schema.json",
+  "title": "LAP Core 0.2 Message Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lap", "envelope", "messages"],
+  "properties": {
+    "lap": { "const": "0.2" },
+    "envelope": { "const": "envelope.schema.json" },
+    "messages": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "object", "additionalProperties": false, "required": ["type", "sender", "critical", "schema_status"], "properties": { "type": { "type": "string", "minLength": 1 }, "sender": { "enum": ["host", "agent", "either"] }, "critical": { "type": "boolean" }, "schema_status": { "enum": ["draft", "implemented"] }, "payload_schema": { "type": "string", "pattern": "^[a-z0-9._-]+\\.schema\\.json$" } } } }
+  }
+}

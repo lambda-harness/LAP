@@ -4,6 +4,10 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added isolated Core 0.2 draft envelope and message registry with mandatory
+  stream identity, Run scope, request correlation, and idempotency checks.
+  Payload contracts and runtime support remain pending; Core 0.1 is unchanged.
+
 - Accepted LEP-0010 and added the commercial-grade PRD, Core 0.2 Design, and
   implementation-level reliability SPEC. This is design approval only; Core
   0.1 wire behavior is unchanged until the proposed schemas and conformance

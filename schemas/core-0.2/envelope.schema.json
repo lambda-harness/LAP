@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/core-0.2/envelope.schema.json",
+  "title": "LAP Core 0.2 Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lap", "id", "producer", "stream_id", "epoch", "seq", "type", "payload"],
+  "properties": {
+    "lap": { "const": "0.2" },
+    "id": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "correlation_id": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "causation_id": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "producer": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "stream_id": { "type": "string", "minLength": 16, "maxLength": 240 },
+    "epoch": { "type": "integer", "minimum": 1 },
+    "seq": { "type": "integer", "minimum": 1 },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "type": { "enum": ["agent.hello", "agent.welcome", "agent.probe", "agent.probe.result", "agent.shutdown", "run.start", "run.accepted", "run.progress", "artifact.offer", "artifact.committed", "run.input_required", "run.input_response", "run.cancel", "run.cancelled", "run.result", "run.result.ack", "run.resume", "run.snapshot", "stream.ack"] },
+    "run": { "$ref": "#/$defs/run" },
+    "idempotency_key": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "ack_seq": { "type": "integer", "minimum": 0 },
+    "payload": { "type": "object" },
+    "extensions": { "type": "object", "propertyNames": { "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z0-9-]+)+$" }, "additionalProperties": true }
+  },
+  "allOf": [
+    {"if": {"properties": {"type": {"pattern": "^(run\\.|artifact\\.)"}}}, "then": {"required": ["run"]}},
+    {"if": {"properties": {"type": {"enum": ["run.start", "artifact.offer", "run.input_response", "run.cancel"]}}}, "then": {"required": ["idempotency_key"]}},
+    {"if": {"properties": {"type": {"enum": ["agent.welcome", "agent.probe.result", "run.accepted", "artifact.committed", "run.input_response", "run.cancelled", "run.result.ack", "run.snapshot"]}}}, "then": {"required": ["correlation_id"]}}
+  ],
+  "$defs": { "run": { "type": "object", "additionalProperties": false, "required": ["tenant_id", "session_id", "run_id", "trace_id"], "properties": { "tenant_id": { "type": "string", "minLength": 1, "maxLength": 240 }, "session_id": { "type": "string", "minLength": 1, "maxLength": 240 }, "run_id": { "type": "string", "minLength": 1, "maxLength": 240 }, "parent_run_id": { "type": "string", "minLength": 1, "maxLength": 240 }, "trace_id": { "type": "string", "minLength": 1, "maxLength": 240 } } } }
+}
