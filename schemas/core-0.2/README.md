@@ -19,6 +19,11 @@ These schemas are draft material for accepted LEP-0010, not a released Core
 - `../../conformance/core-0.2-tck.json` maps all required Core assertions to
   verified draft evidence or a pending runtime scenario. Its current
   `not_claimable` status is normative for Core 0.2 claims.
+- `../../src/lap_protocol/contract_gate.py` and
+  `../../tests/test_core_02_contract_gate.py` make exact release/capability
+  identity comparison and the pre-context activation boundary executable
+  reference evidence. They do not implement a trusted Host registry, package
+  canonicalization, peer authentication, or upgrade pending runtime assertions.
 - `../../src/lap_protocol/stream_ledger.py` and
   `../../tests/test_core_02_stream_ledger.py` make the epoch, sequence, ACK,
   replay, and checkpoint semantics executable reference evidence. They do not

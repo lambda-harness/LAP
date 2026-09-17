@@ -14,6 +14,10 @@ conformance 声明。Core 0.1 的 Schema 与运行时行为保持不变。
   覆盖发送方、幂等性、Artifact、输入、终态结果和 ACK 约束。
 - `../../conformance/core-0.2-tck.json` 将全部必需 Core 断言映射到已验证的草案证据或
   待实现的运行时场景。其当前 `not_claimable` 状态对 Core 0.2 兼容性声明具有约束力。
+- `../../src/lap_protocol/contract_gate.py` 和
+  `../../tests/test_core_02_contract_gate.py` 将精确发布/能力身份比对及业务上下文发放前的
+  激活门禁做成可执行的参考证据；它们不实现可信 Host 注册表、包规范化、对端认证，
+  也不会把待完成的运行时断言升级为已完成。
 - `../../src/lap_protocol/stream_ledger.py` 和
   `../../tests/test_core_02_stream_ledger.py` 将 epoch、序列、ACK、重放和检查点语义做成
   可执行的参考证据；它们不替代 Host 的持久化事务，也不会把待完成的运行时断言升级为已完成。

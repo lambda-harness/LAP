@@ -36,6 +36,12 @@
         "kind": "integration-test",
         "status": "planned",
         "scenario": "Inject a running release or capability digest mismatch and verify that no input artifact, context, or credential reaches the Agent."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_contract_gate.py",
+        "test": "tests/test_core_02_contract_gate.py::Core02ContractGateTests.test_digest_mismatch_rejects_before_context_supplier_is_invoked",
+        "limitations": "Reference identity comparison only; no trusted Host registry, package hashing, peer authentication, or context transport integration."
       }
     },
     {

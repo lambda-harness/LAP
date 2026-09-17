@@ -18,7 +18,7 @@ whether that evidence exists. It is deliberately separate from the published
 | ID | Assertion | Current evidence state |
 |---|---|---|
 | C02-WIRE-01 | Every registered message accepts only its declared sender and payload shape. | Draft schema vector verified. |
-| C02-CONTRACT-01 | Digest mismatch is rejected before context disclosure. | Pending Host integration. |
+| C02-CONTRACT-01 | Digest mismatch is rejected before context disclosure. | Reference state-machine test verified; Host integration pending. |
 | C02-STREAM-01 | A restarted writer uses a new epoch without sequence collision. | Reference state-machine test verified; Host fault injection pending. |
 | C02-STREAM-02 | A lost ACK replays without duplicating state. | Reference state-machine test verified; Host fault injection pending. |
 | C02-STREAM-03 | A stale epoch cannot affect Run or Artifact state. | Reference state-machine test verified; Host fault injection pending. |
@@ -140,7 +140,7 @@ The repository includes the portable material in
 |---|---|
 | `core-0.2-wire.json` | Draft Core 0.2 valid and invalid payload vectors for every registered message. |
 | `core-0.2-tck.json` | Draft Core 0.2 assertion registry, evidence state, and non-claimable blockers. |
-| `tests/test_core_02_schema.py` and `tests/test_core_02_tck.py` | Validate the Core 0.2 typed-wire vectors, state matrix, TCK completeness, evidence paths, and claim boundary without enabling a runtime. |
+| `tests/test_core_02_schema.py`, `tests/test_core_02_contract_gate.py`, and `tests/test_core_02_tck.py` | Validate the Core 0.2 typed-wire vectors, release identity pre-context gate, TCK completeness, evidence paths, and claim boundary without enabling a runtime. |
 | `local-stdio-roundtrip.json` | Valid Core envelopes, ordered producer frames, a digest-identified local input-artifact reference, version/profile selection, correlated acceptance, preserved run identity, and one typed terminal result. |
 | `capability-contract.json` | A Draft 2020-12 capability input/output contract with valid and invalid JSON instances for Host-side contract checks. |
 | `workflow-budget.json` | A strict workflow output-budget example, an explicit dynamic allocation, and a structurally valid oversubscription that every Host must reject during semantic validation. |

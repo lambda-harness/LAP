@@ -154,3 +154,15 @@ Status values: pending, passed, failed, blocked.
   expired/revoked in-memory records. A real Host still needs durable issuance,
   revocation audit, protected delivery, key management, session binding, and
   rate limiting. TCK C02-SEC-01 remains pending Host security integration.
+
+## 2026-09-17 - Core 0.2 contract gate reference
+
+- Added an executable release-identity gate that compares exact Host-admitted
+  `agent_id`, version, package digest, manifest digest, and capability-contract
+  digest set before it invokes a caller-owned business-context supplier.
+- Direct construction is validated as strictly as wire-shaped payload parsing;
+  mismatches produce a safe `LAP-103` without echoing actual release values.
+- The reference proves no-context-before-match ordering only. A production Host
+  still needs RFC 8785/package canonicalization, immutable trusted admission,
+  peer authentication, durable activation audit, and protected context delivery.
+  TCK C02-CONTRACT-01 remains pending Host integration and fault evidence.

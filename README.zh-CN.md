@@ -181,6 +181,8 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Governance](GOVERNANCE.md)：版本和变更流程。
 - [Core 0.2 设计](docs/core-0.2-design.md)：产品边界与可靠性架构。
 - [Core 0.2 规范](docs/core-0.2-spec.md)：拟议消息、状态、安全、测试与迁移。
+- [Core 0.2 契约门禁参考实现](docs/core-0.2-contract-gate.md)：可执行的精确发布/能力匹配与
+  业务上下文发放前门禁；它不是 Host conformance 声明。
 - [Core 0.2 流账本参考实现](docs/core-0.2-stream-ledger.md)：可执行的 epoch、序列、ACK、
   重放与检查点语义；它不是 Host conformance 声明。
 - [Core 0.2 Artifact 账本参考实现](docs/core-0.2-artifact-ledger.md)：可执行的 Offer、收据、

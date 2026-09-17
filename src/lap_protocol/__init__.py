@@ -13,6 +13,14 @@ from .artifact_ledger import (
     ArtifactTerminalError,
     ArtifactValidationError,
 )
+from .contract_gate import (
+    ActivationAdmission,
+    ContractGate,
+    ContractGateError,
+    ContractMismatchError,
+    ContractValidationError,
+    ReleaseIdentity,
+)
 from .package_signing import (
     PackageSignature,
     PackageSignatureVerification,
@@ -79,6 +87,12 @@ __all__ = [
     "ArtifactScope",
     "ArtifactTerminalError",
     "ArtifactValidationError",
+    "ActivationAdmission",
+    "ContractGate",
+    "ContractGateError",
+    "ContractMismatchError",
+    "ContractValidationError",
+    "ReleaseIdentity",
     "PackageSignature",
     "PackageSignatureVerification",
     "PackageSigningError",

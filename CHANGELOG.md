@@ -4,6 +4,11 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added a Core 0.2 reference contract gate for exact Host-admitted release and
+  capability identity comparison before a business-context supplier is invoked.
+  It is executable reference evidence only; no trusted Host registry,
+  authenticated activation transport, or Core 0.2 conformance claim is enabled.
+
 - Added a Core 0.2 reference scoped-token registry for opaque Artifact-download
   and Run-resume secrets. It binds every token to an audience, tenant/Run scope,
   purpose, expiry, and revocation state, with one generic cross-scope denial.

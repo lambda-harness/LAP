@@ -66,6 +66,13 @@ Artifact contract, Effect contract, required profiles, and permission request
 declarations. Any change creates a new release identity even when the human
 version string was incorrectly reused.
 
+The [reference contract gate](core-0.2-contract-gate.md) provides executable
+exact-value comparison for the published release object and proves that a
+caller can defer business-context construction until comparison succeeds. It
+does not calculate canonical package data or authenticate a peer; a Host MUST
+bind it to its trusted immutable release registry and protected context
+transport.
+
 ### Stream
 
 ```json
@@ -175,6 +182,11 @@ add optional safe fields:
 Retry policy is derived from code plus state, never message text. A retryable
 transport failure does not imply an external effect is safe to repeat.
 
+`LAP-103` means that a running Agent's exact release identity differs from the
+Host-admitted identity. It is an activation rejection, not an unsupported
+protocol-version error (`LAP-102`), and a Host MUST NOT disclose business
+context before returning it.
+
 `indeterminate` is a terminal state, not a retry instruction. It MUST include
 a structured safe error and remains immutable while a negotiated Effect Profile
 performs reconciliation. The original Run MUST NOT be replayed or retried
@@ -259,21 +271,24 @@ attestation.
 1. Accept this LEP and freeze new Core 0.1 features.
 2. Add canonicalization and message schemas.
 3. Add TCK registry and mandatory coverage validation.
-4. Bind the [reference stream ledger](core-0.2-stream-ledger.md) to a durable
+4. Bind the [reference contract gate](core-0.2-contract-gate.md) to the trusted
+   release registry, authenticated peer negotiation, activation audit, and a
+   protected no-context-before-match transaction.
+5. Bind the [reference stream ledger](core-0.2-stream-ledger.md) to a durable
    Host transaction, ACK outbox, replay transport, resume token, and writer
    lease implementation.
-5. Bind the [reference Artifact ledger](core-0.2-artifact-ledger.md) to a
+6. Bind the [reference Artifact ledger](core-0.2-artifact-ledger.md) to a
    durable Host object store, receipt/outbox transaction, access scope, and
    success terminal gate.
-6. Bind the [reference Run ledger](core-0.2-run-ledger.md) to the Host Run
+7. Bind the [reference Run ledger](core-0.2-run-ledger.md) to the Host Run
    transaction, terminal ACK outbox, structured-error redaction, and
    `indeterminate` reconciliation boundary.
-7. Bind the [reference scoped-token registry](core-0.2-token-registry.md) to
+8. Bind the [reference scoped-token registry](core-0.2-token-registry.md) to
    durable issuance/revocation, authenticated session delivery, and protected
    Artifact/resume access endpoints.
-8. Publish a migration adapter and compatibility matrix.
-9. Implement separate commercial Profiles through their own LEPs.
-10. Validate against a second independent Host before 1.0.
+9. Publish a migration adapter and compatibility matrix.
+10. Implement separate commercial Profiles through their own LEPs.
+11. Validate against a second independent Host before 1.0.
 
 ## Open Questions and Risks
 

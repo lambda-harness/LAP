@@ -29,6 +29,7 @@ EXPECTED_ASSERTION_IDS = frozenset(
 )
 REFERENCE_ASSERTION_IDS = frozenset(
     (
+        "C02-CONTRACT-01",
         "C02-STREAM-01",
         "C02-STREAM-02",
         "C02-STREAM-03",

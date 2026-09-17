@@ -3,8 +3,8 @@
 ## Status
 
 Accepted for specification. Draft Schema, vector, TCK-registry, and reference
-stream/Artifact/Run state-machine plus scoped-token work exists; no Core 0.2
-Host runtime adapter has started.
+contract-gate, stream/Artifact/Run state-machine, and scoped-token work exists;
+no Core 0.2 Host runtime adapter has started.
 
 ## Abstract
 
@@ -72,6 +72,11 @@ The Host computes a canonical digest of the complete admitted package and each
 capability contract. Negotiation compares those digests with the running
 implementation. A mismatch fails activation, before any business input or
 credential is provided.
+
+The [reference contract gate](core-0.2-contract-gate.md) makes exact identity
+comparison and the no-context-before-match ordering executable. A production
+Host still owns canonicalization, trusted release admission, authenticated
+transport, durable activation audit, and protected context delivery.
 
 ### Artifact transaction
 
