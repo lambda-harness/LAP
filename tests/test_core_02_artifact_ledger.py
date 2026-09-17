@@ -102,6 +102,7 @@ class Core02ArtifactLedgerTests(unittest.TestCase):
         ledger = ArtifactLedger(SCOPE)
         ledger.offer(offer_payload(required=False))
         self.assertEqual(ledger.validate_success([]), ())
+        self.assertEqual(ledger.validate_receipts([]), ())
 
         receipt = ledger.commit("invoice-workbook", CONTENT)
         self.assertEqual(ledger.validate_success([receipt.receipt_id]), (receipt,))

@@ -175,6 +175,13 @@ add optional safe fields:
 Retry policy is derived from code plus state, never message text. A retryable
 transport failure does not imply an external effect is safe to repeat.
 
+`indeterminate` is a terminal state, not a retry instruction. It MUST include
+a structured safe error and remains immutable while a negotiated Effect Profile
+performs reconciliation. The original Run MUST NOT be replayed or retried
+solely because its error metadata is marked retryable. A Host must redact
+message text before it writes diagnostics; schema-shaped error fields cannot
+prove that untrusted text is safe.
+
 ## Security and Authorization
 
 - Tenant and principal are Host-issued and never accepted from Agent input.
@@ -255,7 +262,9 @@ attestation.
 5. Bind the [reference Artifact ledger](core-0.2-artifact-ledger.md) to a
    durable Host object store, receipt/outbox transaction, access scope, and
    success terminal gate.
-6. Implement structured errors and terminal `indeterminate`.
+6. Bind the [reference Run ledger](core-0.2-run-ledger.md) to the Host Run
+   transaction, terminal ACK outbox, structured-error redaction, and
+   `indeterminate` reconciliation boundary.
 7. Publish a migration adapter and compatibility matrix.
 8. Implement separate commercial Profiles through their own LEPs.
 9. Validate against a second independent Host before 1.0.

@@ -26,9 +26,9 @@ whether that evidence exists. It is deliberately separate from the published
 | C02-ART-01 | Required Artifact receipt precedes successful terminal state. | Reference state-machine test verified; Host integration pending. |
 | C02-ART-02 | Artifact validation failure exposes no deliverable. | Reference state-machine test verified; Host fault injection pending. |
 | C02-ART-03 | Duplicate Artifact offer is idempotent only for identical bytes. | Reference state-machine test verified; Host integration pending. |
-| C02-RUN-01 | Cancel/result races produce one terminal ledger record. | Pending fault injection. |
-| C02-RUN-02 | Unprovable external outcome becomes `indeterminate`. | Pending Host integration. |
-| C02-ERR-01 | Contract failure returns safe actionable error metadata. | Pending Host integration. |
+| C02-RUN-01 | Cancel/result races produce one terminal ledger record. | Reference state-machine test verified; Host fault injection pending. |
+| C02-RUN-02 | Unprovable external outcome becomes `indeterminate`. | Reference state-machine test verified; Effect Profile and Host integration pending. |
+| C02-ERR-01 | Contract failure returns safe actionable error metadata. | Reference state-machine test verified; Host adapter/redaction integration pending. |
 | C02-SEC-01 | Cross-tenant receipt/resume replay is safely denied. | Pending security test. |
 
 The registry is not a self-attestation format. A future claimable Core 0.2 TCK

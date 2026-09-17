@@ -28,6 +28,11 @@ These schemas are draft material for accepted LEP-0010, not a released Core
   validation, receipt, and success-gating semantics executable reference
   evidence. They do not implement a Host object store or upgrade pending
   runtime assertions.
+- `../../src/lap_protocol/run_ledger.py` and
+  `../../tests/test_core_02_run_ledger.py` make Host-owned Run transitions,
+  first-terminal-wins, structured errors, and `indeterminate` semantics
+  executable reference evidence. They do not implement Host durability,
+  redaction, provider reconciliation, or upgrade pending runtime assertions.
 
 The payload contracts are fully specified as draft material. A row remains
 `draft` until a Host implements it with positive/negative vectors and runtime

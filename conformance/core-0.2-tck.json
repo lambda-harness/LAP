@@ -4,7 +4,7 @@
   "claimability": {
     "status": "not_claimable",
     "blockers": [
-      "No Core 0.2 Host adapter has implemented the durable stream ledger, ACK, replay, resume, and epoch-fencing requirements.",
+      "No Core 0.2 Host adapter has implemented the durable Stream, ACK, replay, resume, epoch-fencing, and Run-terminal requirements.",
       "No Core 0.2 Host Artifact commit and terminal-gating adapter has completed its required fault tests.",
       "No independent second Host has supplied a complete signed Core 0.2 TCK report."
     ]
@@ -181,6 +181,12 @@
         "kind": "fault-injection",
         "status": "planned",
         "scenario": "Race valid cancellation and terminal result frames across repeated schedules and verify one immutable Host terminal record every time."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_run_ledger.py",
+        "test": "tests/test_core_02_run_ledger.py::Core02RunLedgerTests.test_concurrent_cancel_and_result_write_exactly_one_terminal_record",
+        "limitations": "Reference in-process locking only; no durable transaction, Host failover, or multi-process fault injection."
       }
     },
     {
@@ -194,6 +200,12 @@
         "kind": "integration-test",
         "status": "planned",
         "scenario": "Make a reconciled external operation unavailable past deadline and verify the original Run becomes indeterminate without automatic effect repetition."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_run_ledger.py",
+        "test": "tests/test_core_02_run_ledger.py::Core02RunLedgerTests.test_indeterminate_requires_reconciliation_and_cannot_be_blindly_retried",
+        "limitations": "Reference terminal semantics only; no external provider adapter, policy engine, or durable reconciliation worker."
       }
     },
     {
@@ -207,6 +219,12 @@
         "kind": "integration-test",
         "status": "planned",
         "scenario": "Submit a contract-invalid input and output through the Host adapter and verify safe structured error fields with no secret or path disclosure."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_run_ledger.py",
+        "test": "tests/test_core_02_run_ledger.py::Core02RunLedgerTests.test_safe_error_is_defensive_and_rejects_invalid_contract_fields",
+        "limitations": "Reference validates error shape only; Host redaction, transport adaptation, and diagnostic-sink verification remain unimplemented."
       }
     },
     {

@@ -121,3 +121,21 @@ Status values: pending, passed, failed, blocked.
 - A commercial Host must atomically persist copied bytes, the receipt/audit
   record, outbound `artifact.committed`, and terminal gate. TCK C02-ART-01..03
   remain pending Host integration and fault injection.
+
+## 2026-09-17 - Core 0.2 reference Run ledger and safe errors
+
+- Added an executable, isolated Host-owned Run state machine to the installable
+  Python reference kit. It records lifecycle transitions and first-terminal
+  wins under an in-process lock; later terminal evidence becomes a deduplicated
+  anomaly rather than rewriting the authoritative history.
+- `run.result` proposals now have a reference parser for the existing strict
+  Core shape. Successful results must pass required Artifact receipt gating;
+  all other terminal results validate any referenced receipt without requiring
+  every deliverable.
+- `SafeError` validates only the protocol shape and returns defensive copies.
+  Hosts still own redaction before audit or diagnostics. An `indeterminate`
+  terminal is explicitly non-retryable for the original Run and signals the
+  later Profile reconciliation boundary.
+- The reference has no durable transaction, distributed lease, effect-provider
+  adapter, secret redaction service, or outbox. TCK C02-RUN-01/02 and
+  C02-ERR-01 remain pending Host/runtime evidence.

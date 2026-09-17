@@ -33,6 +33,9 @@ deliverable reliable instead of an Agent output side field:
 - a successful `run.result` names receipt IDs only. Every required offered
   Artifact must have one receipt, while optional Artifacts do not block
   success;
+- failed, cancelled, timed-out, and indeterminate results may still name
+  committed preview or error-report receipts, but receive the same opaque-ID,
+  existence, duplicate, and Run-scope validation without the success gate;
 - receipt selection is restricted to the ledger's Host-issued Run scope and
   never returns byte content, source references, or private storage paths.
 

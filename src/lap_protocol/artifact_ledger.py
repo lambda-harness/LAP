@@ -333,29 +333,8 @@ class ArtifactLedger:
         metadata again is not an alternate success path and remains prohibited
         by the Core 0.2 `run.result` contract.
         """
-        if isinstance(receipt_ids, str) or not isinstance(receipt_ids, Collection):
-            raise ArtifactTerminalError("Success must contain a receipt ID collection.")
         with self._lock:
-            selected: list[ArtifactReceipt] = []
-            seen: set[str] = set()
-            for receipt_id in receipt_ids:
-                identifier = _opaque_id(receipt_id, "receipt_id")
-                if identifier in seen:
-                    raise ArtifactTerminalError(
-                        "Success cannot repeat an Artifact receipt."
-                    )
-                seen.add(identifier)
-                try:
-                    receipt = self._receipts_by_id[identifier]
-                except KeyError as exc:
-                    raise ArtifactTerminalError(
-                        "Success references an uncommitted Artifact receipt."
-                    ) from exc
-                if receipt.scope != self._scope:
-                    raise ArtifactTerminalError(
-                        "Artifact receipt is outside the Run scope."
-                    )
-                selected.append(receipt)
+            selected = self._validated_receipts(receipt_ids)
             required_ids = {
                 offer.artifact_id for offer in self._offers.values() if offer.required
             }
@@ -364,7 +343,20 @@ class ArtifactLedger:
                 raise ArtifactTerminalError(
                     "Success is missing one or more required Artifact receipts."
                 )
-            return tuple(selected)
+            return selected
+
+    def validate_receipts(
+        self, receipt_ids: Collection[str]
+    ) -> tuple[ArtifactReceipt, ...]:
+        """Validate scoped receipt references without imposing a success gate.
+
+        Failed, cancelled, and indeterminate results may still reference a
+        committed preview or error-report Artifact. They must receive the same
+        opaque-ID, duplicate, existence, and Run-scope validation as a success
+        proposal, but they do not need to include every required deliverable.
+        """
+        with self._lock:
+            return self._validated_receipts(receipt_ids)
 
     def _validate_policy(self, offer: ArtifactOffer) -> None:
         if (
@@ -394,6 +386,32 @@ class ArtifactLedger:
             raise ArtifactIntegrityError(
                 "Artifact bytes do not match the offered digest."
             )
+
+    def _validated_receipts(
+        self, receipt_ids: Collection[str]
+    ) -> tuple[ArtifactReceipt, ...]:
+        """Return known scope-bound receipts while the ledger lock is held."""
+        if isinstance(receipt_ids, str) or not isinstance(receipt_ids, Collection):
+            raise ArtifactTerminalError("Result must contain a receipt ID collection.")
+        selected: list[ArtifactReceipt] = []
+        seen: set[str] = set()
+        for receipt_id in receipt_ids:
+            identifier = _opaque_id(receipt_id, "receipt_id")
+            if identifier in seen:
+                raise ArtifactTerminalError("Result cannot repeat an Artifact receipt.")
+            seen.add(identifier)
+            try:
+                receipt = self._receipts_by_id[identifier]
+            except KeyError as exc:
+                raise ArtifactTerminalError(
+                    "Result references an uncommitted Artifact receipt."
+                ) from exc
+            if receipt.scope != self._scope:
+                raise ArtifactTerminalError(
+                    "Artifact receipt is outside the Run scope."
+                )
+            selected.append(receipt)
+        return tuple(selected)
 
 
 def _object(value: Any, label: str) -> Mapping[str, Any]:

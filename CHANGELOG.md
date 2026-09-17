@@ -4,6 +4,13 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added a Core 0.2 reference Run ledger with Host-owned lifecycle transitions,
+  structured safe-error validation, Artifact receipt gates for all terminal
+  references, first-terminal-wins conflict handling, immutable terminal ACKs,
+  and explicit `indeterminate` no-blind-retry semantics. It is executable
+  reference evidence only; no Core 0.2 Host runtime or conformance claim is
+  enabled.
+
 - Added a Core 0.2 reference Artifact ledger with immutable Offer identity,
   delivery/media/quota policy checks, exact-byte receipt validation, opaque
   scoped receipt references, idempotent commits, and required-deliverable
