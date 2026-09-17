@@ -202,6 +202,12 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Local Agent Probe](tools/lap_local_probe.py): an author-side executable
   check for one declared `lap-local/0.1` capability without a Host Runtime.
 - [Governance](GOVERNANCE.md): versioning and change process.
+- [Commercial-grade PRD](docs/commercial-grade-prd.md): approved user outcomes
+  and release gates.
+- [Core 0.2 Design](docs/core-0.2-design.md): product boundary and reliability
+  architecture.
+- [Core 0.2 SPEC](docs/core-0.2-spec.md): proposed messages, states, security,
+  tests, and migration.
 - [LAP Enhancement Proposals](proposals/README.md): public design records for
   normative, compatibility, and security changes.
 

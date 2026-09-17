@@ -4,6 +4,11 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Accepted LEP-0010 and added the commercial-grade PRD, Core 0.2 Design, and
+  implementation-level reliability SPEC. This is design approval only; Core
+  0.1 wire behavior is unchanged until the proposed schemas and conformance
+  material are implemented.
+
 - Added LEP-0009 and the non-claimable `lap-model-relay/0.1` draft: portable
   route, request, response, idempotency, and rejection contracts for a future
   Host-observed external Local-Agent model relay. It preserves the current
