@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for specification. Draft Schema, vector, and TCK-registry work is in
-progress; Core 0.2 Host runtime implementation has not started.
+Accepted for specification. Draft Schema, vector, TCK-registry, and reference
+stream-state-machine work exists; no Core 0.2 Host runtime adapter has started.
 
 ## Abstract
 

@@ -69,7 +69,8 @@
           "type": "string",
           "pattern": "^docs/core-0\\.2-spec\\.md#C02-[A-Z]+-[0-9]{2}$"
         },
-        "verification": { "$ref": "#/$defs/verification" }
+        "verification": { "$ref": "#/$defs/verification" },
+        "reference_evidence": { "$ref": "#/$defs/reference_evidence" }
       },
       "allOf": [
         {
@@ -122,6 +123,20 @@
         },
         "test": { "type": "string", "minLength": 1, "maxLength": 1000 },
         "scenario": { "type": "string", "minLength": 1, "maxLength": 2000 }
+      }
+    },
+    "reference_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "location", "test", "limitations"],
+      "properties": {
+        "kind": { "const": "state-machine-test" },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:tests|tools)/[A-Za-z0-9._/-]+$"
+        },
+        "test": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "limitations": { "type": "string", "minLength": 1, "maxLength": 2000 }
       }
     }
   }

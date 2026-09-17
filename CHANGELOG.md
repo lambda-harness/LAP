@@ -4,6 +4,12 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added a Core 0.2 reference stream ledger with strict epoch fencing,
+  sequence-gap detection, same-position conflict rejection, bounded replay,
+  duplicate identities retained beyond replay-body eviction, ACK waterlines,
+  and validated checkpoint recovery. It is executable reference evidence only;
+  no Core 0.2 Host runtime or conformance claim is enabled.
+
 - Added isolated Core 0.2 draft envelope and message registry with mandatory
   stream identity, explicit sender role, Run scope, request correlation,
   idempotency checks, typed payload contracts for all registered messages, a

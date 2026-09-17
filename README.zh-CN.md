@@ -179,6 +179,10 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
 - [Local Agent Probe](tools/lap_local_probe.py)：无需 Host Runtime，对一个已声明
   `lap-local/0.1` capability 执行的 Agent 作者侧可执行检查。
 - [Governance](GOVERNANCE.md)：版本和变更流程。
+- [Core 0.2 设计](docs/core-0.2-design.md)：产品边界与可靠性架构。
+- [Core 0.2 规范](docs/core-0.2-spec.md)：拟议消息、状态、安全、测试与迁移。
+- [Core 0.2 流账本参考实现](docs/core-0.2-stream-ledger.md)：可执行的 epoch、序列、ACK、
+  重放与检查点语义；它不是 Host conformance 声明。
 - [LAP Enhancement Proposals](proposals/README.zh-CN.md)：规范性、兼容性和安全变更的
   公开设计记录。
 

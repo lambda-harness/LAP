@@ -90,3 +90,19 @@ Status values: pending, passed, failed, blocked.
   its listed blockers are closed.
 - This remains draft contract evidence only. Stream fencing, durable ACK,
   replay, authorization, and terminal persistence remain Host runtime work.
+
+## 2026-09-17 - Core 0.2 reference stream ledger
+
+- Added an executable, isolated stream state machine to the installable Python
+  reference kit. It enforces sequential epochs, fences stale appenders, rejects
+  gaps and same-position conflicts, produces idempotent duplicate results, and
+  exposes bounded replay with explicit unavailability.
+- Replay body retention is intentionally separate from duplicate identities.
+  An evicted body cannot cause a conflicting old frame to be silently treated
+  as a valid duplicate.
+- The reference checkpoint preserves waterlines, retained bodies, and all
+  duplicate identities across a restart. Tests cover lost-ACK replay, stale
+  writer fencing, sequence gaps, retention, and checkpoint restoration.
+- The reference remains in-memory by design. A commercial Host must persist
+  its checkpoint, run-state update, and outbound ACK intent atomically; TCK
+  C02-STREAM-01..03 and C02-RESUME-01 remain pending Host fault injection.

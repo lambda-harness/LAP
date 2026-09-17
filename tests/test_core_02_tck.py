@@ -27,6 +27,14 @@ EXPECTED_ASSERTION_IDS = frozenset(
         "C02-SEC-01",
     )
 )
+REFERENCE_ASSERTION_IDS = frozenset(
+    (
+        "C02-STREAM-01",
+        "C02-STREAM-02",
+        "C02-STREAM-03",
+        "C02-RESUME-01",
+    )
+)
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -89,6 +97,17 @@ class Core02TckTests(unittest.TestCase):
                     self.assertIn("scenario", verification)
                     self.assertNotIn("location", verification)
                     self.assertNotIn("test", verification)
+                reference = assertion.get("reference_evidence")
+                if assertion["id"] in REFERENCE_ASSERTION_IDS:
+                    self.assertIsNotNone(reference)
+                    assert reference is not None
+                    self.assertEqual(reference["kind"], "state-machine-test")
+                    self.assertTrue((ROOT / reference["location"]).is_file())
+                    test_path = reference["test"].split("::", maxsplit=1)[0]
+                    self.assertTrue((ROOT / test_path).is_file())
+                    self.assertIn("reference", reference["limitations"].lower())
+                else:
+                    self.assertIsNone(reference)
 
 
 if __name__ == "__main__":

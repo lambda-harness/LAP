@@ -19,6 +19,10 @@ These schemas are draft material for accepted LEP-0010, not a released Core
 - `../../conformance/core-0.2-tck.json` maps all required Core assertions to
   verified draft evidence or a pending runtime scenario. Its current
   `not_claimable` status is normative for Core 0.2 claims.
+- `../../src/lap_protocol/stream_ledger.py` and
+  `../../tests/test_core_02_stream_ledger.py` make the epoch, sequence, ACK,
+  replay, and checkpoint semantics executable reference evidence. They do not
+  replace a Host's durable transaction or upgrade pending runtime assertions.
 
 The payload contracts are fully specified as draft material. A row remains
 `draft` until a Host implements it with positive/negative vectors and runtime

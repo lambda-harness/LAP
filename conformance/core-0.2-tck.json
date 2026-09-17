@@ -48,6 +48,12 @@
         "kind": "fault-injection",
         "status": "planned",
         "scenario": "Restart an Agent writer after persisted events and prove that the Host fences the old epoch while accepting the higher epoch."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_stream_ledger.py",
+        "test": "tests/test_core_02_stream_ledger.py::Core02StreamLedgerTests.test_new_epoch_fences_old_writer_without_sequence_collision",
+        "limitations": "Reference in-memory semantics only; no Host persistence, peer authentication, or failover fault injection."
       }
     },
     {
@@ -61,6 +67,12 @@
         "kind": "fault-injection",
         "status": "planned",
         "scenario": "Drop an ACK after durable application, reconnect, and prove that replay returns the existing durable response without a second transition."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_stream_ledger.py",
+        "test": "tests/test_core_02_stream_ledger.py::Core02StreamLedgerTests.test_lost_ack_replay_does_not_apply_a_second_transition",
+        "limitations": "Reference in-memory semantics only; no durable outbox, transport loss, or Host reconnect integration."
       }
     },
     {
@@ -74,6 +86,12 @@
         "kind": "fault-injection",
         "status": "planned",
         "scenario": "After failover, submit terminal and Artifact frames from the fenced epoch and verify rejection plus safe audit evidence."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_stream_ledger.py",
+        "test": "tests/test_core_02_stream_ledger.py::Core02StreamLedgerTests.test_new_epoch_fences_old_writer_without_sequence_collision",
+        "limitations": "Reference in-memory semantics only; terminal, Artifact, audit, and failover integration remain unimplemented."
       }
     },
     {
@@ -87,6 +105,12 @@
         "kind": "fault-injection",
         "status": "planned",
         "scenario": "Kill each peer mid-Run, retain the ledger, and prove that resume either restores the correct waterline or produces a typed truthful failure."
+      },
+      "reference_evidence": {
+        "kind": "state-machine-test",
+        "location": "tests/test_core_02_stream_ledger.py",
+        "test": "tests/test_core_02_stream_ledger.py::Core02StreamLedgerTests.test_checkpoint_restores_provable_state_and_fences_prior_epoch",
+        "limitations": "Reference checkpoint round-trip only; no process-kill, durable-store, or Host reconciliation fault injection."
       }
     },
     {

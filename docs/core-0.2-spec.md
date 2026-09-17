@@ -249,7 +249,9 @@ attestation.
 1. Accept this LEP and freeze new Core 0.1 features.
 2. Add canonicalization and message schemas.
 3. Add TCK registry and mandatory coverage validation.
-4. Implement stream ledger, ACK, replay, resume, and fencing.
+4. Bind the [reference stream ledger](core-0.2-stream-ledger.md) to a durable
+   Host transaction, ACK outbox, replay transport, resume token, and writer
+   lease implementation.
 5. Implement Artifact store receipts and terminal gating.
 6. Implement structured errors and terminal `indeterminate`.
 7. Publish a migration adapter and compatibility matrix.

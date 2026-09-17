@@ -12,6 +12,23 @@ from .package_signing import (
     verify_package_signature,
     write_package_signature,
 )
+from .stream_ledger import (
+    AckRangeError,
+    AckResult,
+    ApplyResult,
+    CheckpointError,
+    EpochError,
+    InvalidStreamEventError,
+    ReplayResult,
+    ReplayUnavailableError,
+    SequenceConflictError,
+    SequenceGapError,
+    StaleEpochError,
+    StreamEvent,
+    StreamLedger,
+    StreamLedgerError,
+    StreamSnapshot,
+)
 
 __all__ = [
     "PackageSignature",
@@ -24,4 +41,19 @@ __all__ = [
     "read_package_signature",
     "verify_package_signature",
     "write_package_signature",
+    "AckRangeError",
+    "AckResult",
+    "ApplyResult",
+    "CheckpointError",
+    "EpochError",
+    "InvalidStreamEventError",
+    "ReplayResult",
+    "ReplayUnavailableError",
+    "SequenceConflictError",
+    "SequenceGapError",
+    "StaleEpochError",
+    "StreamEvent",
+    "StreamLedger",
+    "StreamLedgerError",
+    "StreamSnapshot",
 ]

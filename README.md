@@ -208,6 +208,9 @@ Agent package -> Registry -> Supervisor -> Adapter -> Agent implementation
   architecture.
 - [Core 0.2 SPEC](docs/core-0.2-spec.md): proposed messages, states, security,
   tests, and migration.
+- [Core 0.2 Stream Ledger Reference](docs/core-0.2-stream-ledger.md):
+  executable epoch, sequence, ACK, replay, and checkpoint semantics; it is not
+  a Host conformance claim.
 - [LAP Enhancement Proposals](proposals/README.md): public design records for
   normative, compatibility, and security changes.
 
