@@ -46,3 +46,4 @@ normal pull request. State why no LEP is needed in that pull request.
 | [LEP-0008](LEP-0008-canonical-profile-namespaces.md) | Implemented | `0.1.0-draft` | Canonical `lambda-harness` extension namespaces and explicit `0.2` profile migration. |
 | [LEP-0009](LEP-0009-host-model-relay.md) | Draft | `0.1.0-draft` | Host-mediated model requests for externally implemented Local Agents, without trusting self-reported usage. |
 | [LEP-0010](LEP-0010-commercial-grade-core-0.2.md) | Accepted | `0.2.0-draft` | Commercial-grade Core reliability, contract identity, recovery, Artifact commit, and terminal evidence. |
+| [LEP-0011](LEP-0011-effect-execution-profile.md) | Accepted | `0.2.0-draft` | Host-governed external-effect intents, evidence, reconciliation, and required-effect settlement. |

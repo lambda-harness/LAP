@@ -20,6 +20,7 @@ from datetime import datetime, timezone
 from typing import Any, Final, cast
 
 from .artifact_ledger import ArtifactLedger, ArtifactScope
+from .effect_ledger import EffectLedger
 
 _TERMINAL_STATES: Final = frozenset(
     ("succeeded", "failed", "cancelled", "timed_out", "indeterminate")
@@ -324,13 +325,18 @@ class RunLedger:
     """
 
     def __init__(
-        self, scope: ArtifactScope, *, artifact_ledger: ArtifactLedger | None = None
+        self,
+        scope: ArtifactScope,
+        *,
+        artifact_ledger: ArtifactLedger | None = None,
+        effect_ledger: EffectLedger | None = None,
     ) -> None:
         """Create an initially queued Host Run ledger.
 
         Args:
             scope: Host-issued tenant and Run identity, never Agent input.
             artifact_ledger: Optional same-scope Artifact receipt validator.
+            effect_ledger: Optional same-scope external Effect settlement gate.
 
         Raises:
             RunValidationError: If scope or Artifact ownership is invalid.
@@ -342,8 +348,14 @@ class RunLedger:
                 raise RunValidationError("Artifact ledger is invalid.")
             if artifact_ledger.scope != scope:
                 raise RunValidationError("Artifact ledger must match the Run scope.")
+        if effect_ledger is not None:
+            if not isinstance(effect_ledger, EffectLedger):
+                raise RunValidationError("Effect ledger is invalid.")
+            if effect_ledger.scope != scope:
+                raise RunValidationError("Effect ledger must match the Run scope.")
         self._scope = scope
         self._artifact_ledger = artifact_ledger
+        self._effect_ledger = effect_ledger
         self._state = "queued"
         self._terminal: TerminalRecord | None = None
         self._events: dict[str, _EventRecord] = {}
@@ -461,6 +473,7 @@ class RunLedger:
             result=result,
             allowed_states=_ACTIVE_STATES,
             validate_artifacts=False,
+            validate_effects=False,
         )
 
     def record_result(
@@ -481,6 +494,7 @@ class RunLedger:
                 "reconciling",
             },
             validate_artifacts=True,
+            validate_effects=True,
         )
 
     def acknowledge_terminal(self, event_id: str) -> TerminalAck:
@@ -595,6 +609,7 @@ class RunLedger:
         result: RunResult,
         allowed_states: frozenset[str] | set[str],
         validate_artifacts: bool,
+        validate_effects: bool,
     ) -> TerminalRecord:
         """Write exactly one terminal record after all semantic gates pass."""
         identifier = _opaque_id(event_id, "event_id")
@@ -610,6 +625,8 @@ class RunLedger:
             self._require_state(allowed_states, event_type)
             if validate_artifacts:
                 self._validate_result_artifacts(result)
+            if validate_effects:
+                self._validate_result_effects(result)
             transition = RunTransition(
                 event_id=identifier,
                 event_type=event_type,
@@ -641,6 +658,11 @@ class RunLedger:
             self._artifact_ledger.validate_success(result.artifact_receipt_ids)
         else:
             self._artifact_ledger.validate_receipts(result.artifact_receipt_ids)
+
+    def _validate_result_effects(self, result: RunResult) -> None:
+        """Gate successful terminal state on every required Profile Effect settlement."""
+        if result.status == "succeeded" and self._effect_ledger is not None:
+            self._effect_ledger.validate_success()
 
     def _existing_outcome(
         self,

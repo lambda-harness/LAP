@@ -12,6 +12,11 @@ from lap_protocol.artifact_ledger import (
     ArtifactScope,
     ArtifactTerminalError,
 )
+from lap_protocol.effect_ledger import (
+    EffectLedger,
+    EffectRule,
+    EffectTerminalGateError,
+)
 from lap_protocol.run_ledger import (
     RunConflictError,
     RunLedger,
@@ -91,10 +96,18 @@ def failed_result(receipt_ids: list[str] | None = None) -> dict[str, Any]:
     return payload
 
 
-def running_ledger(*, artifact_ledger: ArtifactLedger | None = None) -> RunLedger:
+def running_ledger(
+    *,
+    artifact_ledger: ArtifactLedger | None = None,
+    effect_ledger: EffectLedger | None = None,
+) -> RunLedger:
     """Create one Run ledger that has completed start and acceptance."""
 
-    ledger = RunLedger(SCOPE, artifact_ledger=artifact_ledger)
+    ledger = RunLedger(
+        SCOPE,
+        artifact_ledger=artifact_ledger,
+        effect_ledger=effect_ledger,
+    )
     ledger.start("start-event")
     ledger.accept("accepted-event")
     return ledger
@@ -159,6 +172,44 @@ class Core02RunLedgerTests(unittest.TestCase):
             without_artifacts.record_result(
                 "missing-ledger", failed_result([receipt.receipt_id])
             )
+
+    def test_success_waits_for_required_effect_settlement(self) -> None:
+        """Prevent provider acceptance from being misreported as Run success."""
+        effects = EffectLedger(
+            SCOPE,
+            "release.execute",
+            (EffectRule("jenkins.release", True, False),),
+        )
+        proposed = effects.propose(
+            "effect-intent",
+            {
+                "intent_id": "release-intent",
+                "effect_type": "jenkins.release",
+                "request_digest": "sha256:" + "1" * 64,
+                "summary": "Publish the approved release.",
+            },
+        )
+        effects.authorize(
+            "effect-authorized",
+            proposed.effect_id,
+            authorization_ref="authorization-release",
+        )
+        effects.accept(
+            "effect-accepted",
+            proposed.effect_id,
+            provider_operation_ref="provider-release",
+        )
+        ledger = running_ledger(effect_ledger=effects)
+
+        with self.assertRaises(EffectTerminalGateError):
+            ledger.record_result("result-before-settlement", successful_result())
+        self.assertEqual(ledger.state, "running")
+
+        effects.record_settled(
+            "effect-settled", proposed.effect_id, evidence_ref="receipt-release"
+        )
+        terminal = ledger.record_result("result-after-settlement", successful_result())
+        self.assertEqual(terminal.status, "succeeded")
 
     def test_lifecycle_transitions_replay_exact_events_and_reject_bad_states(
         self,

@@ -4,6 +4,10 @@ All notable changes to LAP are documented in this file.
 
 ## Unreleased
 
+- Added the draft `lap-effect/0.1` profile and reference effect ledger for
+  Host-governed authorization, approval, reconciliation, and required-effect
+  settlement in Core 0.2.
+
 - Added a Core 0.2 reference contract gate for exact Host-admitted release and
   capability identity comparison before a business-context supplier is invoked.
   It is executable reference evidence only; no trusted Host registry,

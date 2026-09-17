@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lambda-harness/LAP/schemas/effect-execution-0.1.schema.json",
+  "title": "LAP Effect Execution Profile 0.1",
+  "description": "Draft profile payload fragments for Host-governed external effect evidence.",
+  "$defs": {
+    "opaque_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "effect_type": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9.-]{2,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "safe_summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 400
+    },
+    "error_code": {
+      "type": "string",
+      "pattern": "^LAP-[1-5][0-9]{2}$"
+    },
+    "effect_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect_type", "required_for_success", "approval_required", "max_intents"],
+      "properties": {
+        "effect_type": {"$ref": "#/$defs/effect_type"},
+        "required_for_success": {"type": "boolean"},
+        "approval_required": {"type": "boolean"},
+        "max_intents": {"type": "integer", "minimum": 1, "maximum": 1000}
+      }
+    },
+    "effect_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "capability_id", "rules"],
+      "properties": {
+        "version": {"const": "0.1"},
+        "capability_id": {"$ref": "#/$defs/opaque_id"},
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/effect_rule"}
+        }
+      }
+    },
+    "effect_intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intent_id", "effect_type", "request_digest", "summary"],
+      "properties": {
+        "intent_id": {"$ref": "#/$defs/opaque_id"},
+        "effect_type": {"$ref": "#/$defs/effect_type"},
+        "request_digest": {"$ref": "#/$defs/digest"},
+        "summary": {"$ref": "#/$defs/safe_summary"}
+      }
+    },
+    "effect_authorized": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect_id", "authorization_ref"],
+      "properties": {
+        "effect_id": {"$ref": "#/$defs/opaque_id"},
+        "authorization_ref": {"$ref": "#/$defs/opaque_id"},
+        "approval_ref": {"$ref": "#/$defs/opaque_id"}
+      }
+    },
+    "effect_accepted": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect_id", "provider_operation_ref"],
+      "properties": {
+        "effect_id": {"$ref": "#/$defs/opaque_id"},
+        "provider_operation_ref": {"$ref": "#/$defs/opaque_id"}
+      }
+    },
+    "effect_unknown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect_id", "observation_ref"],
+      "properties": {
+        "effect_id": {"$ref": "#/$defs/opaque_id"},
+        "observation_ref": {"$ref": "#/$defs/opaque_id"}
+      }
+    },
+    "effect_reconciling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect_id", "reconciliation_ref"],
+      "properties": {
+        "effect_id": {"$ref": "#/$defs/opaque_id"},
+        "reconciliation_ref": {"$ref": "#/$defs/opaque_id"}
+      }
+    },
+    "effect_settled": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect_id", "evidence_ref"],
+      "properties": {
+        "effect_id": {"$ref": "#/$defs/opaque_id"},
+        "evidence_ref": {"$ref": "#/$defs/opaque_id"}
+      }
+    },
+    "effect_failed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect_id", "evidence_ref", "failure_code", "failure_summary"],
+      "properties": {
+        "effect_id": {"$ref": "#/$defs/opaque_id"},
+        "evidence_ref": {"$ref": "#/$defs/opaque_id"},
+        "failure_code": {"$ref": "#/$defs/error_code"},
+        "failure_summary": {"$ref": "#/$defs/safe_summary"}
+      }
+    },
+    "effect_indeterminate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect_id", "evidence_ref", "failure_code", "failure_summary"],
+      "properties": {
+        "effect_id": {"$ref": "#/$defs/opaque_id"},
+        "evidence_ref": {"$ref": "#/$defs/opaque_id"},
+        "failure_code": {"$ref": "#/$defs/error_code"},
+        "failure_summary": {"$ref": "#/$defs/safe_summary"}
+      }
+    }
+  }
+}

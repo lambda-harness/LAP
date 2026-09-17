@@ -27,6 +27,10 @@ Host-issued tenant and Run scope. It makes these portable facts executable:
 - when a same-scope `ArtifactLedger` is supplied, a successful result must
   pass required-receipt gating before a terminal record exists. Other terminal
   results validate each referenced receipt without requiring every deliverable;
+- when a same-scope `EffectLedger` is supplied, a successful result also waits
+  for every Host-required external Effect to be `settled`; provider acceptance,
+  failure, unknown state, reconciliation, and `indeterminate` do not prove Run
+  success;
 - the first legal terminal event is immutable. A concurrent cancellation
   confirmation and result produce one terminal record; the later event is
   retained as a deduplicated anomaly and cannot rewrite history;

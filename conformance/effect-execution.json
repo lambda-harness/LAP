@@ -1,0 +1,132 @@
+{
+  "profile": "lap-effect/0.1",
+  "status": "draft",
+  "extension_key": "io.github.lambda-harness.lap.effect",
+  "context_extension": {
+    "version": "0.1",
+    "capability_id": "release.execute",
+    "rules": [
+      {
+        "effect_type": "jenkins.release",
+        "required_for_success": true,
+        "approval_required": false,
+        "max_intents": 1
+      }
+    ]
+  },
+  "valid_payloads": [
+    {
+      "fragment": "effect_intent",
+      "value": {
+        "intent_id": "intent-release-1",
+        "effect_type": "jenkins.release",
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "summary": "Publish the approved release."
+      }
+    },
+    {
+      "fragment": "effect_authorized",
+      "value": {
+        "effect_id": "effect-release-1",
+        "authorization_ref": "authorization-release-1",
+        "approval_ref": "approval-release-1"
+      }
+    },
+    {
+      "fragment": "effect_accepted",
+      "value": {
+        "effect_id": "effect-release-1",
+        "provider_operation_ref": "jenkins-build-1"
+      }
+    },
+    {
+      "fragment": "effect_unknown",
+      "value": {
+        "effect_id": "effect-release-1",
+        "observation_ref": "transport-gap-1"
+      }
+    },
+    {
+      "fragment": "effect_reconciling",
+      "value": {
+        "effect_id": "effect-release-1",
+        "reconciliation_ref": "jenkins-query-1"
+      }
+    },
+    {
+      "fragment": "effect_settled",
+      "value": {
+        "effect_id": "effect-release-1",
+        "evidence_ref": "jenkins-result-1"
+      }
+    },
+    {
+      "fragment": "effect_indeterminate",
+      "value": {
+        "effect_id": "effect-release-1",
+        "evidence_ref": "reconciliation-result-1",
+        "failure_code": "LAP-500",
+        "failure_summary": "The provider outcome cannot be proven."
+      }
+    }
+  ],
+  "invalid_payloads": [
+    {
+      "fragment": "effect_intent",
+      "value": {
+        "intent_id": "intent-release-1",
+        "effect_type": "Jenkins.Release",
+        "request_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "summary": "Publish the approved release."
+      }
+    },
+    {
+      "fragment": "effect_authorized",
+      "value": {
+        "effect_id": "effect-release-1",
+        "authorization_ref": "authorization-release-1",
+        "credential": "must-not-appear"
+      }
+    },
+    {
+      "fragment": "effect_indeterminate",
+      "value": {
+        "effect_id": "effect-release-1",
+        "evidence_ref": "reconciliation-result-1",
+        "failure_code": "not-a-lap-code",
+        "failure_summary": "The provider outcome cannot be proven."
+      }
+    }
+  ],
+  "required_effect_lifecycle": [
+    "proposed",
+    "approval_required",
+    "authorized",
+    "accepted",
+    "unknown",
+    "reconciling",
+    "indeterminate"
+  ],
+  "required_rejections": [
+    {
+      "case": "effect type absent from admitted capability contract",
+      "code": "LAP-301",
+      "provider_contacted": false
+    },
+    {
+      "case": "acceptance reported before Host authorization",
+      "code": "LAP-201",
+      "provider_contacted": false
+    },
+    {
+      "case": "required effect accepted but not settled at successful Run terminal",
+      "code": "LAP-104",
+      "provider_contacted": false
+    },
+    {
+      "case": "terminal effect receives changed later event",
+      "code": "LAP-109",
+      "provider_contacted": false
+    }
+  ]
+}
