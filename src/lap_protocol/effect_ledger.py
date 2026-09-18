@@ -944,7 +944,8 @@ def _effect_types(values: Iterable[str]) -> tuple[str, ...]:
 
 def _effect_rules(values: Iterable[EffectRule]) -> dict[str, EffectRule]:
     """Validate and freeze one deterministic Host effect-rule map."""
-    if isinstance(values, (str, bytes)):
+    raw_values: Any = values
+    if isinstance(raw_values, (str, bytes)):
         raise EffectValidationError("Effect rules must be an iterable of rules.")
     try:
         items = tuple(values)

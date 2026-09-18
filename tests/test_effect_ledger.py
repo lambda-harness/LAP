@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import unittest
-from typing import cast
+from typing import Any, cast
 
 from lap_protocol.artifact_ledger import ArtifactScope
 from lap_protocol.effect_ledger import (
@@ -274,7 +274,7 @@ class EffectLedgerTests(unittest.TestCase):
                 (EffectRule(EFFECT_TYPE, True, False),),
             )
         with self.assertRaises(EffectValidationError):
-            EffectLedger(SCOPE, CAPABILITY, EFFECT_TYPE)
+            EffectLedger(SCOPE, CAPABILITY, cast(Any, EFFECT_TYPE))
         with self.assertRaises(EffectValidationError):
             EffectLedger(
                 SCOPE,
