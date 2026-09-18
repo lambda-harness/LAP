@@ -211,12 +211,8 @@ class EffectLedgerTests(unittest.TestCase):
     def test_intent_and_event_idempotency_reject_changed_data(self) -> None:
         """Keep repeated logical intent safe while rejecting mutated replays."""
         first = self.ledger.propose("intent-event", intent_payload())
-        self.assertIs(
-            self.ledger.propose("intent-event", intent_payload()), first
-        )
-        same_intent = self.ledger.propose(
-            "duplicate-intent-event", intent_payload()
-        )
+        self.assertIs(self.ledger.propose("intent-event", intent_payload()), first)
+        same_intent = self.ledger.propose("duplicate-intent-event", intent_payload())
         self.assertEqual(same_intent.effect_id, first.effect_id)
         self.assertEqual(self.ledger.snapshot().effect_count, 1)
         self.assertEqual(self.ledger.snapshot().transition_count, 1)
@@ -231,6 +227,7 @@ class EffectLedgerTests(unittest.TestCase):
                 "changed-intent-event",
                 intent_payload(request_digest=OTHER_DIGEST),
             )
+
     def test_optional_failed_effect_does_not_claim_settlement_or_block_required_gate(
         self,
     ) -> None:
@@ -238,7 +235,8 @@ class EffectLedgerTests(unittest.TestCase):
         optional = self.ledger.propose(
             "optional-intent-event",
             intent_payload(
-                intent_id="optional-intent", effect_type=OTHER_EFFECT_TYPE,
+                intent_id="optional-intent",
+                effect_type=OTHER_EFFECT_TYPE,
                 request_digest=OTHER_DIGEST,
             ),
         )
@@ -281,7 +279,10 @@ class EffectLedgerTests(unittest.TestCase):
             EffectLedger(
                 SCOPE,
                 CAPABILITY,
-                (EffectRule(EFFECT_TYPE, True, False), EffectRule(EFFECT_TYPE, True, False)),
+                (
+                    EffectRule(EFFECT_TYPE, True, False),
+                    EffectRule(EFFECT_TYPE, True, False),
+                ),
             )
         with self.assertRaises(EffectAuthorizationError):
             self.ledger.propose(
@@ -293,9 +294,7 @@ class EffectLedgerTests(unittest.TestCase):
                 "malformed-intent-event",
                 {"intent_id": "intent-1"},
             )
-        proposed = self.ledger.propose(
-            "valid-intent-event", intent_payload()
-        )
+        proposed = self.ledger.propose("valid-intent-event", intent_payload())
         with self.assertRaises(EffectValidationError):
             self.ledger.resolve_reconciliation(
                 "bad-outcome-event",
